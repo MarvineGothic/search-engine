@@ -10,7 +10,14 @@ public class SearchEngine {
         }
         Scanner sc = new Scanner(System.in);
         List<Website> sites = FileHelper.parseFile(args[0]);
+
+        System.out.println("These are all the available sites");
+        for (int i = 0; i < Math.min(10, sites.size()); i++){
+            System.out.println(sites.get(i));
+        }
+
         System.out.println("Please provide a query word");
+
         while (sc.hasNext()) {
             String line = sc.nextLine();
             // Go through all websites and check if word is present

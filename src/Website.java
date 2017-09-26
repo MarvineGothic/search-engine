@@ -24,5 +24,11 @@ public class Website {
         return words.contains(word);
     }
 
-    
+    @Override
+    public String toString(){
+        String output = "Title: " +  title + "\n";
+        output += "url: " +  url + "\n";
+        output += "words: " +  String.join(";", words) + "\n";
+        return output;
+    }
 }
