@@ -1,9 +1,6 @@
 # Compiled class file
 *.class
 
-# JetBrains files
-*.class
-
 # Log file
 *.log
 
