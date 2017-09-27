@@ -24,6 +24,9 @@ public class Website {
         return words.contains(word);
     }
 
+    /**
+     * Author Rasmus F
+     */
     @Override
     public String toString(){
         String output = "Title: " +  title + "\n";
