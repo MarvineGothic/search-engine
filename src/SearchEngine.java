@@ -1,5 +1,3 @@
-import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,18 +19,24 @@ public class SearchEngine {
 
         System.out.println("Please provide a query word");
 
+        /**
+         * @author Sergiy
+         */
         while (sc.hasNext()) {
+            long startTime = System.nanoTime();
+            boolean contains = false;
             String line = sc.nextLine();
             // Go through all websites and check if word is present
             for (Website w : sites) {
                 if (w.containsWord(line)) {
+                    contains = true;
                     System.out.println("Query is found on '" + w.getUrl() + "'");
+                    System.out.println("Response time: " + (System.nanoTime() - startTime) + " ns");
                 }
-                /**
-                 * @author Sergiy
-                 */
-                else System.out.println("No website contains the query word.");
-                // --------------------------------------------------------
+            }
+            if (!contains) {
+                System.out.println("No website contains the query word.");
+                System.out.println("Response time: " + (System.nanoTime() - startTime) + " ns");
             }
             System.out.println("Please provide the next query word");
         }
