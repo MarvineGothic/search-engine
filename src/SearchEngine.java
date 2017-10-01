@@ -1,8 +1,10 @@
+import java.io.File;
 import java.util.List;
 import java.util.Scanner;
 
 public class SearchEngine {
     public static void main(String[] args) {
+
         System.out.println("Welcome to the SearchEngine!");
 
         if (args.length != 1) {
@@ -10,7 +12,10 @@ public class SearchEngine {
             return;
         }
         Scanner sc = new Scanner(System.in);
-        List<Website> sites = FileHelper.parseFile(args[0]);
+
+        // Now you only need to specify the relative path from the project folder to the datafile
+        String dir = System.getProperty("user.dir");
+        List<Website> sites = FileHelper.parseFile(dir + File.separator + args[0]);
 
         System.out.println("These are some of the available sites");
         for (int i = 0; i < Math.min(10, sites.size()); i++) {
