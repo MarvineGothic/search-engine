@@ -16,7 +16,7 @@ public class FileHelper {
                 String line = sc.nextLine();
                 if (line.startsWith("*PAGE:")) {
                     // create previous website from data gathered
-                    if (url != null) {
+                    if (url != null && title != null && title.trim().length() > 0 && listOfWords != null) {  // Sergiy
                         sites.add(new Website(url, title, listOfWords));
                     }
                     // new website starts
@@ -30,15 +30,22 @@ public class FileHelper {
                     if (listOfWords == null) {
                         listOfWords = new ArrayList<String>();
                     }
-                    listOfWords.add(line);
+                    /**
+                     * @author Sergiy
+                     */
+                    String word = line.replaceAll(" ", "").toLowerCase().trim();
+                    if (word.trim().length() != 0) {
+                        listOfWords.add(word);
+                    } else listOfWords = null;
+                    // -----------------------------------------------------------------
                 }
             }
-            if (url != null) {
+            if (url != null && title != null && title.trim().length() > 0 && listOfWords != null) {    // Sergiy
                 sites.add(new Website(url, title, listOfWords));
             }
         } catch (FileNotFoundException e) {
             System.out.println("Couldn't load the given file");
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
         return sites;

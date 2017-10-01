@@ -31,7 +31,7 @@ public class Website {
     public String toString(){
         String output = "Title: " +  title + "\n";
         output += "url: " +  url + "\n";
-        output += "words: " +  String.join(";", words) + "\n";
+        output += "words: " +  String.join("; ", words) + "\n";
         return output;
     }
 }
