@@ -10,20 +10,16 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../../Libraries/Java/commons-validator-1.6" />
+          <root url="jar://$MODULE_DIR$/Dependencies/commons-validator-1.6.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../Libraries/Java/commons-validator-1.6" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../../../Libraries/Java/commons-validator-1.6" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../Libraries/Java/commons-validator-1.6" recursive="false" type="SOURCES" />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../../Libraries/Java/jsoup-1.10.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/Dependencies/jsoup-1.10.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
