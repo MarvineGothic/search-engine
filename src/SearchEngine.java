@@ -8,17 +8,17 @@ public class SearchEngine {
         System.out.println("Welcome to the SearchEngine!");
         args = new String[1];          ////  Just my solution
         args[0] = "data.txt";          ////   Sergiy
-        if (args.length != 1) {
+        if (args.length <=0) {
             System.out.println("Error: Filename is missing");
             return;
         }
         Scanner sc = new Scanner(System.in);
-        List<Website> sites = FileHelper.parseFile(args[0]);  // Sergiy
+        //List<Website> sites = FileHelper.parseFile(args[0]);  // Sergiy
         
         // so we don't need the directory path:
         // Now you only need to specify the relative path from the project folder to the datafile
-        //String dir = System.getProperty("user.dir");
-        //List<Website> sites = FileHelper.parseFile(dir + File.separator + args[0]);
+        String dir = System.getProperty("user.dir");
+        List<Website> sites = FileHelper.parseFile(dir + File.separator + args[0]);
         // ----------------------------------------------------------------
         
         System.out.println("These are some of the available sites");

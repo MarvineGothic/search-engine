@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class FileHelper {
     public static List<Website> parseFile(String filename) {
         List<Website> sites = new ArrayList<Website>();
-        String url = null, title = null;
-        List<String> listOfWords = null;
+        String url = "", title = "";
+        List<String> listOfWords = new ArrayList<String>();
 
         try {
             Scanner sc = new Scanner(new File(filename), "UTF-8");
@@ -16,18 +16,18 @@ public class FileHelper {
                 String line = sc.nextLine();
                 if (line.startsWith("*PAGE:")) {
                     // create previous website from data gathered
-                    if (url != null && title != null && title.trim().length() > 0 && listOfWords != null) {  // Sergiy
+                    if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy
                         sites.add(new Website(url, title, listOfWords));
                     }
                     // new website starts
                     url = line.substring(6);
-                    title = null;
-                    listOfWords = null;
-                } else if (title == null) {
+                    title = "";
+                    listOfWords.clear();
+                } else if (title.equals("")) {
                     title = line;
                 } else {
                     // and that's a word!
-                    if (listOfWords == null) {
+                    if (listOfWords.isEmpty()) {
                         listOfWords = new ArrayList<String>();
                     }
                     /**
@@ -36,7 +36,7 @@ public class FileHelper {
                     String word = line.replaceAll(" ", "").toLowerCase().trim();
                     if (word.trim().length() != 0) {
                         listOfWords.add(word);
-                    } else listOfWords = null;
+                    } else listOfWords = null; //RasmusL: Remove statement?
                     // -----------------------------------------------------------------
                 }
             }
