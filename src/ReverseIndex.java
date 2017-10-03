@@ -6,7 +6,7 @@ import java.util.*;
  * Implements the Index interface using a reverse index method
  */
 public class ReverseIndex implements Index {
-    private Map<String, List<IndexItem>> wordMap;
+    private Map<String, HashSet<Website>> wordMap;
 
     /**
      * Test to see if the method works
@@ -14,11 +14,12 @@ public class ReverseIndex implements Index {
      */
     public static void main(String args[]){
         String dir = System.getProperty("user.dir");
-        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-small.txt");
+        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-medium.txt");
 
         ReverseIndex index = new ReverseIndex();
         index.build(sites);
 
+        System.out.println(index.lookup("modern").size());
         List<IndexItem> result = index.lookupIndexItems("district");
         for (IndexItem item : result){
             System.out.println(item);
@@ -32,62 +33,34 @@ public class ReverseIndex implements Index {
      * @return All websites matching the query in the form of IndexItems
      */
     public List<IndexItem> lookupIndexItems(String query){
-        return wordMap.get(query);
+        List<IndexItem> itemList = new ArrayList<>();
+        for (Website site : lookup(query)){
+            List<Integer> wordPositions = new ArrayList<>();
+            for (int i = 0; i < site.getWords().size(); i++){
+                if (site.getWords().get(i).equals(query)){
+                    wordPositions.add(i);
+                }
+            }
+            itemList.add(new IndexItem(site, query, wordPositions));
+        }
+        return itemList;
     }
 
     @Override
     public void build(List<Website> websiteList) {
         wordMap = new HashMap<>();
-
-        // For each word that occurs in a website if that words doesn't exist in the hash map it adds it.
-        // If the word is already contained it checkes if the there already exits an IndexItem with that website and
-        // word. If so it adds a word position to that IndexItem
         for (Website currentSite : websiteList){
-            List<String> wordsOnSite = currentSite.getWords();
-            for (int i = 0; i < wordsOnSite.size(); i++){
-                // Note: i is the i'th word on the current site
-                String currentWord = wordsOnSite.get(i);
-
-                if (!wordMap.containsKey(currentWord)){
-                    // If the word is not present we add it to the hash map and add the current site as a IndexItem
-                    IndexItem item = new IndexItem(currentSite, currentWord, i);
-                    List<IndexItem> itemList = new ArrayList<>();
-                    itemList.add(item);
-                    wordMap.put(currentWord, itemList);
-                } else {
-                    List<IndexItem> indexItems = wordMap.get(currentWord);
-                    // Before we can add the site as an index item we need to check if the current site already contains
-                    // an index item for this word. If so, only a new entry to that ItemIndex' word positions.
-                    boolean wordInSite = false;
-                    for (IndexItem testItem : indexItems){
-                        if (testItem.website == currentSite) {
-                            testItem.wordPositions.add(i);
-                            wordInSite = true;
-                            break;
-                        }
-                    }
-                    if (!wordInSite) {
-                        // The site does not have an IndexItem for this word already, so we add a new one.
-                        IndexItem item = new IndexItem(currentSite, currentWord, i);
-                        wordMap.get(currentWord).add(item);
-                    }
-                }
+            for (String wordOnSite : currentSite.getWords()){
+                wordMap.computeIfAbsent(wordOnSite, key -> new HashSet<>());
+                wordMap.get(wordOnSite).add(currentSite);
             }
         }
     }
 
     @Override
     public List<Website> lookup(String query) {
-        List<IndexItem> items = lookupIndexItems(query);
-
-        if (items == null){
-            return new ArrayList<>();
-        }
-        List<Website> siteList = new ArrayList<>();
-        for (IndexItem item : items){
-            siteList.add(item.website);
-        }
-        return siteList;
+        HashSet<Website> sites = wordMap.getOrDefault(query, new HashSet<>());
+        return new ArrayList<>(sites);
     }
 
     /**
