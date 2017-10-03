@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,19 +12,43 @@ import java.util.List;
  */
 public class IndexItem {
     public Website website;
-    public String indexWord;
-    public List<Integer> wordIndexes;
+    public String word;
+    public List<Integer> wordPositions;
 
-    public IndexItem(Website website, String indexWord, List<Integer> wordIndexes) {
+    public IndexItem(Website website, String word, List<Integer> wordPositions) {
         this.website = website;
-        this.indexWord = indexWord;
-        this.wordIndexes = wordIndexes;
+        this.word = word;
+        this.wordPositions = wordPositions;
     }
+
+    public IndexItem(Website website, String word) {
+        this.website = website;
+        this.word = word;
+        this.wordPositions = new ArrayList<>();
+    }
+
+    public IndexItem(Website website, String word, int wordPosition) {
+        this.website = website;
+        this.word = word;
+        this.wordPositions = new ArrayList<>();
+        this.wordPositions.add(wordPosition);
+    }
+
+
 
     /**
      * @return The number times the word occurs in the website
      */
     public int getWordCount(){
-        return wordIndexes.size();
+        return wordPositions.size();
+    }
+
+    @Override
+    public String toString() {
+        return "IndexItem{" +
+                "website=" + website.getTitle() +
+                ", word='" + word + '\'' +
+                ", wordCount=" + getWordCount() +
+                '}';
     }
 }
