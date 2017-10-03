@@ -12,6 +12,10 @@ public class Website {
         this.words = words;
     }
 
+    public List<String> getWords() {
+        return words;
+    }
+
     public String getTitle() {
         return title;
     }
