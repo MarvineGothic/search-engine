@@ -51,4 +51,25 @@ public class FileHelper {
 
         return sites;
     }
+
+    /**
+     * Author: Rasmus F
+     * Returns the full path to the data folder (in the root of your project), using the slashes native to your
+     * operating system. For example: "C:\Users\Rasmus\Documents\Dropbox\Kurser\Programming Workshop\SearchEngine\data\"
+     * @return Path to data folder
+     */
+    public static String getDataPath(){
+        String dir = System.getProperty("user.dir");
+        return dir + File.separator + "data" + File.separator;
+    }
+
+    /**
+     * Loads the a file similar to parse file, but only need the file name instead of entire path
+     * (assuming file is located in a folder called "data" in the root of the project.
+     * @param filename The file to load. For example "enwiki-small.txt".
+     * @return A list of website objects
+     */
+    public static List<Website> loadFile(String filename){
+        return parseFile(getDataPath() + filename);
+    }
 }
