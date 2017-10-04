@@ -14,11 +14,10 @@ public class ReverseIndex implements Index {
      */
     public static void main(String args[]){
         String dir = System.getProperty("user.dir");
-        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-medium.txt");
+        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-small.txt");
 
         ReverseIndex index = new ReverseIndex();
         index.build(sites);
-
         System.out.println(index.lookup("modern").size());
         List<IndexItem> result = index.lookupIndexItems("district");
         for (IndexItem item : result){
@@ -35,13 +34,7 @@ public class ReverseIndex implements Index {
     public List<IndexItem> lookupIndexItems(String query){
         List<IndexItem> itemList = new ArrayList<>();
         for (Website site : lookup(query)){
-            List<Integer> wordPositions = new ArrayList<>();
-            for (int i = 0; i < site.getWords().size(); i++){
-                if (site.getWords().get(i).equals(query)){
-                    wordPositions.add(i);
-                }
-            }
-            itemList.add(new IndexItem(site, query, wordPositions));
+            itemList.add(new IndexItem(site, query, site.getWordPositions(query)));
         }
         return itemList;
     }
@@ -51,8 +44,16 @@ public class ReverseIndex implements Index {
         wordMap = new HashMap<>();
         for (Website currentSite : websiteList){
             for (String wordOnSite : currentSite.getWords()){
-                wordMap.computeIfAbsent(wordOnSite, key -> new HashSet<>());
-                wordMap.get(wordOnSite).add(currentSite);
+//                The statement in this for loop is equivalent to the two lines below, but should be faster.
+//                wordMap.computeIfAbsent(wordOnSite, key -> new HashSet<>());
+//                wordMap.get(wordOnSite).add(currentSite);
+                wordMap.compute(wordOnSite, (key, oldValue) -> {
+                    if (oldValue == null) {
+                        oldValue = new HashSet<>();
+                    }
+                    oldValue.add(currentSite);
+                    return oldValue;
+                });
             }
         }
     }
@@ -71,7 +72,7 @@ public class ReverseIndex implements Index {
     @Override
     public Boolean validateQuery(String query) {
         // Checks if the query contains any non standard letters and numbers
-        String strppedWord = query.replaceAll("[^a-zA-Z0-9]", "");
-        return strppedWord.length() >= query.length();
+        String strippedWord = query.replaceAll("[^a-zA-Z0-9]", "");
+        return strippedWord.length() >= query.length();
     }
 }
