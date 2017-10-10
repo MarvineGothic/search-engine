@@ -20,36 +20,40 @@ public class FileHelper {
 
         Set<String> usedUrls = new HashSet<>(); // Keeps track of url so we don't get duplicate sites
         while (sc.hasNext()) {
-                String line = sc.nextLine();
-                if (line.startsWith("*PAGE:")) {
-                    // create previous website from data gathered
-                    if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
-                        if (checkForDublicates(usedUrls, url))
-                            return null;
-                        sites.add(new Website(url, title, listOfWords));
-                    }
-                    // new website starts
-                    url = line.substring(6);
-                    title = "";
-                    listOfWords =  new ArrayList<String>();
-                } else if (title.equals("")) {
-                    title = line;
-                } else {
-                    // and that's a word!
-                    if (listOfWords.isEmpty()) {
-                        listOfWords = new ArrayList<String>();
-                    }
-                    String word = line.replaceAll(" ", "").toLowerCase().trim();
-                    if (word.trim().length() != 0) {
-                        listOfWords.add(word);
-                    }
+            String line = sc.nextLine();
+            if (line.replaceAll("\\s", "").length() != line.length()){
+                System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
+                return null;
+            }
+            if (line.startsWith("*PAGE:")) {
+                // create previous website from data gathered
+                if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
+                    if (checkForDublicates(usedUrls, url))
+                        return null;
+                    sites.add(new Website(url, title, listOfWords));
+                }
+                // new website starts
+                url = line.substring(6);
+                title = "";
+                listOfWords =  new ArrayList<String>();
+            } else if (title.equals("")) {
+                title = line;
+            } else {
+                // and that's a word!
+                if (listOfWords.isEmpty()) {
+                    listOfWords = new ArrayList<String>();
+                }
+                String word = line.replaceAll(" ", "").toLowerCase().trim();
+                if (word.trim().length() != 0) {
+                    listOfWords.add(word);
                 }
             }
-            if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
-                if (checkForDublicates(usedUrls, url))
-                    return null;
-                sites.add(new Website(url, title, listOfWords));
-            }
+        }
+        if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
+            if (checkForDublicates(usedUrls, url))
+                return null;
+            sites.add(new Website(url, title, listOfWords));
+        }
 
         return sites;
     }
