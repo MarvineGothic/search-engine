@@ -1,23 +1,31 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileHelper {
-    public static List<Website> parseFile(String filename) {
+    public static List<Website> parseFile(String filename)  {
         List<Website> sites = new ArrayList<Website>();
         String url = "", title = "";
         List<String> listOfWords = new ArrayList<String>();
 
         //RL: Removed all null values from scanner to use empty instead
+        Scanner sc = null;
         try {
-            Scanner sc = new Scanner(new File(filename), "UTF-8");
-            while (sc.hasNext()) {
+            sc = new Scanner(new File(filename), "UTF-8");
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't load the given file");
+            e.printStackTrace();
+            return null;
+        }
+
+        Set<String> usedUrls = new HashSet<>(); // Keeps track of url so we don't get duplicate sites
+        while (sc.hasNext()) {
                 String line = sc.nextLine();
                 if (line.startsWith("*PAGE:")) {
                     // create previous website from data gathered
                     if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
+                        if (checkForDublicates(usedUrls, url))
+                            return null;
                         sites.add(new Website(url, title, listOfWords));
                     }
                     // new website starts
@@ -31,26 +39,32 @@ public class FileHelper {
                     if (listOfWords.isEmpty()) {
                         listOfWords = new ArrayList<String>();
                     }
-
-                    /**
-                     * @author Sergiy
-                     */
                     String word = line.replaceAll(" ", "").toLowerCase().trim();
                     if (word.trim().length() != 0) {
                         listOfWords.add(word);
                     }
                 }
             }
-            if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {    // Sergiy & RL
+            if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
+                if (checkForDublicates(usedUrls, url))
+                    return null;
                 sites.add(new Website(url, title, listOfWords));
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't load the given file");
-            e.printStackTrace();
-        }
 
         return sites;
     }
+
+    private static boolean checkForDublicates(Set<String> usedUrls, String url){
+        // Check if site is a duplicate;
+        if (usedUrls.contains(url)){
+            System.out.println("ERROR: Duplicate site when parsing file: " + url);
+            return true;
+        }
+        usedUrls.add(url);
+        return false;
+    }
+
+
 
     /**
      * Author: Rasmus F
