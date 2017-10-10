@@ -6,7 +6,7 @@ public class SearchEngine {
     public static void main(String[] args) {
 
         System.out.println("Welcome to the SearchEngine!");
-        if (args.length <=0) {
+        if (args.length <= 0) {
             System.out.println("Error: Filename is missing");
             return;
         }
@@ -35,10 +35,12 @@ public class SearchEngine {
             long startTime = System.currentTimeMillis();
 
             String line = sc.nextLine();
-            if (!index.validateQuery(line)){
+
+            if (!index.validateQuery(line)) {
                 System.out.println("Query is invalid");
                 continue;
             }
+            line = line.toLowerCase();
             List<Website> foundSites = index.lookup(line);
             for (Website w : foundSites) {
                 System.out.println("Query is found on '" + w.getUrl() + "'");
@@ -46,9 +48,10 @@ public class SearchEngine {
 
             if (foundSites.size() == 0) {
                 System.out.println("No websites matches the query");
+
+                System.out.println("Response time: " + (System.currentTimeMillis() - startTime) + " ns");
+                System.out.println("Please provide the next query word");
             }
-            System.out.println("Response time: " + (System.currentTimeMillis() - startTime) + " ns");
-            System.out.println("Please provide the next query word");
         }
     }
 }
