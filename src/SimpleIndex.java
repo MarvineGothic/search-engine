@@ -42,6 +42,6 @@ public class SimpleIndex implements Index {
 
     @Override
     public Boolean validateQuery(String query) {
-        return query.replaceAll("[^a-zA-Z0-9]", "").length() >= query.length();
+        return query.replaceAll("[^a-zA-Z 0-9]", "").length() >= query.length();
     }
 }
