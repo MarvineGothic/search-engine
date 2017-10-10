@@ -74,5 +74,6 @@ public class ReverseIndex implements Index {
         // Checks if the query contains any non standard letters and numbers
         String strippedWord = query.replaceAll("[^a-zA-Z0-9]", "");
         return strippedWord.length() >= query.length();
+       // return query.replaceAll("[^a-zA-Z0-9]", "").length() >= query.length();    // just one line ;) Serg
     }
 }
