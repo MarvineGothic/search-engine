@@ -32,7 +32,7 @@ public class SearchEngine {
 
         System.out.println("Please provide a query word");
         while (sc.hasNext()) {
-            long startTime = System.nanoTime();
+            long startTime = System.currentTimeMillis();
 
             String line = sc.nextLine();
             if (!index.validateQuery(line)){
@@ -47,7 +47,7 @@ public class SearchEngine {
             if (foundSites.size() == 0) {
                 System.out.println("No websites matches the query");
             }
-            System.out.println("Response time: " + (System.nanoTime() - startTime) + " ns");
+            System.out.println("Response time: " + (System.currentTimeMillis() - startTime) + " ns");
             System.out.println("Please provide the next query word");
         }
     }
