@@ -21,11 +21,14 @@ public class SearchEngine {
 
         Index index;
         System.out.println("Please select a SearchEngine type by typing a number:");
-        System.out.println("1 = ReverseIndex");
+        System.out.println("1 = ReverseHashMapIndex");
+        System.out.println("2 = ReverseTreeMapIndex");
         System.out.println("Otherwise: SimpleIndex");
         String inputNumber = sc.nextLine();
         if (inputNumber.equals("1"))
-            index = new ReverseIndex();
+            index = new ReverseHashMapIndex();
+        else if (inputNumber.equals("2"))
+            index = new ReverseTreeMapIndex();
         else
             index = new SimpleIndex();
         index.build(sites);

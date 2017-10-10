@@ -5,8 +5,8 @@ import java.util.*;
 /**
  * Implements the Index interface using a reverse index method
  */
-public class ReverseIndex implements Index {
-    private Map<String, HashSet<Website>> wordMap;
+abstract public class ReverseIndex implements Index {
+    protected Map<String, HashSet<Website>> wordMap;
 
     /**
      * Test to see if the method works
@@ -16,7 +16,7 @@ public class ReverseIndex implements Index {
         String dir = System.getProperty("user.dir");
         List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-small.txt");
 
-        ReverseIndex index = new ReverseIndex();
+        ReverseIndex index = new ReverseHashMapIndex();
         index.build(sites);
         System.out.println(index.lookup("modern").size());
         List<IndexItem> result = index.lookupIndexItems("district");
@@ -39,9 +39,11 @@ public class ReverseIndex implements Index {
         return itemList;
     }
 
+    abstract void InitializeWordMap();
+
     @Override
     public void build(List<Website> websiteList) {
-        wordMap = new HashMap<>();
+        InitializeWordMap();
         for (Website currentSite : websiteList){
             for (String wordOnSite : currentSite.getWords()){
 //                The statement in this for loop is equivalent to the two lines below, but should be faster.
