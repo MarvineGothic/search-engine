@@ -9,6 +9,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+
+/**
+ * This class measures the time needed for each of the 3 different indexes;
+ *  - ReverseTreeMap, ReverseHashMap and Simple
+ * to scan all the files chosen.
+ */
+
+
 public class Benchmarking {
     public static void main(String[] args) {
         runTimeIndex(new SimpleIndex());
@@ -16,29 +24,20 @@ public class Benchmarking {
         runTimeIndex(new ReverseHashMapIndex());
     }
 
-    public static HashSet<String> loadFile(String filename) {
-        HashSet<String> words = new HashSet<>();
-        Scanner scanner;
-        try {
-            scanner = new Scanner(new File(FileHelper.getDataPath() + filename));
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't load the given file");
-            e.printStackTrace();
-            return null;
-        }
-        while (scanner.hasNext()) {
-            String line = scanner.nextLine();
-            if (!line.startsWith("*PAGE:")) {
-                words.add(line);
-            }
-        }
-        return words;
-    }
+    /**
+     * This method:
+     * 1. loads a file.
+     * 2. scans it.
+     * 3. starts the timer.
+     * 4. looks up every word.
+     * 5. and stops the time when finished.
+     * @param index
+     */
 
     public static void runTimeIndex(Index index) {
         List<Website> sites = FileHelper.loadFile("enwiki-tiny.txt");
-        Set<String> words = loadFile("enwiki-tiny.txt");
+        Set<String> words = FileHelper.loadWordsInFile("enwiki-tiny.txt");
         index.build(sites);
         long startTime = System.nanoTime();
         for (String word : words) {
