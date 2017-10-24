@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Website {
+public class Website implements Comparable<Website>{
     private String title;
     private String url;
     private List<String> words;
@@ -54,5 +54,10 @@ public class Website {
             }
         }
         return wordPositions;
+    }
+
+    @Override
+    public int compareTo(Website o) {
+        return title.compareTo(o.title);
     }
 }
