@@ -7,7 +7,6 @@ import java.util.List;
  *
  */
 
-
 public class IndexMethods {
 
     // testing method
@@ -15,9 +14,9 @@ public class IndexMethods {
         List<List<String>> result;
         String one = "The OR That, nothing OR it OR bla bla. bla OR bla bla bla";
         String two = "  two  ";
-        String three = " one two three four";
-        String four = "President USA OR Queen Danmark OR Chancellor Germany";
-        String string = one;
+        String three = "  one two three  four";
+        String four = " President USA OR Queen Danmark OR Chancellor Germany";
+        String string = four;
 
         IndexMethods im = new IndexMethods();
 
@@ -37,7 +36,7 @@ public class IndexMethods {
     /**
      * modifyQuery modifies the query, to ease use of regular expressions. This is done by the following:
      * 1. converting query words to lower-case
-     * 2. converting any use of punctuation to single space
+     * 2. converting any use of punctuation to single space // TODO: 24-Oct-17 This could become a problem since two words might get treated as a single word
      * 3. converting any longer spaces in queries, e.g. uses of tab or double space to single space
      * 4. removing any space after a query word
      *
@@ -56,9 +55,10 @@ public class IndexMethods {
             String modifiedWord;
             List<String> tempSubList = new ArrayList<>();
             for (String word: subList) {
-                modifiedWord = word.toLowerCase().replaceAll("\\p{Punct}"," ").replaceAll("//+s", " ")
-                ;
-                modifiedWord = modifiedWord.replaceAll("//s+$","");
+                modifiedWord = word.toLowerCase()
+                        .replaceAll("\\p{Punct}"," ")
+                        .replaceAll("\\s+", " ")
+                        .replaceAll("\\s+$|^\\s+","");
                 tempSubList.add((subList.indexOf(word)), modifiedWord);
             }
             tempQuery.add(query.indexOf(subList), tempSubList);
