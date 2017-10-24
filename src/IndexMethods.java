@@ -1,22 +1,70 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
+
+
 public class IndexMethods {
 
     // testing method
     public static void main(String[] args) {
-        String one = "the OR that nothing OR it OR bla bla bla OR bla bla bla";
+        List<List<String>> result;
+        String one = "The OR That, nothing OR it OR bla bla. bla OR bla bla bla";
         String two = "  two  ";
-        String three = " one two  three    four";
+        String three = " one two three four";
         String four = "President USA OR Queen Danmark OR Chancellor Germany";
-        String string = three;
-        for (List<String> list : IndexMethods.splitQuery(string)) {
+        String string = one;
+
+        IndexMethods im = new IndexMethods();
+
+        for (List<String> list : im.splitQuery(string)) {
             for (String s : list) {
                 System.out.println(s);
             }
             System.out.println();
         }
+        result = splitQuery(string);
+        System.out.println(result);
+        result = im.modifyQuery(result);
+        System.out.println(result);
     }
+
+
+    /**
+     * modifyQuery modifies the query, to ease use of regular expressions. This is done by the following:
+     * 1. converting query words to lower-case
+     * 2. converting any use of punctuation to single space
+     * 3. converting any longer spaces in queries, e.g. uses of tab or double space to single space
+     * 4. removing any space after a query word
+     *
+     * The modifyQuery method requires that queries have already been processed by the splitQuery method.
+     *
+     * @param query is a List of OR-statements, that are Lists of AND-statements.
+     * @return returns a List of OR-statements, that are Lists of AND-statements, that have been converted to lower-case.
+     *
+     * When running this method we iterate through the Lists of strings in query, and within that iteration, we iterate through the strings
+     * in those lists.
+     */
+
+    public static List<List<String>> modifyQuery(List<List<String>> query){
+        List<List<String>> tempQuery = new ArrayList<>();
+        for (List<String> subList: query) {
+            String modifiedWord;
+            List<String> tempSubList = new ArrayList<>();
+            for (String word: subList) {
+                modifiedWord = word.toLowerCase().replaceAll("\\p{Punct}"," ").replaceAll("//+s", " ")
+                ;
+                modifiedWord = modifiedWord.replaceAll("//s+$","");
+                tempSubList.add((subList.indexOf(word)), modifiedWord);
+            }
+            tempQuery.add(query.indexOf(subList), tempSubList);
+        }
+        query = tempQuery;
+        return query;
+    }
+
     /**
      * Sergio
      * splitQuery method is processing the query line such that:
