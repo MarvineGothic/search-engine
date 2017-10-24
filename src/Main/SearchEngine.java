@@ -1,11 +1,17 @@
-import java.io.File;
+package Main;
+
+import Main.Indexes.Index;
+import Main.Indexes.ReverseHashMapIndex;
+import Main.Indexes.ReverseTreeMapIndex;
+import Main.Indexes.SimpleIndex;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class SearchEngine {
     public static void main(String[] args) {
 
-        System.out.println("Welcome to the SearchEngine!");
+        System.out.println("Welcome to the Main.SearchEngine!");
         if (args.length <=0) {
             System.out.println("Error: Filename is missing");
             return;
@@ -20,7 +26,7 @@ public class SearchEngine {
         }
 
         Index index;
-        System.out.println("Please select a SearchEngine type by typing a number:");
+        System.out.println("Please select a Main.SearchEngine type by typing a number:");
         System.out.println("1 = ReverseHashMapIndex");
         System.out.println("2 = ReverseTreeMapIndex");
         System.out.println("Otherwise: SimpleIndex");

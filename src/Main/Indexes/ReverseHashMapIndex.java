@@ -1,3 +1,5 @@
+package Main.Indexes;
+
 import java.util.HashMap;
 
 public class ReverseHashMapIndex extends ReverseIndex {

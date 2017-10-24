@@ -1,4 +1,4 @@
-package Stemming;
+package Main.Stemming;
 
 import java.io.File;
 import java.io.FileNotFoundException;

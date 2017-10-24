@@ -1,4 +1,4 @@
-package Stemming;
+package Main.Stemming;
 
 /*
    --------------------------------------------------------------------------------------------------------------------
@@ -43,9 +43,9 @@ package Stemming;
 import java.io.*;
 
 /**
- * Stemming.PortersStemmer, implementing the Porter Stemming Algorithm
+ * Main.Stemming.PortersStemmer, implementing the Porter Main.Stemming Algorithm
  *
- * The Stemming.PortersStemmer class transforms a word into its root form.  The input
+ * The Main.Stemming.PortersStemmer class transforms a word into its root form.  The input
  * word can be provided a character at time (by calling add()), or at once
  * by calling one of the various stem(something) methods.
  */
@@ -355,7 +355,7 @@ class PortersStemmer
         if (b[k] == 'l' && doublec(k) && m() > 1) k--;
     }
 
-    /** Stem the word placed into the Stemming.PortersStemmer buffer through calls to add().
+    /** Stem the word placed into the Main.Stemming.PortersStemmer buffer through calls to add().
      * Returns true if the stemming process resulted in a word different
      * from the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
@@ -366,11 +366,11 @@ class PortersStemmer
         i_end = k+1; i = 0;
     }
 
-    /** Test program for demonstrating the Stemming.PortersStemmer.  It reads text from a
+    /** Test program for demonstrating the Main.Stemming.PortersStemmer.  It reads text from a
      * a list of files, stems each word, and writes the result to standard
      * output. Note that the word stemmed is expected to be in lower case:
-     * forcing lower case must be done outside the Stemming.PortersStemmer class.
-     * Usage: Stemming.PortersStemmer file-name file-name ...
+     * forcing lower case must be done outside the Main.Stemming.PortersStemmer class.
+     * Usage: Main.Stemming.PortersStemmer file-name file-name ...
      */
     public static void main(String[] args)
     {

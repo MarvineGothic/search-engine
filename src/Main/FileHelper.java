@@ -1,3 +1,7 @@
+package Main;
+
+import Main.Website;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -110,7 +114,7 @@ public class FileHelper {
     /**
      * Author: Rasmus F
      * Returns the full path to the data folder (in the root of your project), using the slashes native to your
-     * operating system. For example: "C:\Users\Rasmus\Documents\Dropbox\Kurser\Programming Workshop\SearchEngine\data\"
+     * operating system. For example: "C:\Users\Rasmus\Documents\Dropbox\Kurser\Programming Workshop\Main.SearchEngine\data\"
      * @return Path to data folder
      */
     public static String getDataPath(){

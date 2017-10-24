@@ -1,3 +1,7 @@
+package Main.Indexes;
+
+import Main.Website;
+
 import java.util.*;
 
 public class SimpleIndex implements Index {
@@ -8,7 +12,7 @@ public class SimpleIndex implements Index {
 
     private List<Website> sites;
 
-    SimpleIndex() {
+    public SimpleIndex() {
         this.sites = new ArrayList<>();
     }
 
@@ -26,7 +30,7 @@ public class SimpleIndex implements Index {
     /**
      *
      * @param query Input string. Depending on the implementation it might allow multiple words and AND and OR statements.
-     * @return newList with Website objects that contains query word.
+     * @return newList with Main.Website objects that contains query word.
      */
     @Override
     public List<Website> lookup(String query) {

@@ -1,3 +1,7 @@
+package Main.Indexes;
+
+import Main.Website;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +37,6 @@ public class IndexItem {
         this.wordPositions = new ArrayList<>();
         this.wordPositions.add(wordPosition);
     }
-
-
 
     /**
      * @return The number times the word occurs in the website

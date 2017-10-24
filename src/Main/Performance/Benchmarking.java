@@ -1,3 +1,10 @@
+package Main.Performance;
+import Main.Indexes.Index;
+import Main.Indexes.ReverseHashMapIndex;
+import Main.Indexes.ReverseTreeMapIndex;
+import Main.Indexes.SimpleIndex;
+import Main.FileHelper;
+import Main.Website;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
