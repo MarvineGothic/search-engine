@@ -21,10 +21,7 @@ public class FileHelper {
         Set<String> usedUrls = new HashSet<>(); // Keeps track of url so we don't get duplicate sites
         while (sc.hasNext()) {
             String line = sc.nextLine();
-            if (line.replaceAll("\\s", "").length() != line.length()){
-                System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
-                return null;
-            }
+
             if (line.startsWith("*PAGE:")) {
                 // create previous website from data gathered
                 if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
@@ -32,13 +29,25 @@ public class FileHelper {
                         return null;
                     sites.add(new Website(url, title, listOfWords));
                 }
+
                 // new website starts
+                // Check for multiple words
+                if (line.replaceAll("\\s", "").length() != line.length()){
+                    System.out.println("ERROR: parseFile with multiple words int the URL: " + line);
+                    return null;
+                }
                 url = line.substring(6);
                 title = "";
                 listOfWords =  new ArrayList<String>();
             } else if (title.equals("")) {
+
                 title = line;
             } else {
+                // Check for multiple words
+                if (line.replaceAll("\\s", "").length() != line.length()){
+                    System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
+                    return null;
+                }
                 // and that's a word!
                 if (listOfWords.isEmpty()) {
                     listOfWords = new ArrayList<String>();
@@ -56,6 +65,34 @@ public class FileHelper {
         }
 
         return sites;
+    }
+
+    /**
+     * Returns a HashSet with all the different words in a file.
+     * @param filename The filename to load
+     * @return A set of all words on all the pages of that file.
+     */
+    public static HashSet<String> loadWordsInFile(String filename) {
+        HashSet<String> words = new HashSet<>();
+        Scanner scanner;
+        try {
+            scanner = new Scanner(new File(getDataPath() + filename));
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't load the given file");
+            e.printStackTrace();
+            return null;
+        }
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine();
+            if (line.startsWith("*PAGE:")) {
+                scanner.nextLine(); // Skips the title of the paga as well
+            } else {
+                words.add(line);
+
+            }
+        }
+        return words;
     }
 
     private static boolean checkForDublicates(Set<String> usedUrls, String url){

@@ -36,9 +36,10 @@ class FileHelperTest {
         String path;
         List<Website> sites;
 
+        // We allow for multiple word pr line for the title
         path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "multiTitleLineSites.txt";
         sites = FileHelper.parseFile(path);
-        assertEquals(sites, null);
+        assertNotEquals(sites, null);
 
         path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "multiUrlLineSites.txt";
         sites = FileHelper.parseFile(path);
