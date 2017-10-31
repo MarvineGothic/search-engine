@@ -34,7 +34,7 @@ public class SimpleIndex implements Index {
         // Go through all websites and check if query is present
         for (Website website : sites) {
             // If query is present, add it to list of websites newList
-            if (website.containsWord(query)) {
+            if (website.containsWord(queryWord)) {
                 newList.add(website);
             }
         }
