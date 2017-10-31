@@ -29,7 +29,7 @@ public class SimpleIndex implements Index {
     }
 
     @Override
-    public List<Website> singleLookup(String query) {
+    public List<Website> lookup(String queryWord) {
         List<Website> newList = new ArrayList<>();
         // Go through all websites and check if query is present
         for (Website website : sites) {
