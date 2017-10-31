@@ -31,7 +31,7 @@ public class SearchEngine {
             long startTime = System.currentTimeMillis();
 
             String line = sc.nextLine();
-            List<Website> foundSites = index.lookup(line);
+            List<Website> foundSites = IndexMethods.multiWordQuery(index, line);
             for (Website w : foundSites) {
                 System.out.println("Query is found on '" + w.getUrl() + "'");
             }
