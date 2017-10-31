@@ -21,7 +21,8 @@ public class IndexMethods {
         String three = "  one two three  four";
         String four = " President USA OR Queen Danmark OR Chancellor Germany";
         String five = " or sunrise in modern in geography known as asia minor from small asia in modern OR american state ";
-        String string = five;
+        String six = "OR  Anatolia   OR  Australia OR";
+        String string = six;
 
         IndexMethods im = new IndexMethods();
 
@@ -129,8 +130,8 @@ public class IndexMethods {
         String line = query.trim();
         String[] array = new String[]{line};
 
-        if (line.contains(" OR ")) {
-            array = line.split(" OR ");
+        if (line.contains("OR")) {
+            array = line.split("[\\s]+OR[\\s]+|^[\\s]*OR[\\s]+|[\\s]+OR[\\s]*");
         }
         for (String sentence : array) {
             subList = new ArrayList<>();
@@ -144,7 +145,7 @@ public class IndexMethods {
                     subList.add(word);
                 }
             }
-            if (!result.contains(subList)) {
+            if (!result.contains(subList) && subList.size() > 0) {
                 result.add(subList);
             }
         }
