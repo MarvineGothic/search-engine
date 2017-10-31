@@ -60,8 +60,6 @@ public class IndexTests {
      */
     @Test
     void assertExpectedSearchResults() {
-
-        // TODO: 24-Oct-17 Currently fails due to capital letters in query words
         // A  list of websites to build the indexes
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "expectedQueryTest.txt";
         List<Website> listOfWebsites = FileHelper.parseFile(path);
