@@ -77,14 +77,15 @@ public class IndexMethods {
     /**
      * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
      * NOTE: This method also uses modifiesQuery on the given query
-     * @param index The Index that will perform the singleLookup on the search words
+     *
+     * @param index          The Index that will perform the singleLookup on the search words
      * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
      *                       treated as an OR condiiton
      * @return A list of websites matching at least one of the or conditions of the query.
      */
     public static List<Website> multiWordQuery(Index index, String multiWordWuery) {
         // TODO: 31-Oct-17 This method can be improved by making a dictionary with all words in the query and
-        // TODO: 31-Oct-17 corresponding search results so the same single queary word is not looked up multiple times
+        // TODO: 31-Oct-17 corresponding search results so the same single query word is not looked up multiple times
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
 
         Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
@@ -126,11 +127,11 @@ public class IndexMethods {
     public static List<List<String>> splitQuery(String query) {
         ArrayList<List<String>> result = new ArrayList<>();
         ArrayList<String> subList;
-        String line = query.trim();
-        String[] array = new String[]{line};
+        //String line = query.trim();
+        String[] array = new String[]{query};
 
-        if (line.contains(" OR ")) {
-            array = line.split(" OR ");
+        if (query.matches(".*?\\s+OR\\s+.*?")) {
+            array = query.split("\\s+OR\\s+");
         }
         for (String sentence : array) {
             subList = new ArrayList<>();
@@ -139,12 +140,12 @@ public class IndexMethods {
                 temp = sentence.split(" ");
             }
             for (String words : temp) {
-                if (!words.matches("")) {
+                if (!words.matches("") && words.length() > 0) {
                     String word = words.trim();
                     subList.add(word);
                 }
             }
-            if (!result.contains(subList)) {
+            if (!result.contains(subList) && subList.size() != 0) {
                 result.add(subList);
             }
         }
