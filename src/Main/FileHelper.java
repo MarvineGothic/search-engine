@@ -90,7 +90,7 @@ public class FileHelper {
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
             if (line.startsWith("*PAGE:")) {
-                scanner.nextLine(); // Skips the title of the paga as well
+                scanner.nextLine(); // Skips the title of the page as well
             } else {
                 words.add(line);
 

@@ -66,8 +66,8 @@ abstract public class ReverseIndex implements Index {
     }
 
     @Override
-    public List<Website> lookup(String query) {
-        HashSet<Website> sites = wordMap.getOrDefault(query, new HashSet<>());
+    public List<Website> singleLookup(String queryWord) {
+        HashSet<Website> sites = wordMap.getOrDefault(queryWord, new HashSet<>());
         return new ArrayList<>(sites);
     }
 

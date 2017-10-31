@@ -1,5 +1,6 @@
 package Main.Indexes;
 
+import Main.IndexMethods;
 import Main.Website;
 
 import java.util.*;
@@ -27,17 +28,12 @@ public class SimpleIndex implements Index {
         this.sites = websiteList;
     }
 
-    /**
-     *
-     * @param query Input string. Depending on the implementation it might allow multiple words and AND and OR statements.
-     * @return newList with Main.Website objects that contains query word.
-     */
     @Override
-    public List<Website> lookup(String query) {
+    public List<Website> singleLookup(String queryWord) {
         List<Website> newList = new ArrayList<>();
         // Go through all websites and check if word is present
         for (Website website : sites) {
-            if (website.containsWord(query)) {
+            if (website.containsWord(queryWord)) {
                 newList.add(website);
             }
         }
