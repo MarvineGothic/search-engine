@@ -1,19 +1,20 @@
 package Main.Performance;
+
+import Main.FileHelper;
 import Main.Indexes.Index;
 import Main.Indexes.ReverseHashMapIndex;
 import Main.Indexes.ReverseTreeMapIndex;
 import Main.Indexes.SimpleIndex;
-import Main.FileHelper;
 import Main.Website;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+
+import java.util.List;
+import java.util.Set;
 
 
 /**
- * This class measures the time needed for each of the 3 different indexes;
- *  - ReverseTreeMap, ReverseHashMap and Simple
- * to scan all the files chosen.
+ * This class measures the time needed to scan all the files chosen
+ * for each of the 3 different indexes;
+ * ReverseTreeMap, ReverseHashMap and Simple
  */
 
 
@@ -28,22 +29,34 @@ public class Benchmarking {
     /**
      * This method:
      * 1. loads a file.
-     * 2. scans it.
-     * 3. starts the timer.
-     * 4. looks up every word.
-     * 5. and stops the time when finished.
-     * @param index
+     * 2. scans it for words.
+     * 3. runs through the file for the word "and" to warm up.
+     * 4. starts the timer.
+     * 5. looks up every word.
+     * 6. and stops the time when finished.
+     * 7. print out the result.
+     *
+     * @param index The index to check
      */
 
     public static void runTimeIndex(Index index) {
+        //Loading the file and the words
         List<Website> sites = FileHelper.loadFile("enwiki-tiny.txt");
         Set<String> words = FileHelper.loadWordsInFile("enwiki-tiny.txt");
         index.build(sites);
+        //Adding a for-loop to warm up the test
+        for (int i = 0; i < 1000; i++) {
+            for (String word : words) {
+                index.lookup("and");
+            }
+        }
+        //Running the actual test
         long startTime = System.nanoTime();
         for (String word : words) {
             index.lookup(word);
         }
         long elapsedTime = System.nanoTime() - startTime;
+        //printing result
         System.out.println("Took "
                 + (elapsedTime / 1000) + " microseconds for "
                 + index.getClass().getSimpleName());
