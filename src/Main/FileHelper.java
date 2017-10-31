@@ -1,6 +1,7 @@
 package Main;
 
 import Main.Website;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +12,7 @@ public class FileHelper {
         List<Website> sites = new ArrayList<Website>();
         String url = "", title = "";
         List<String> listOfWords = new ArrayList<String>();
+        UrlValidator urlValidator = new UrlValidator();
 
         //RL: Removed all null values from scanner to use empty instead
         Scanner sc = null;
