@@ -128,7 +128,7 @@ public class IndexMethods {
         for (int i = 0; i < splitQueries.size(); i++) {
             List<String> andSeperatedSearchWords = splitQueries.get(i);
 
-            // TODO: 31-Oct-17 Improve speed by using longest word here
+            // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
             Set<Website> sites = new HashSet<>(index.lookup(andSeperatedSearchWords.get(0)));
             for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
                 String queryWord = andSeperatedSearchWords.get(j);
