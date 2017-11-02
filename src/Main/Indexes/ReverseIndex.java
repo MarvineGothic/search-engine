@@ -13,21 +13,7 @@ import java.util.*;
 abstract public class ReverseIndex implements Index {
     protected Map<String, HashSet<Website>> wordMap;
 
-    /**
-     * Test to see if the method works
-     * @param args (no args needed)
-     */
     public static void main(String args[]){
-        String dir = System.getProperty("user.dir");
-        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-small.txt");
-
-        ReverseIndex index = new ReverseHashMapIndex();
-        index.build(sites);
-        System.out.println(index.lookup("modern").size());
-        List<IndexItem> result = index.lookupIndexItems("district");
-        for (IndexItem item : result){
-            System.out.println(item);
-        }
     }
 
     /**
@@ -79,7 +65,7 @@ abstract public class ReverseIndex implements Index {
     @Override
     public Boolean validateQuery(String query) {
         // Checks if the query contains any non standard letters and numbers
-        String strippedWord = query.replaceAll("[^a-zA-Z0-9]", "");
+        String strippedWord = query.replaceAll("[^a-zA-Z 0-9]", "");
         return strippedWord.length() >= query.length();
        // return query.replaceAll("[^a-zA-Z0-9]", "").length() >= query.length();    // just one line ;) Serg
     }
