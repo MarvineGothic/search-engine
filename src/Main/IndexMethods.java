@@ -21,7 +21,8 @@ public class IndexMethods {
         String three = "  one two three  four";
         String four = " President USA OR Queen Danmark OR Chancellor Germany";
         String five = " or sunrise in modern in geography known as asia minor from small asia in modern OR american state ";
-        String string = five;
+        String six = "OR  Anatolia   OR  Australia OR";
+        String string = six;
 
         IndexMethods im = new IndexMethods();
 
@@ -97,11 +98,11 @@ public class IndexMethods {
 
 //            Get the query result for the first and-separated-search-words. This contains ALL sites matching the
 //            and-separated-search-words (and probably also some additional ones).
-            sites.addAll(index.singleLookup(andSeperatedSearchWords.get(0)));
+            sites.addAll(index.lookup(andSeperatedSearchWords.get(0)));
 
             // Loop over the rest of the search words
             for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
-                List<Website> nextSites = index.singleLookup(andSeperatedSearchWords.get(j));
+                List<Website> nextSites = index.lookup(andSeperatedSearchWords.get(j));
 //                An intersection between sites and nextSites ensures to remove any pages not contained in all sites
 //                matching at least one single word query.
                 sites.retainAll(nextSites);

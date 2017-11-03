@@ -74,7 +74,7 @@ public class SimpleIndexTest {
         // Test for query word Mango - Should match website 1 in webSiteList1 and website 2 in webSiteList1 and webSiteList2
         for (List<Website> listOfWebsites: listOfWebsiteLists){
             testIndex.build(listOfWebsites);
-            assertEquals(, testIndex.lookup("mango"), "List failed: "+listOfWebsites);
+            assertEquals(listOfWebsites, testIndex.lookup("mango"), "List failed: "+listOfWebsites);
 
         }
 
