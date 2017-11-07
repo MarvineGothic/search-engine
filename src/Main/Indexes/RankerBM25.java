@@ -14,10 +14,11 @@ public class RankerBM25 extends RankerIDF {
             this.totalAmountOfWords += site.getWords().size();
         }
     }
-
+        // I added tfplus instead of tf (by the formula from slides)
+        // so this method becomes actually bm25
     @Override
     public long getScore(String word, Website website, Index index) {
-        return idf(word, index) * tf(word, website);
+        return idf(word, index) * tfplus(word, website);            
     }
 
     private long tfplus(String word, Website website) {
@@ -27,6 +28,6 @@ public class RankerBM25 extends RankerIDF {
         int dl = website.getWords().size();
         int avdl = totalAmountOfWords / sites.size();
 
-        return (long) (tf * (k + 1) / (k * (1 - b + b * dl / avdl + tf)));
+        return (long) (tf * (k + 1) / (k * (1 - b + b * dl / avdl) + tf));  // just needed this parenthesis to be correct
     }
 }
