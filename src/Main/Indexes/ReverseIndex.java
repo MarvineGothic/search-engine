@@ -30,7 +30,7 @@ abstract public class ReverseIndex implements Index {
         return itemList;
     }
 
-    public abstract void InitializeWordMap();
+    protected abstract void InitializeWordMap();
 
     @Override
     public void build(List<Website> websiteList) {
