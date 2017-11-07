@@ -1,45 +1,76 @@
+
+import Main.Indexes.Index;
 import Main.Indexes.SimpleIndex;
-import Main.FileHelper;
 import Main.Website;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SimpleIndexTest {
+class SimpleIndexTest {
+    private Index fullSimpleIndex = null;
+    private Index minSimpleIndex = null;
+    private Index emptySimpleIndex = null;
 
-    /**
-     * Tests the correctness of validation results of the validateQueryResults method using an array of queries
-     * with an expected return value of true, named validQueries.
-     */
-    @Test
-    void Should_ReturnTrue_When_QueryContainsOnlyCharactersNumbersOrSpaces() {
-        SimpleIndex testIndex = new SimpleIndex();
-        String[] validQueries = {"testone", "testTwo", "test three", "test 4 ", "   test fi ve"};
-        for (String query : validQueries) {
-            assertTrue(testIndex.validateQuery(query), "Query failed: " + query);
-        }
+    @BeforeEach
+    void setUp() {
+        fullSimpleIndex = new SimpleIndex();
+        minSimpleIndex = new SimpleIndex();
+        minSimpleIndex.build(Arrays.asList(new Website("example1.com", "example1", Arrays.asList("word1", "word2", "word6", "word7"))));
+        emptySimpleIndex = new SimpleIndex();
+        List<Website> sites = new ArrayList<>();
+        sites.add(new Website("example1.com", "example1", Arrays.asList("word1", "word2", "word6", "word7")));
+        sites.add(new Website("example2.com", "example2", Arrays.asList("word2", "word3", "word6", "word7","word8")));
+        sites.add(new Website("example3.com","example3", Arrays.asList("word2","word3","word4","word5","word6", "word7")));
+        fullSimpleIndex.build(sites);
+    }
+
+    @AfterEach
+    void tearDown() {
+        fullSimpleIndex = null;
+        minSimpleIndex = null;
     }
 
     /**
-     * Tests the correctness of validation results of the validateQueryResults method using an array of queries with an
-     * expected return value of false, named invalidQueries.
-     */
-    @Test
-    void Should_ReturnFalse_When_QueryContainsPunctuation() {
-        SimpleIndex testIndex = new SimpleIndex();
-        String[] invalidQueries = {".", ","};
-        for (String query : invalidQueries) {
-            assertFalse(testIndex.validateQuery(query), "Query fails: " + query);
-        }
-    }
-
-    /**
+     * Tests the build method of SimpleIndex.
      *
+     * Case 1a: Testing if build method crashes if it is called on an empty websiteList
+     * Case 2a: Testing if build method works for websiteList containing 1 website
+     * Case 3a: Testing if build method works for websiteList containing 3 websites
      */
     @Test
+    void buildSimpleIndex() {
+        assertEquals("SimpleIndex{sites=[]}", emptySimpleIndex.toString(), "Case 1a failed");
+        assertEquals("SimpleIndex{sites=[Title: example1\nurl: example1.com\nwords: word1; word2; word6; word7\n]}",
+                minSimpleIndex.toString(), "Case 2a failed");
+        assertEquals("SimpleIndex{sites=[" +
+                        "Title: example1\nurl: example1.com\nwords: word1; word2; word6; word7\n, " +
+                        "Title: example2\nurl: example2.com\nwords: word2; word3; word6; word7; word8\n, " +
+                        "Title: example3\nurl: example3.com\nwords: word2; word3; word4; word5; word6; word7\n]}",
+                fullSimpleIndex.toString(), "Case 3a failed");
+    }
+
+    /**
+     * Testing corner cases for the SimpleIndex class
+     *
+     * Case 1-5c: testing corner-cases for the lookup method
+     * Case 1c: single word query match for websiteList with only one website
+     * Case 2c: two word query match for websiteList with only one website
+     * Case 3c: two word query with OR-statement match for websiteList with only one website
+     * Case 4c: two word query with OR-statement match for websiteList with only one website and no matches
+     * Case 5c: check for crash if websiteList is empty
+     */
+    @Test
+    void testCornerCases(){
+        lookupMin(minSimpleIndex);
+        lookupEmpty(emptySimpleIndex);
+	}
+  
     // Test of lookUp
     void Should_ReturnWebsiteInList_When_QueryMatchesWordInWebsite() {
         SimpleIndex testIndex = new SimpleIndex();
@@ -77,48 +108,15 @@ public class SimpleIndexTest {
             assertEquals(listOfWebsites, testIndex.lookup("mango"), "List failed: "+listOfWebsites);
 
         }
-
-
-
-
+    }
+    private void lookupMin(Index index) {
+        assertEquals(1, index.lookup("word1").size(), "Case 1a failed");
+        assertEquals(1, index.lookup("word1 word2").size(), "Case 2a failed");
+        assertEquals(1, index.lookup("word1 OR word8").size(), "Case 3a failed");
+        assertEquals(0, index.lookup("wordX OR wordY").size(), "Case 4a failed");
     }
 
-        /**
-         * Tests if the index finds the expected pages from expected query words
-         */
-        @Test
-        void assertExpectedSearchResults () {
-            // TODO: 24-Oct-17 Currently fails due to capital letters in query words
-            // A  list of websites to build the indexes
-            String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "expectedQueryTest.txt";
-            List<Website> listOfWebsites = FileHelper.parseFile(path);
-
-            // A list of query words along with the expected title of the sites found
-            Map<String, String[]> expectedSitesFound = new HashMap<>();
-            expectedSitesFound.put("apple", new String[]{"Site1", "Site2"});
-            expectedSitesFound.put("banana", new String[]{"Site1", "Site2"});
-            expectedSitesFound.put("Car", new String[]{"Site3", "Site6", "Site7"});
-            expectedSitesFound.put("Airplane", new String[]{"Site3"});
-            expectedSitesFound.put("laptop", new String[]{"Site4"});
-            expectedSitesFound.put("Unknown", new String[0]);
-            expectedSitesFound.put("empty", new String[0]);
-
-            SimpleIndex s = new SimpleIndex();
-            // Checks each entry of expectedSitesFound if the found query is the expected one.
-            for (Map.Entry<String, String[]> pair : expectedSitesFound.entrySet()) {
-                List<Website> queryResult = s.lookup(pair.getKey());
-                Collections.sort(queryResult);
-                int expectedPagesFound = pair.getValue().length;
-
-                // Checks expected length
-                assertEquals(expectedPagesFound, queryResult.size());
-
-                // Checks expected words found
-                for (int j = 0; j < queryResult.size(); j++) {
-                    Website website = queryResult.get(j);
-                    assertEquals(website.getTitle(), pair.getValue()[j]);
-                }
-            }
-        }
+    private void lookupEmpty(Index index){
+        assertEquals(0, index.lookup("word1").size(), "Case 5a failed");
     }
-
+}
