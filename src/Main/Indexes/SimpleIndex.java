@@ -7,15 +7,19 @@ import java.util.*;
 
 public class SimpleIndex implements Index {
 
-    public static void main(String[] args) {
-
-    }
+    public static void main(String[] args) {}
 
     private List<Website> sites;
 
     public SimpleIndex() {
         this.sites = new ArrayList<>();
     }
+
+
+    /**
+     * Returns a list of the indexed websites
+     */
+
 
     /**
      *
@@ -51,6 +55,9 @@ public class SimpleIndex implements Index {
         return query.replaceAll("[^a-zA-Z 0-9]", "").length() >= query.length();
     }
 
+    /**
+     * Method used for test purposes to compare expected and actual sites results
+     */
     @Override
     public String toString() {
         return "SimpleIndex{" +

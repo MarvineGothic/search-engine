@@ -35,11 +35,9 @@ public class IndexTests {
     void tearDown() {
         Indexes = null;
     }
-
-
+    
     /**
      * Tests the lookup method of each type of Index: SimpleIndex, ReverseHashMapIndex and ReverseTreeMapIndex.
-     * The FileHelper class rids data input of duplicate words in websites, so there are no tests for duplicate words.
      *
      * Case 1-4b: Single query word
      * Asserts correctness of search using one query word with 1, 2, 3 and 0 matches.
@@ -66,7 +64,7 @@ public class IndexTests {
      * while the two return 1
      */
     @Test
-    void lookupSimpleIndex() {
+    void lookupIndex() {
         lookupFull(Indexes);
     }
 
@@ -101,7 +99,7 @@ public class IndexTests {
      * A variety of commonly used punctuation
      */
     @Test
-    void TestValidateQuery() {
+    void validateQuery() {
         for (Index index:Indexes) {
             // Define valid query cases
             String[] validQueries = {"word1", "testTwo", "test three", "test 4 ", "   test  fi ve"};

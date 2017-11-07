@@ -18,12 +18,6 @@ class SimpleIndexTest {
     private Index emptySimpleIndex = null;
 
     @BeforeEach
-    /**
-     * Instantiates three indexes used for testing:
-     * fullSimpleIndex: SimpleIndex with a number of websites all containing a variety of different words
-     * minSimpleIndex: SimpleIndex with 1 website
-     * emptySimpleIndex: SimpleIndex without websites for testing corner-cases
-     */
     void setUp() {
         fullSimpleIndex = new SimpleIndex();
         minSimpleIndex = new SimpleIndex();
