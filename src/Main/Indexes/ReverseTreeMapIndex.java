@@ -5,7 +5,7 @@ import java.util.TreeMap;
 public class ReverseTreeMapIndex extends ReverseIndex {
 
     @Override
-    void InitializeWordMap(){
+    protected void InitializeWordMap(){
         wordMap = new TreeMap<>();
     }
 }

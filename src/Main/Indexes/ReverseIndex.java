@@ -13,21 +13,7 @@ import java.util.*;
 abstract public class ReverseIndex implements Index {
     protected Map<String, HashSet<Website>> wordMap;
 
-    /**
-     * Test to see if the method works
-     * @param args (no args needed)
-     */
     public static void main(String args[]){
-        String dir = System.getProperty("user.dir");
-        List<Website> sites = FileHelper.parseFile(dir + File.separator + "data" + File.separator + "enwiki-small.txt");
-
-        ReverseIndex index = new ReverseHashMapIndex();
-        index.build(sites);
-        System.out.println(index.lookup("modern").size());
-        List<IndexItem> result = index.lookupIndexItems("district");
-        for (IndexItem item : result){
-            System.out.println(item);
-        }
     }
 
     /**
@@ -44,7 +30,7 @@ abstract public class ReverseIndex implements Index {
         return itemList;
     }
 
-    abstract void InitializeWordMap();
+    protected abstract void InitializeWordMap();
 
     @Override
     public void build(List<Website> websiteList) {
@@ -79,8 +65,22 @@ abstract public class ReverseIndex implements Index {
     @Override
     public Boolean validateQuery(String query) {
         // Checks if the query contains any non standard letters and numbers
-        String strippedWord = query.replaceAll("[^a-zA-Z0-9]", "");
+        String strippedWord = query.replaceAll("[^a-zA-Z 0-9]", "");
         return strippedWord.length() >= query.length();
        // return query.replaceAll("[^a-zA-Z0-9]", "").length() >= query.length();    // just one line ;) Serg
+    }
+
+
+    /**
+     * Method used for test purposes to compare expected and actual wordMap results
+     */
+    @Override
+    public String toString() {
+        return "Mapped values=" + wordMap;
+    }
+
+
+    public Map<String, HashSet<Website>> getWordMap() {
+        return wordMap;
     }
 }

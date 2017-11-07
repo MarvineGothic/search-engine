@@ -1,17 +1,20 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Website implements Comparable<Website>{
     private String title;
     private String url;
     private List<String> words;
+    private HashSet<String> setOfwords;
 
     public Website(String url, String title, List<String> words) {
         this.url = url;
         this.title = title;
         this.words = words;
+        setOfwords = new HashSet<>(words);
     }
 
     public List<String> getWords() {
@@ -27,7 +30,7 @@ public class Website implements Comparable<Website>{
     }
 
     public Boolean containsWord(String word) {
-        return words.contains(word);
+        return setOfwords.contains(word);
     }
 
     /**
@@ -60,6 +63,6 @@ public class Website implements Comparable<Website>{
 
     @Override
     public int compareTo(Website o) {
-        return title.compareTo(o.title);
+        return url.compareTo(o.url);
     }
 }

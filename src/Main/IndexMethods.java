@@ -81,10 +81,43 @@ public class IndexMethods {
      *
      * @param index          The Index that will perform the singleLookup on the search words
      * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
-     *                       treated as an OR condiiton
+     *                       treated as an OR condition.
      * @return A list of websites matching at least one of the or conditions of the query.
      */
     public static List<Website> multiWordQuery(Index index, String multiWordWuery) {
+        List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
+
+        Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
+        // We loop over each OR separated list of query words
+        for (int i = 0; i < splitQueries.size(); i++) {
+            List<String> andSeperatedSearchWords = splitQueries.get(i);
+
+            // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
+            Set<Website> sites = new HashSet<>(index.lookup(andSeperatedSearchWords.get(0)));
+            for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
+                String queryWord = andSeperatedSearchWords.get(j);
+                Set<Website> validSites = new HashSet<>();
+                for (Website site : sites)  {
+                    if (site.containsWord(queryWord))
+                        validSites.add(site);
+                }
+                sites = validSites;
+            }
+            searchResults.addAll(sites);
+        }
+        return new ArrayList<>(searchResults);
+    }
+
+    /**
+     * NOTE This method is identical to multiWordQuery but uses a different algorithm
+     * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
+     * NOTE: This method also uses modifiesQuery on the given query
+     * @param index The Index that will perform the singleLookup on the search words
+     * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
+     *                       treated as an OR condiiton
+     * @return A list of websites matching at least one of the or conditions of the query.
+     */
+    public static List<Website> multiWordQuery2(Index index, String multiWordWuery) {
         // TODO: 31-Oct-17 This method can be improved by making a dictionary with all words in the query and
         // TODO: 31-Oct-17 corresponding search results so the same single query word is not looked up multiple times
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
