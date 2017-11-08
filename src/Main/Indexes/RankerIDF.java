@@ -18,11 +18,11 @@ public class RankerIDF implements IRanker {
         return idf(word, index) * tf(word, website);
     }
 
-    protected long tf(String word, Website website) {
+    public long tf(String word, Website website) {
         return Collections.frequency(website.getWords(), word);
     }
 
-    protected long idf(String word, Index index) {
+    public long idf(String word, Index index) {
         double d = sites.size();
         double n = index.lookup(word).size();
 
