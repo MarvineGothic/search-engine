@@ -45,7 +45,7 @@ public class FileHelper {
                 // Check for multiple words
                 if (line.replaceAll("\\s", "").length() != line.length() || !urlIsValid(url)) { // added !urlIsValid here for now -Atoe-
                     System.out.println("ERROR: parseFile with multiple words int the URL: " + line);
-                    return null;
+                    break;
                 }
                 url = line.substring(6);
                 title = "";
@@ -56,7 +56,7 @@ public class FileHelper {
                 }
             } else {
                 // Check for multiple words
-                if (line.replaceAll("\\s", "").length() != line.length()) {
+                if (!line.startsWith("*PAGE:") && line.replaceAll("\\s", "").length() != line.length()) {
                     System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
                     return null;
                 }
@@ -159,7 +159,7 @@ public class FileHelper {
             return true;
         } else
             System.out.println("Invalid URL: " + URL);
-        return false;
+            return false;
     }
 
     /**

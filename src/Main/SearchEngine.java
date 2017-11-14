@@ -1,9 +1,6 @@
 package Main;
 
-import Main.Indexes.Index;
-import Main.Indexes.ReverseHashMapIndex;
-import Main.Indexes.ReverseTreeMapIndex;
-import Main.Indexes.SimpleIndex;
+import Main.Indexes.*;
 
 import java.util.List;
 import java.util.Scanner;
@@ -25,6 +22,7 @@ public class SearchEngine {
         }
         Index index = new ReverseHashMapIndex();
         index.build(sites);
+        IRanker ranker = new RankerIDF(sites);
 
         System.out.println("Please provide a query word");
         while (sc.hasNext()) {
