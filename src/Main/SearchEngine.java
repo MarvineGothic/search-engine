@@ -22,6 +22,7 @@ public class SearchEngine {
         }
         Index index = new ReverseHashMapIndex();
         index.build(sites);
+
         IRanker ranker = new RankerBM25(sites);
 
         System.out.println("Please provide a query word");

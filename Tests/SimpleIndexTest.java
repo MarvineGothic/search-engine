@@ -70,53 +70,15 @@ class SimpleIndexTest {
         lookupMin(minSimpleIndex);
         lookupEmpty(emptySimpleIndex);
 	}
-  
-    // Test of lookUp
-    void Should_ReturnWebsiteInList_When_QueryMatchesWordInWebsite() {
-        SimpleIndex testIndex = new SimpleIndex();
 
-        // Empty websiteList
-        List<Website> websiteList0 = Arrays.asList();
-
-        // websiteList with one website
-        List<Website> webSiteList1 = Arrays.asList(
-                new Website("standardTestSite1.org", "testTitle1", Arrays.asList("apple", "pear", "mango")));
-
-        // websiteList with two websites
-        List<Website> webSiteList2 = Arrays.asList(
-                new Website("standardTestSite1.org", "testTitle1", Arrays.asList("apple", "pear", "mango")),
-                new Website("standardTestSite2.org", "testTitle2", Arrays.asList("apple", "mango", "plum")));
-
-        // websiteList with three websites
-        List<Website> webSiteList3 = Arrays.asList(
-                new Website("standardTestSite1.org", "testTitle1", Arrays.asList("apple", "pear", "mango")),
-                new Website("standardTestSite2.org", "testTitle2", Arrays.asList("apple", "mango", "plum")),
-                new Website("standardTestSite3.org", "testTitle3", Arrays.asList("apple", "mandarin", "clementine")));
-
-        // List of all websiteLists
-        List<List<Website>> listOfWebsiteLists = Arrays.asList(websiteList0, webSiteList1, webSiteList2, webSiteList3);
-
-        // Test for query word Apple - Should match all websites in all websiteLists
-        for (List<Website> listOfWebsites: listOfWebsiteLists) {
-            testIndex.build(listOfWebsites);
-            assertEquals(listOfWebsites ,testIndex.lookup("apple"), "List failed: "+listOfWebsites );
-            }
-
-        // Test for query word Mango - Should match website 1 in webSiteList1 and website 2 in webSiteList1 and webSiteList2
-        for (List<Website> listOfWebsites: listOfWebsiteLists){
-            testIndex.build(listOfWebsites);
-            assertEquals(listOfWebsites, testIndex.lookup("mango"), "List failed: "+listOfWebsites);
-
-        }
-    }
     private void lookupMin(Index index) {
-        assertEquals(1, index.lookup("word1").size(), "Case 1a failed");
-        assertEquals(1, index.lookup("word1 word2").size(), "Case 2a failed");
-        assertEquals(1, index.lookup("word1 OR word8").size(), "Case 3a failed");
-        assertEquals(0, index.lookup("wordX OR wordY").size(), "Case 4a failed");
+        assertEquals(1, index.lookup("word1").size(), "Case 1c failed");
+        assertEquals(1, index.lookup("word1 word2").size(), "Case 2c failed");
+        assertEquals(1, index.lookup("word1 OR word8").size(), "Case 3c failed");
+        assertEquals(0, index.lookup("wordX OR wordY").size(), "Case 4c failed");
     }
 
     private void lookupEmpty(Index index){
-        assertEquals(0, index.lookup("word1").size(), "Case 5a failed");
+        assertEquals(0, index.lookup("word1").size(), "Case 5c failed");
     }
 }

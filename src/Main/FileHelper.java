@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileHelper {
-    private static final Pattern CAPITALLETTERS = Pattern.compile("[A-Z]");
+    private static final Pattern CAPITALLETTERS = Pattern.compile("[A-Z0-9]");
     private static UrlValidator urlValidator;
     private static String illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
 
@@ -43,20 +43,24 @@ public class FileHelper {
 
                 // new website starts
                 // Check for multiple words
+                url = line.substring(6);
                 if (line.replaceAll("\\s", "").length() != line.length() || !urlIsValid(url)) { // added !urlIsValid here for now -Atoe-
                     System.out.println("ERROR: parseFile with multiple words int the URL: " + line);
                     return null;
                 }
-                url = line.substring(6);
+
                 title = "";
                 listOfWords = new ArrayList<String>();
-            } else if (title.equals("") && titleIsValid(title)) { //added titleIsValid here for now -atoe-
-                if (titleIsValid(title)) {
+            } else if (title.equals("")) { //added titleIsValid here for now -atoe-
+                if (titleIsValid(line)) {
                     title = line;
+                } else {
+                    System.out.println("ERROR: Invalid Title: " + line);
+                    return null;
                 }
             } else {
                 // Check for multiple words
-                if (line.replaceAll("\\s", "").length() != line.length()) {
+                if (!line.startsWith("*PAGE:") && line.replaceAll("\\s", "").length() != line.length()) {
                     System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
                     return null;
                 }
@@ -155,11 +159,10 @@ public class FileHelper {
         String[] schemes = {"http", "https", "ftp"};
         urlValidator = new UrlValidator(schemes);
         if (urlValidator.isValid(URL) && !URL.contains(illegalCharacters)) {
-            System.out.println("Valid URL");
             return true;
         } else
             System.out.println("Invalid URL: " + URL);
-        return false;
+            return false;
     }
 
     /**
@@ -171,16 +174,18 @@ public class FileHelper {
      * @return Returns whether the title is a title with uppercase or not.
      */
     public static boolean titleIsValid(String title) {
+        if (title.length() == 0)
+            return false;
         String firstLetter = String.valueOf(title.charAt(0));
         Matcher ttl = CAPITALLETTERS.matcher(firstLetter);
         if(!title.contains(illegalCharacters) && ttl.matches()){
-            System.out.println("titleIsValid passed the title");
+//            System.out.println("titleIsValid passed the title");
+            return true;
         } else {
-            System.out.println("titleIsValid didn't pass the title: " + title);
+//            System.out.println("titleIsValid didn't pass the title: " + title);
+            return false;
         }
-        return !title.contains(illegalCharacters) && ttl.matches();
     }
-
 
     /**
      * atoe
@@ -190,11 +195,6 @@ public class FileHelper {
      * @return Returns whether the word is a word or not.
      */
     public static boolean wordIsValid(String word) {
-        if(word.contains(illegalCharacters)){
-            System.out.println("Word is invalid: " + word);
-        } else {
-            System.out.println("Word is valid");
-        }
         return !word.contains(illegalCharacters);
     }
 
