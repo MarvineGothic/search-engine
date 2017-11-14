@@ -1,11 +1,10 @@
 package Main;
 
+import Main.Indexes.IRanker;
 import Main.Indexes.Index;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.jws.WebService;
+import java.util.*;
 
 /**
  *
@@ -84,28 +83,44 @@ public class IndexMethods {
      *                       treated as an OR condition.
      * @return A list of websites matching at least one of the or conditions of the query.
      */
-    public static List<Website> multiWordQuery(Index index, String multiWordWuery) {
+    public static List<Website> multiWordQuery(Index index, String multiWordWuery, IRanker ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
 
-        Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
+//        Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
+        Map<Website, Long> allRanks = new HashMap<>();
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
             List<String> andSeperatedSearchWords = splitQueries.get(i);
 
             // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
-            Set<Website> sites = new HashSet<>(index.lookup(andSeperatedSearchWords.get(0)));
+            
+            Map<Website, Long> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
+            for (Website site : index.lookup(andSeperatedSearchWords.get(0))){
+                currentRanks.put(site, ranker.getScore(andSeperatedSearchWords.get(0), site, index));
+            }
             for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
                 String queryWord = andSeperatedSearchWords.get(j);
-                Set<Website> validSites = new HashSet<>();
-                for (Website site : sites)  {
-                    if (site.containsWord(queryWord))
-                        validSites.add(site);
+                List<Website> sitesToRemove = new ArrayList<>();
+                for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()){
+                    Website site = mapEntry.getKey();
+                    long currentRank = mapEntry.getValue();
+                    if (site.containsWord(queryWord)) {
+                        currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
+                    } else
+                        sitesToRemove.add(site);
                 }
-                sites = validSites;
+                sitesToRemove.forEach(currentRanks::remove);
             }
-            searchResults.addAll(sites);
+            for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
+                Website site = mapEntry.getKey();
+                long currentRank = mapEntry.getValue();
+                long newRank = Math.max(allRanks.getOrDefault(site, (long) 0), currentRank);
+                allRanks.put(site, newRank);
+            }
         }
-        return new ArrayList<>(searchResults);
+//        Set<Map.Entry<Website, Long>> as = allRanks.entrySet();
+        int a = Arrays.asList(allRanks.);
+
     }
 
     /**
