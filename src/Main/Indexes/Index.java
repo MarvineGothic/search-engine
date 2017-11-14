@@ -34,4 +34,6 @@ public interface Index {
      * @return true if the query is valid
      */
     Boolean validateQuery(String query);
+
+
 }

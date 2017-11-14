@@ -22,14 +22,14 @@ public class SearchEngine {
         }
         Index index = new ReverseHashMapIndex();
         index.build(sites);
-        IRanker ranker = new RankerIDF(sites);
+
+        IRanker ranker = new RankerBM25(sites);
 
         System.out.println("Please provide a query word");
         while (sc.hasNext()) {
             long startTime = System.currentTimeMillis();
-
             String line = sc.nextLine();
-            List<Website> foundSites = IndexMethods.multiWordQuery(index, line);
+            List<Website> foundSites = IndexMethods.multiWordQuery(index, line, ranker);
             for (Website w : foundSites) {
                 System.out.println("Query is found on '" + w.getUrl() + "'");
             }
