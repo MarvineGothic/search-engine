@@ -1,7 +1,5 @@
 import Main.IndexMethods;
-import Main.Indexes.Index;
-import Main.Indexes.ReverseHashMapIndex;
-import Main.Indexes.SimpleIndex;
+import Main.Indexes.*;
 import Main.Website;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QueryHandlerTest {
     private IndexMethods indexMethods = null;
     private Index idx;
+    private IRanker ranker;
+
     @BeforeEach
     void setUp() {
         List<Website> sites = new ArrayList<>();
@@ -27,53 +27,54 @@ class QueryHandlerTest {
         sites.add(new Website("7.com","example7", Arrays.asList("Denmark", "Germany")));
         idx = new SimpleIndex();
         idx.build(sites);
+        ranker = new RankerBM25(sites);
         indexMethods = new IndexMethods();
     }
 
     @Test
     void testSingleWord() {
-        assertEquals(1, IndexMethods.multiWordQuery(idx, "word1").size());
-        assertEquals("example1", IndexMethods.multiWordQuery(idx,"word1").get(0).getTitle());
-        assertEquals(2, IndexMethods.multiWordQuery(idx,"word2").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx, "word1", ranker).size());
+        assertEquals("example1", IndexMethods.multiWordQuery(idx,"word1", ranker).get(0).getTitle());
+        assertEquals(2, IndexMethods.multiWordQuery(idx,"word2", ranker).size());
     }
 
     @Test
     void testMultipleWords() {
-        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 word2").size());
-        assertEquals(1, IndexMethods.multiWordQuery(idx,"word3 word4").size());
-        assertEquals(1, IndexMethods.multiWordQuery(idx,"word4 word3 word5").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 word2", ranker).size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx,"word3 word4",ranker).size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx,"word4 word3 word5", ranker).size());
         // checks if only all words are in the website
-        assertEquals(0, IndexMethods.multiWordQuery(idx,"word1 word3").size());
-        assertEquals(0, IndexMethods.multiWordQuery(idx,"word4 word1 word5").size());
+        assertEquals(0, IndexMethods.multiWordQuery(idx,"word1 word3", ranker).size());
+        assertEquals(0, IndexMethods.multiWordQuery(idx,"word4 word1 word5", ranker).size());
     }
 
     @Test
     void testORQueries() {
-        assertEquals(3, IndexMethods.multiWordQuery(idx,"word2 OR word3").size());
-        assertEquals(2, IndexMethods.multiWordQuery(idx,"word1 OR word4").size());
+        assertEquals(3, IndexMethods.multiWordQuery(idx,"word2 OR word3", ranker).size());
+        assertEquals(2, IndexMethods.multiWordQuery(idx,"word1 OR word4", ranker).size());
         // Corner case: Does code remove duplicates?
-        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 OR word1").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 OR word1", ranker).size());
     }
     @Test
     void testMultipleORQueries() {
-        assertEquals(4, IndexMethods.multiWordQuery(idx,"word2 OR word3 OR word5 OR word6").size());
-        assertEquals(2, IndexMethods.multiWordQuery(idx,"word1 OR word4 OR ").size());
+        assertEquals(4, IndexMethods.multiWordQuery(idx,"word2 OR word3 OR word5 OR word6", ranker).size());
+        assertEquals(2, IndexMethods.multiWordQuery(idx,"word1 OR word4 OR ", ranker).size());
         // Corner case: Does code remove duplicates?
-        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 OR word1 OR OR word1").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx,"word1 OR word1 OR OR word1", ranker).size());
     }
 
     // Test for problematic input
     @Test
     void testCornerCases() {
     // spaces and punctuation
-        assertEquals(1, IndexMethods.multiWordQuery(idx, " word1,").size());
-        assertEquals(0, IndexMethods.multiWordQuery(idx, " ").size());
-        assertEquals(0, IndexMethods.multiWordQuery(idx, ". ").size());
-        assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx, " word1,", ranker).size());
+        assertEquals(0, IndexMethods.multiWordQuery(idx, " ", ranker).size());
+        assertEquals(0, IndexMethods.multiWordQuery(idx, ". ", ranker).size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ", ranker).size());
         // mistaken query
         System.out.println("Since we use toLowerCase() we can't look up for words with capital letters");
         //assertEquals(1, IndexMethods.multiWordQuery(idx, " OR OROROR OR ").size());
-        assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR Germany").size());
+        assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR Germany", ranker).size());
 
     }
 

@@ -3,8 +3,8 @@ package Main;
 import Main.Indexes.IRanker;
 import Main.Indexes.Index;
 
-import javax.jws.WebService;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -86,22 +86,27 @@ public class IndexMethods {
     public static List<Website> multiWordQuery(Index index, String multiWordWuery, IRanker ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
 
-//        Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
         Map<Website, Long> allRanks = new HashMap<>();
+
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
             List<String> andSeperatedSearchWords = splitQueries.get(i);
+            Map<Website, Long> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
 
             // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
-            
-            Map<Website, Long> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
-            for (Website site : index.lookup(andSeperatedSearchWords.get(0))){
-                currentRanks.put(site, ranker.getScore(andSeperatedSearchWords.get(0), site, index));
+            String initialSearchWord = andSeperatedSearchWords.get(0);
+            for (Website site : index.lookup(initialSearchWord)) {
+                currentRanks.put(site, ranker.getScore(initialSearchWord, site, index));
             }
+
+            // For each other searchword than the initial search words, we check the initial sites found if these
+            // sites also contains the rest of the search words.
             for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
                 String queryWord = andSeperatedSearchWords.get(j);
                 List<Website> sitesToRemove = new ArrayList<>();
-                for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()){
+
+
+                for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
                     Website site = mapEntry.getKey();
                     long currentRank = mapEntry.getValue();
                     if (site.containsWord(queryWord)) {
@@ -118,16 +123,17 @@ public class IndexMethods {
                 allRanks.put(site, newRank);
             }
         }
-//        Set<Map.Entry<Website, Long>> as = allRanks.entrySet();
-        int a = Arrays.asList(allRanks.);
-
+        return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
+                compareTo(x.getValue())).map(Map.Entry::getKey).collect(
+                Collectors.toList());
     }
 
     /**
      * NOTE This method is identical to multiWordQuery but uses a different algorithm
      * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
      * NOTE: This method also uses modifiesQuery on the given query
-     * @param index The Index that will perform the singleLookup on the search words
+     *
+     * @param index          The Index that will perform the singleLookup on the search words
      * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
      *                       treated as an OR condiiton
      * @return A list of websites matching at least one of the or conditions of the query.

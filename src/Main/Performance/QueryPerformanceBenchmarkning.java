@@ -2,7 +2,9 @@ package Main.Performance;
 
 import Main.FileHelper;
 import Main.IndexMethods;
+import Main.Indexes.IRanker;
 import Main.Indexes.Index;
+import Main.Indexes.RankerBM25;
 import Main.Indexes.ReverseHashMapIndex;
 import Main.Website;
 import bb.util.Benchmark;
@@ -22,20 +24,23 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
     private Index index;
     private List<String> queryList;
     private boolean methodType;
+    private IRanker ranker;
 
     /**
      * Creates a new instance for performance testing.
      * @param iterations How many lookups should be performed when (each  of) the performance call is executed
      * @param index The index that performs the lookups
      * @param queryList A list of queries that lookups should be done from (in order)
-     *                  (which may contain more than one word and OR statements).
+ *                  (which may contain more than one word and OR statements).
      * @param methodType if true, use method "multiWordQuery" otherwise "multiWordQuery2"
+     * @param ranker
      */
-    public QueryPerformanceBenchmarkning(int iterations, Index index, List<String> queryList, boolean methodType) {
+    public QueryPerformanceBenchmarkning(int iterations, Index index, List<String> queryList, boolean methodType, IRanker ranker) {
         this.iterations = iterations;
         this.index = index;
         this.queryList = queryList;
         this.methodType = methodType;
+        this.ranker = ranker;
     }
 
     /**
@@ -76,6 +81,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         List<Website> sites = FileHelper.loadFile(filename);
         Index index = new ReverseHashMapIndex();
         index.build(sites);
+        IRanker ranker = new RankerBM25(sites);
         System.out.println("Comparing multiWordQuery using wordsPerQuery: " + wordsPerQuery + ", iterations: " + iterations);
 
         List<String> queryList = generateQueryList(wordsInFile, wordsPerQuery, iterations);
@@ -84,8 +90,9 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
 //        Benchmarking multiWordQuery1
 //        --------------------------------------------------------------------------------------------------------------
 
-        Callable callable1 = new QueryPerformanceBenchmarkning(iterations,index,queryList, true);
-        Callable callable2 = new QueryPerformanceBenchmarkning(iterations,index,queryList, false);
+
+        Callable callable1 = new QueryPerformanceBenchmarkning(iterations,index,queryList, true, ranker);
+        Callable callable2 = new QueryPerformanceBenchmarkning(iterations,index,queryList, false, ranker);
 
         double elapsedTime1 = -1;
         double elapsedTime2 = -1;
@@ -144,9 +151,10 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
     public Integer call() throws Exception {
         for (int i = 0; i < iterations; i++) {
             if (methodType)
-                IndexMethods.multiWordQuery(index, queryList.get(i));
+                IndexMethods.multiWordQuery(index, queryList.get(i), ranker);
             else
                 IndexMethods.multiWordQuery2(index, queryList.get(i));
+            // TODO: 14-Nov-17 multiWordQuery2 should implement ranking also to properly compare
         }
         return 0;
     }
