@@ -1,7 +1,5 @@
-import searchengine.Indexes.Index;
-import searchengine.Indexes.ReverseHashMapIndex;
-import searchengine.Indexes.ReverseTreeMapIndex;
-import searchengine.Indexes.SimpleIndex;
+import searchengine.IndexMethods;
+import searchengine.Indexes.*;
 import searchengine.Website;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IndexTests {
     private List<Index> Indexes = null;
+    private IRanker ranker;
 
     @BeforeEach
     void setUp() {
@@ -26,6 +25,7 @@ public class IndexTests {
         Indexes.add(new SimpleIndex());
         Indexes.add(new ReverseHashMapIndex());
         Indexes.add(new ReverseTreeMapIndex());
+        ranker = new RankerBM25(sites);
         for (Index index: Indexes) {
             index.build(sites);
         }
@@ -70,25 +70,35 @@ public class IndexTests {
 
     private void lookupFull(List<Index> indexList) {
         for (Index index:indexList) {
-        // Tests each Index type using 1 query word
-        assertEquals(1, index.lookup("word1").size(), "Case 1b failed for "+index);
-        assertEquals(2, index.lookup("word3").size(), "Case 2b failed for "+index);
-        assertEquals(3, index.lookup("word2").size(), "Case 3b failed for "+index);
-        assertEquals(0, index.lookup("wordX").size(), "Case 4b failed for "+index);
+            // Tests each Index type using 1 query word
+            assertEquals(1, index.lookup("word1").size(), "Case 1b failed for "+index);
+            assertEquals(2, index.lookup("word3").size(), "Case 2b failed for "+index);
+            assertEquals(3, index.lookup("word2").size(), "Case 3b failed for "+index);
+            assertEquals(0, index.lookup("wordX").size(), "Case 4b failed for "+index);
 
-        // Tests each Index type using multiple query words
-        assertEquals(1, index.lookup("word1 word2").size(), "Case 5b failed for "+index);
-        assertEquals(2, index.lookup("word2 word3").size(), "Case 6b failed for "+index);
-        assertEquals(3, index.lookup("word2 word6").size(), "Case 7b failed for "+index);
-        assertEquals(0, index.lookup("word1 word4").size(), "Case 8b failed for "+index);
-        assertEquals(1, index.lookup("word1 word2 word7").size(), "Case 9b failed for "+index);
+            // Tests each Index type using multiple query words
+            assertEquals(1, IndexMethods.multiWordQuery(index,"word1 word2", ranker).size(),
+                    "Case 5b failed for "+index);
+            assertEquals(2, IndexMethods.multiWordQuery(index,"word2 word3", ranker).size(),
+                    "Case 6b failed for "+index);
+            assertEquals(3, IndexMethods.multiWordQuery(index,"word2 word6", ranker).size(),
+                    "Case 7b failed for "+index);
+            assertEquals(0, IndexMethods.multiWordQuery(index,"word1 word4", ranker).size(),
+                    "Case 8b failed for "+index);
+            assertEquals(1, IndexMethods.multiWordQuery(index,"word1 word2 word7", ranker).size(),
+                    "Case 9b failed for "+index);
 
-        // Tests each Index type using varying number of query words and OR statements
-        assertEquals(2, index.lookup("word1 OR word8").size(), "Case 10b failed "+index);
-        assertEquals(2, index.lookup("word3 OR word4").size(), "Case 11b failed "+index);
-        assertEquals(3, index.lookup("word1 word2 OR word3").size(), "Case 12b failed "+index);
-        assertEquals(1, index.lookup("word1 word7 OR wordX").size(), "Case 13b failed "+index);
-        assertEquals(2, index.lookup("word1 OR word8 OR wordX").size(), "Case 13b failed "+index);
+            // Tests each Index type using varying number of query words and OR statements
+            assertEquals(2, IndexMethods.multiWordQuery(index,"word1 OR word8", ranker).size(),
+                    "Case 10b failed "+index);
+            assertEquals(2, IndexMethods.multiWordQuery(index,"word3 OR word4", ranker).size(),
+                    "Case 11b failed "+index);
+            assertEquals(3, IndexMethods.multiWordQuery(index,"word1 word2 OR word3", ranker).size(),
+                    "Case 12b failed "+index);
+            assertEquals(1, IndexMethods.multiWordQuery(index,"word1 word7 OR wordX", ranker).size(),
+                    "Case 13b failed "+index);
+            assertEquals(2, IndexMethods.multiWordQuery(index,"word1 OR word8 OR wordX", ranker).size(),
+                    "Case 13b failed "+index);
         }
     }
 }
