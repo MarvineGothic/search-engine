@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IndexTests {
     private List<Index> Indexes = null;
-    private IRanker ranker;
+    private IRanker ranker = new NoRanker();
 
     @BeforeEach
     void setUp() {
@@ -25,7 +25,6 @@ public class IndexTests {
         Indexes.add(new SimpleIndex());
         Indexes.add(new ReverseHashMapIndex());
         Indexes.add(new ReverseTreeMapIndex());
-        ranker = new RankerBM25(sites);
         for (Index index: Indexes) {
             index.build(sites);
         }

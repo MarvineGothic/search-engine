@@ -40,7 +40,7 @@ public class FileHelper {
                 // create previous website from data gathered
                 if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
                     if (checkForDublicates(usedUrls, url)) {
-                        System.out.println("Duplicate website");
+                        System.out.println("ERROR: Duplicate site when parsing file: " + url);
                     } else {
                         sites.add(new Website(url, title, listOfWords));
                     }
@@ -83,7 +83,7 @@ public class FileHelper {
             }
             if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
                 if (checkForDublicates(usedUrls, url)) {
-                    System.out.println("Duplicate website");
+                    System.out.println("ERROR: Duplicate site when parsing file: " + url);
                 } else if (websiteIsUsable) {
                     sites.add(new Website(url, title, listOfWords));
                 }
@@ -123,7 +123,6 @@ public class FileHelper {
     private static boolean checkForDublicates(Set<String> usedUrls, String url) {
         // Check if site is a duplicate;
         if (usedUrls.contains(url)) {
-            System.out.println("ERROR: Duplicate site when parsing file: " + url);
             return true;
         }
         usedUrls.add(url);
