@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 /**
  * Author: Rasmus F
- * This class can stem a textfile encoded with utf-8 encoding
+ * This class can stem a text file encoded with utf-8 encoding
  */
 public class Stemmer {
 

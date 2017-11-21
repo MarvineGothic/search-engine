@@ -8,13 +8,13 @@ public class Website implements Comparable<Website>{
     private String title;
     private String url;
     private List<String> words;
-    private HashSet<String> setOfwords;
+    private HashSet<String> setOfWords;
 
     public Website(String url, String title, List<String> words) {
         this.url = url;
         this.title = title;
         this.words = words;
-        setOfwords = new HashSet<>(words);
+        setOfWords = new HashSet<>(words);
     }
 
     public List<String> getWords() {
@@ -30,7 +30,7 @@ public class Website implements Comparable<Website>{
     }
 
     public Boolean containsWord(String word) {
-        return setOfwords.contains(word);
+        return setOfWords.contains(word);
     }
 
     /**

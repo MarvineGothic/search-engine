@@ -123,6 +123,7 @@ public class IndexMethods {
                 allRanks.put(site, newRank);
             }
         }
+        // The line below selects a all the Websites to a List and sorts them according to the key (score).
         return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
                 compareTo(x.getValue())).map(Map.Entry::getKey).collect(
                 Collectors.toList());
@@ -134,36 +135,58 @@ public class IndexMethods {
      * NOTE: This method also uses modifiesQuery on the given query
      *
      * @param index          The Index that will perform the singleLookup on the search words
-     * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
-     *                       treated as an OR condiiton
+     * @param multiWordQuery The query to match. each whitespace is treated as an AND condition and each " OR " is
+     *                       treated as an OR condition
      * @return A list of websites matching at least one of the or conditions of the query.
      */
-    public static List<Website> multiWordQuery2(Index index, String multiWordWuery) {
+    public static List<Website> multiWordQuery2(Index index, String multiWordQuery, IRanker ranker) {
         // TODO: 31-Oct-17 This method can be improved by making a dictionary with all words in the query and
         // TODO: 31-Oct-17 corresponding search results so the same single query word is not looked up multiple times
-        List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
 
-        Set<Website> searchResults = new HashSet<>(); // This is the all the sites matching the full query
+        List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
+
+        Map<Website, Long> allRanks = new HashMap<>();
+
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
-            List<String> andSeperatedSearchWords = splitQueries.get(i);
+            List<String> andSeparatedSearchWords = splitQueries.get(i);
+            Map<Website, Long> currentRanks = new HashMap<>(); // Ranks for the current list of AND separated words.
 
-            Set<Website> sites = new HashSet<>(); // This is the sites that matches all the and-separated-search-words
-
-//            Get the query result for the first and-separated-search-words. This contains ALL sites matching the
-//            and-separated-search-words (and probably also some additional ones).
-            sites.addAll(index.lookup(andSeperatedSearchWords.get(0)));
-
-            // Loop over the rest of the search words
-            for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
-                List<Website> nextSites = index.lookup(andSeperatedSearchWords.get(j));
-//                An intersection between sites and nextSites ensures to remove any pages not contained in all sites
-//                matching at least one single word query.
-                sites.retainAll(nextSites);
+            // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
+            String initialSearchWord = andSeparatedSearchWords.get(0);
+            for (Website site : index.lookup(initialSearchWord)) {
+                currentRanks.put(site, ranker.getScore(initialSearchWord, site, index));
             }
-            searchResults.addAll(sites);
+
+            // For each other search word than the initial search words, we check the initial sites found if these
+            // sites also contains the rest of the search words.
+            for (int j = 1; j < andSeparatedSearchWords.size(); j++) {
+                String queryWord = andSeparatedSearchWords.get(j);
+                List<Website> sitesToRemove = new ArrayList<>();
+
+                Set<Website> currentSites = new HashSet<>(index.lookup(initialSearchWord));
+
+                for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
+                    Website site = mapEntry.getKey();
+                    long currentRank = mapEntry.getValue();
+                    if (currentSites.contains(site)) {
+                        currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
+                    } else
+                        sitesToRemove.add(site);
+                }
+                sitesToRemove.forEach(currentRanks::remove);
+            }
+            for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
+                Website site = mapEntry.getKey();
+                long currentRank = mapEntry.getValue();
+                long newRank = Math.max(allRanks.getOrDefault(site, (long) 0), currentRank);
+                allRanks.put(site, newRank);
+            }
         }
-        return new ArrayList<>(searchResults);
+        // The line below selects a all the Websites to a List and sorts them according to the key (score).
+        return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
+                compareTo(x.getValue())).map(Map.Entry::getKey).collect(
+                Collectors.toList());
     }
 
     /**

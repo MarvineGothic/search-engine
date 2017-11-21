@@ -91,29 +91,4 @@ public class IndexTests {
         assertEquals(2, index.lookup("word1 OR word8 OR wordX").size(), "Case 13b failed "+index);
         }
     }
-
-    /**
-     * Testing if the validateQuery method creates false positives or false negatives. Cases tested for false negatives:
-     * Spaces, tabs and numbers.
-     * Cases tested for false positives:
-     * A variety of commonly used punctuation
-     */
-    @Test
-    void validateQuery() {
-        for (Index index:Indexes) {
-            // Define valid query cases
-            String[] validQueries = {"word1", "testTwo", "test three", "test 4 ", "   test  fi ve"};
-            // Define invalid query cases
-            String[] invalidQueries = {".",",",":","?","!","/","[","]","{","}","(",")",};
-            // Test valid query cases for each Index type
-            for (String query : validQueries) {
-                assertTrue(index.validateQuery(query), "Test failed for query: " + query + " using the "+index);
-            }
-            //Test invalid query cases for each Index type
-            for (String query : invalidQueries) {
-                assertFalse(index.validateQuery(query), "Test failed for query: " + query + " using the "+index);
-            }
-        }
-    }
-
 }

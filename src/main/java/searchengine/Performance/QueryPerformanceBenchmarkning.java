@@ -1,5 +1,6 @@
 package searchengine.Performance;
 
+import bb.util.Benchmark;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.IRanker;
@@ -7,7 +8,6 @@ import searchengine.Indexes.Index;
 import searchengine.Indexes.RankerBM25;
 import searchengine.Indexes.ReverseHashMapIndex;
 import searchengine.Website;
-import bb.util.Benchmark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,11 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
 
     /**
      * Creates a new instance for performance testing.
+     *
      * @param iterations How many lookups should be performed when (each  of) the performance call is executed
-     * @param index The index that performs the lookups
-     * @param queryList A list of queries that lookups should be done from (in order)
- *                  (which may contain more than one word and OR statements).
+     * @param index      The index that performs the lookups
+     * @param queryList  A list of queries that lookups should be done from (in order)
+     *                   (which may contain more than one word and OR statements).
      * @param methodType if true, use method "multiWordQuery" otherwise "multiWordQuery2"
      * @param ranker
      */
@@ -91,8 +92,8 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
 //        --------------------------------------------------------------------------------------------------------------
 
 
-        Callable callable1 = new QueryPerformanceBenchmarkning(iterations,index,queryList, true, ranker);
-        Callable callable2 = new QueryPerformanceBenchmarkning(iterations,index,queryList, false, ranker);
+        Callable callable1 = new QueryPerformanceBenchmarkning(iterations, index, queryList, true, ranker);
+        Callable callable2 = new QueryPerformanceBenchmarkning(iterations, index, queryList, false, ranker);
 
         double elapsedTime1 = -1;
         double elapsedTime2 = -1;
@@ -105,13 +106,12 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
             benchmark2 = new Benchmark(callable2);
             elapsedTime1 = benchmark1.getMean();
             elapsedTime2 = benchmark2.getMean();
-            System.out.printf("multiWordQuery:  {avr=%s stderr=%s} units of microseconds\n", benchmark1.getMean()/1000, benchmark1.getSd()/1000);
-            System.out.printf("multiWordQuery2: {avr=%s stderr=%s} units of microseconds\n", benchmark2.getMean()/1000, benchmark2.getSd()/1000);
+            System.out.printf("multiWordQuery:  {avr=%s stderr=%s} units of microseconds\n", benchmark1.getMean() / 1000, benchmark1.getSd() / 1000);
+            System.out.printf("multiWordQuery2: {avr=%s stderr=%s} units of microseconds\n", benchmark2.getMean() / 1000, benchmark2.getSd() / 1000);
             System.out.println("--------------");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
         if (elapsedTime1 < elapsedTime2)
@@ -145,6 +145,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
 
     /**
      * This method performs the code to evaluate performance on. It uses the inputs provided in the constructor.
+     *
      * @return Will always return 0 (should not be used for anything)
      * @throws Exception If something goes wrong it throws an exception.
      */
@@ -153,7 +154,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
             if (methodType)
                 IndexMethods.multiWordQuery(index, queryList.get(i), ranker);
             else
-                IndexMethods.multiWordQuery2(index, queryList.get(i));
+                IndexMethods.multiWordQuery2(index, queryList.get(i), ranker);
             // TODO: 14-Nov-17 multiWordQuery2 should implement ranking also to properly compare
         }
         return 0;

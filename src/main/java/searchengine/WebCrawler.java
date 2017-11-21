@@ -194,9 +194,9 @@ public class WebCrawler {
 
     /**
      * Author: Rasmus F
-     * strips a word to remove illigal characters (fx ,.'?!)
+     * strips a word to remove illegal characters (fx ,.'?!)
      * It also removes foreign words such as é, à or á.
-     * Finaly it removes some webpages
+     * Finally it removes some webpages
      * @param word:  Word to be stripped
      * @return stripped word
      */
@@ -302,7 +302,7 @@ public class WebCrawler {
 
             // Stop if to many interruptions errors
             if (interruptetSleepCount > loopcount / 5){
-                System.out.println("Eroor: Stopped crawling. To many interruptions");
+                System.out.println("Error: Stopped crawling. To many interruptions");
                 break;
             }
             // TODO Retry some of the failed links again until they have been tried lets say 5 times.
