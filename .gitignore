@@ -1,10 +1,10 @@
 
-server/JavaDoc/
+JavaDoc/
 
-# server/data/
-!server/data/enwiki-medium.txt
-!server/data/enwiki-small.txt
-!server/data/enwiki-tiny.txt
+# data/
+!data/enwiki-medium.txt
+!data/enwiki-small.txt
+!data/enwiki-tiny.txt
 
 
 # Compiled class file
@@ -39,28 +39,28 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-server/.idea/**/workspace.xml
-server/.idea/**/tasks.xml
-server/.idea/dictionaries
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
 
 # Sensitive or high-churn files:
-server/.idea/**/dataSources/
-server/.idea/**/dataSources.ids
-server/.idea/**/dataSources.xml
-server/.idea/**/dataSources.local.xml
-server/.idea/**/sqlDataSources.xml
-server/.idea/**/dynamic.xml
-server/.idea/**/uiDesigner.xml
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
 
 # Gradle:
-server/.idea/**/gradle.xml
-server/.idea/**/libraries
+.idea/**/gradle.xml
+.idea/**/libraries
 
 # CMake
-server/cmake-build-debug/
+cmake-build-debug/
 
 # Mongo Explorer plugin:
-server/.idea/**/mongoSettings.xml
+.idea/**/mongoSettings.xml
 
 ## File-based project format:
 *.iws
@@ -68,10 +68,10 @@ server/.idea/**/mongoSettings.xml
 ## Plugin-specific files:
 
 # IntelliJ
-server/out/
+out/
 
 # mpeltonen/sbt-idea plugin
-server/.idea_modules/
+.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
