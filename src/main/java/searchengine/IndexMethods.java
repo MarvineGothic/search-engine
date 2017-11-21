@@ -86,12 +86,12 @@ public class IndexMethods {
     public static List<Website> multiWordQuery(Index index, String multiWordWuery, IRanker ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
 
-        Map<Website, Double> allRanks = new HashMap<>();
+        Map<Website, Float> allRanks = new HashMap<>();
 
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
             List<String> andSeperatedSearchWords = splitQueries.get(i);
-            Map<Website, Double> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
+            Map<Website, Float> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
 
             // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
             String initialSearchWord = andSeperatedSearchWords.get(0);
@@ -106,9 +106,9 @@ public class IndexMethods {
                 List<Website> sitesToRemove = new ArrayList<>();
 
 
-                for (Map.Entry<Website, Double> mapEntry : currentRanks.entrySet()) {
+                for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
                     Website site = mapEntry.getKey();
-                    double currentRank = mapEntry.getValue();
+                    float currentRank = mapEntry.getValue();
                     if (site.containsWord(queryWord)) {
                         currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
                     } else
@@ -116,10 +116,10 @@ public class IndexMethods {
                 }
                 sitesToRemove.forEach(currentRanks::remove);
             }
-            for (Map.Entry<Website, Double> mapEntry : currentRanks.entrySet()) {
+            for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
                 Website site = mapEntry.getKey();
-                Double currentRank = mapEntry.getValue();
-                Double newRank = Math.max(allRanks.getOrDefault(site, (double) 0), currentRank);
+                Float currentRank = mapEntry.getValue();
+                Float newRank = Math.max(allRanks.getOrDefault(site, (float) 0), currentRank);
                 allRanks.put(site, newRank);
             }
         }
@@ -145,12 +145,12 @@ public class IndexMethods {
 
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
 
-        Map<Website, Long> allRanks = new HashMap<>();
+        Map<Website, Float> allRanks = new HashMap<>();
 
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
             List<String> andSeparatedSearchWords = splitQueries.get(i);
-            Map<Website, Long> currentRanks = new HashMap<>(); // Ranks for the current list of AND separated words.
+            Map<Website, Float> currentRanks = new HashMap<>(); // Ranks for the current list of AND separated words.
 
             // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
             String initialSearchWord = andSeparatedSearchWords.get(0);
@@ -166,9 +166,9 @@ public class IndexMethods {
 
                 Set<Website> currentSites = new HashSet<>(index.lookup(initialSearchWord));
 
-                for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
+                for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
                     Website site = mapEntry.getKey();
-                    long currentRank = mapEntry.getValue();
+                    Float currentRank = mapEntry.getValue();
                     if (currentSites.contains(site)) {
                         currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
                     } else
@@ -176,10 +176,10 @@ public class IndexMethods {
                 }
                 sitesToRemove.forEach(currentRanks::remove);
             }
-            for (Map.Entry<Website, Long> mapEntry : currentRanks.entrySet()) {
+            for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
                 Website site = mapEntry.getKey();
-                long currentRank = mapEntry.getValue();
-                long newRank = Math.max(allRanks.getOrDefault(site, (long) 0), currentRank);
+                Float currentRank = mapEntry.getValue();
+                Float newRank = Math.max(allRanks.getOrDefault(site, (float) 0), currentRank);
                 allRanks.put(site, newRank);
             }
         }
