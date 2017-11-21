@@ -34,7 +34,6 @@ public class SearchEngine extends ResourceConfig {
     private static IRanker currentRanker; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
 
     public SearchEngine() {
-
         packages("searchengine");
     }
 
@@ -48,7 +47,7 @@ public class SearchEngine extends ResourceConfig {
      * @param args command line arguments.
      */
     public static void main(String[] args) {
-        System.out.println("Welcome to the searchengine!");
+        System.out.println("Welcome to the Search Engine!");
 
         if (args.length != 1) {
             System.out.println("Error: Filename is missing");
@@ -80,7 +79,7 @@ public class SearchEngine extends ResourceConfig {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
     public List<Website> search(@Context HttpServletResponse response, @QueryParam("query") String query) {
-        // Set crossdomain access. Otherwise your browser will complain that it does not want
+        // Set cross domain access. Otherwise your browser will complain that it does not want
         // to load code from a different location.
         response.setHeader("Access-Control-Allow-Origin", "*");
 

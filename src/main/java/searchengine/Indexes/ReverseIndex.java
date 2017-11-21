@@ -56,20 +56,6 @@ abstract public class ReverseIndex implements Index {
     }
 
     /**
-     * A valid query is a string that only contains numeric symbols 0-9 or letters a-z (both small and large letters).
-     * @param query The query to test
-     * @return True if query is valid
-     */
-    @Override
-    public Boolean validateQuery(String query) {
-        // Checks if the query contains any non standard letters and numbers
-        String strippedWord = query.replaceAll("[^a-zA-Z 0-9]", "");
-        return strippedWord.length() >= query.length();
-       // return query.replaceAll("[^a-zA-Z0-9]", "").length() >= query.length();    // just one line ;) Serg
-    }
-
-
-    /**
      * Method used for test purposes to compare expected and actual wordMap results
      */
     @Override

@@ -45,16 +45,6 @@ public class SimpleIndex implements Index {
     }
 
     /**
-     * A valid query is a string that only contains numeric symbols 0-9 or letters a-z (both small and large letters).
-     * @param query The query to test
-     * @return True if query is valid
-     */
-    @Override
-    public Boolean validateQuery(String query) {
-        return query.replaceAll("[^a-zA-Z 0-9]", "").length() >= query.length();
-    }
-
-    /**
      * Method used for test purposes to compare expected and actual sites results
      */
     @Override

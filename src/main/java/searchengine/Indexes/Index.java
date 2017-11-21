@@ -5,7 +5,7 @@ import searchengine.Website;
 import java.util.List;
 
 /**
- * This interface can preprocesses a list of website objects and can returns a list of website
+ * This interface can pre-processes a list of website objects and can returns a list of website
  objects matching a query provided as its input
  * Author: Rasmus F
  */
@@ -23,13 +23,4 @@ public interface Index {
      * @return A collection of matching websites
      */
     List<Website> lookup(String query);
-
-    /**
-     * This methods checks if the query input is valid to use for the lookup method.
-     * @param query The query to test
-     * @return true if the query is valid
-     */
-    Boolean validateQuery(String query);
-
-
 }

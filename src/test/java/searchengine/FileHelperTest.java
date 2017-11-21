@@ -1,5 +1,5 @@
-import searchengine.FileHelper;
-import searchengine.Website;
+package searchengine;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileHelperTest {
 
     /**
-     * Test if the searchengine.FileHelper skips sites that does not contain a title or any words
+     * Test if the Searchengine skips sites that does not contain a title or any words
      */
     @Test
     void fileHelperIncompleteSitesTest() {
@@ -21,7 +21,7 @@ class FileHelperTest {
     }
 
     /**
-     * Test if the searchengine.FileHelper returns null when trying to load files with duplicate websites
+     * Test if the Searchengine returns null when trying to load files with duplicate websites
      */
     @Test
     void fileHelperDuplicateSitesTest() {
@@ -31,7 +31,7 @@ class FileHelperTest {
     }
 
     /**
-     * Test if the searchengine.FileHelper returns null (error) if a webpage has more more words on a line
+     * Test if the Searchengine returns null (error) if a webpage has more more words on a line
      */
     @Test
     void fileHelperSingleWordsTest() {
