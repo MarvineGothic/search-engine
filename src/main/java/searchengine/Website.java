@@ -1,5 +1,7 @@
 package searchengine;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +15,12 @@ public class Website implements Comparable<Website>{
     public Website(String url, String title, List<String> words) {
         this.url = url;
         this.title = title;
+
+        // process word the same way that queries are processed.
+        List<List<String>> wrappedWords = new ArrayList<>();
+        wrappedWords.add(words);
+        wrappedWords = IndexMethods.modifyQuery(wrappedWords);
+        words = wrappedWords.get(0);
         this.words = words;
         setOfWords = new HashSet<>(words);
     }

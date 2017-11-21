@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QueryHandlerTest {
     private IndexMethods indexMethods = null;
     private Index idx;
-    private IRanker ranker;
+    private IRanker ranker = new NoRanker();
 
     @BeforeEach
     void setUp() {
@@ -27,7 +27,6 @@ class QueryHandlerTest {
         sites.add(new Website("7.com","example7", Arrays.asList("Denmark", "Germany")));
         idx = new SimpleIndex();
         idx.build(sites);
-        ranker = new RankerBM25(sites);
         indexMethods = new IndexMethods();
     }
 
@@ -71,11 +70,7 @@ class QueryHandlerTest {
         assertEquals(0, IndexMethods.multiWordQuery(idx, " ", ranker).size());
         assertEquals(0, IndexMethods.multiWordQuery(idx, ". ", ranker).size());
         assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ", ranker).size());
-        // mistaken query
-        System.out.println("Since we use toLowerCase() we can't look up for words with capital letters");
-        //assertEquals(1, IndexMethods.multiWordQuery(idx, " OR OROROR OR ").size());
         assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR Germany", ranker).size());
-
     }
 
 

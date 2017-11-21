@@ -1,6 +1,6 @@
 
-import searchengine.Indexes.Index;
-import searchengine.Indexes.SimpleIndex;
+import searchengine.IndexMethods;
+import searchengine.Indexes.*;
 import searchengine.Website;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +16,16 @@ class SimpleIndexTest {
     private Index fullSimpleIndex = null;
     private Index minSimpleIndex = null;
     private Index emptySimpleIndex = null;
+    private IRanker ranker = new NoRanker();
 
     @BeforeEach
     void setUp() {
         fullSimpleIndex = new SimpleIndex();
         minSimpleIndex = new SimpleIndex();
-        minSimpleIndex.build(Arrays.asList(new Website("example1.com", "example1", Arrays.asList("word1", "word2", "word6", "word7"))));
+        List<Website> sitesMin = Arrays.asList(new Website("example1.com", "example1",
+                Arrays.asList("word1", "word2", "word6", "word7")));
+        minSimpleIndex.build(sitesMin);
+
         emptySimpleIndex = new SimpleIndex();
         List<Website> sites = new ArrayList<>();
         sites.add(new Website("example1.com", "example1", Arrays.asList("word1", "word2", "word6", "word7")));
@@ -72,10 +76,10 @@ class SimpleIndexTest {
 	}
 
     private void lookupMin(Index index) {
-        assertEquals(1, index.lookup("word1").size(), "Case 1c failed");
-        assertEquals(1, index.lookup("word1 word2").size(), "Case 2c failed");
-        assertEquals(1, index.lookup("word1 OR word8").size(), "Case 3c failed");
-        assertEquals(0, index.lookup("wordX OR wordY").size(), "Case 4c failed");
+        assertEquals(1, IndexMethods.multiWordQuery(index,"word1", ranker).size(), "Case 1c failed");
+        assertEquals(1, IndexMethods.multiWordQuery(index,"word1 word2", ranker).size(), "Case 2c failed");
+        assertEquals(1, IndexMethods.multiWordQuery(index,"word1 OR word8", ranker).size(), "Case 3c failed");
+        assertEquals(0, IndexMethods.multiWordQuery(index,"wordX OR wordY", ranker).size(), "Case 4c failed");
     }
 
     private void lookupEmpty(Index index){
