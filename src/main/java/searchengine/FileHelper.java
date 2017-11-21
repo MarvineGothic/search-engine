@@ -13,6 +13,7 @@ public class FileHelper {
     private static UrlValidator urlValidator;
     private static String illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
 
+
     public static List<Website> parseFile(String filename) {
         List<Website> sites = new ArrayList<Website>();
         String url = "", title = "";
@@ -29,6 +30,8 @@ public class FileHelper {
             return null;
         }
 
+        boolean websiteIsUsable = true;
+
         Set<String> usedUrls = new HashSet<>(); // Keeps track of url so we don't get duplicate sites
         while (sc.hasNext()) {
             String line = sc.nextLine();
@@ -36,50 +39,55 @@ public class FileHelper {
             if (line.startsWith("*PAGE:")) {
                 // create previous website from data gathered
                 if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
-                    if (checkForDublicates(usedUrls, url))
-                        return null;
-                    sites.add(new Website(url, title, listOfWords));
+                    if (checkForDublicates(usedUrls, url)) {
+                        System.out.println("Duplicate website");
+                    } else {
+                        sites.add(new Website(url, title, listOfWords));
+                    }
                 }
+                    websiteIsUsable = true;
 
-                // new website starts
-                // Check for multiple words
-                url = line.substring(6);
-                if (line.replaceAll("\\s", "").length() != line.length() || !urlIsValid(url)) { // added !urlIsValid here for now -Atoe-
-                    System.out.println("ERROR: parseFile with multiple words int the URL: " + line);
-                    return null;
-                }
+                    // new website starts
+                    // Check for multiple words
+                    url = line.substring(6);
+                    if (line.replaceAll("\\s", "").length() != line.length() || !urlIsValid(url)) { // added !urlIsValid here for now -Atoe-
+                        System.out.println("ERROR: parseFile with multiple words int the URL: " + line);
+                        websiteIsUsable = false;
+                    }
 
-                title = "";
-                listOfWords = new ArrayList<String>();
-            } else if (title.equals("")) { //added titleIsValid here for now -atoe-
-                if (titleIsValid(line)) {
-                    title = line;
-                } else {
-                    System.out.println("ERROR: Invalid Title: " + line);
-                    return null;
-                }
-            } else {
-                // Check for multiple words
-                if (!line.startsWith("*PAGE:") && line.replaceAll("\\s", "").length() != line.length()) {
-                    System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
-                    return null;
-                }
-                // and that's a word!
-                if (listOfWords.isEmpty()) {
+
+                    title = "";
                     listOfWords = new ArrayList<String>();
-                }
-                String word = line.replaceAll(" ", "").toLowerCase().trim();
-                if (word.trim().length() != 0 && wordIsValid(word)) { // Added wordIsValid here for now -atoe-
-                    listOfWords.add(word);
+                } else if (title.equals("")) { //added titleIsValid here for now -atoe-
+                    if (titleIsValid(line)) {
+                        title = line;
+                    } else {
+                        System.out.println("ERROR: Invalid Title: " + line);
+                        websiteIsUsable = false;
+                    }
+                } else {
+                    // Check for multiple words
+                    if (!line.startsWith("*PAGE:") && line.replaceAll("\\s", "").length() != line.length()) {
+                        System.out.println("ERROR: parseFile with multiple words on the same line: " + line);
+                        websiteIsUsable = false;
+                    }
+                    // and that's a word!
+                    if (listOfWords.isEmpty()) {
+                        listOfWords = new ArrayList<String>();
+                    }
+                    String word = line.replaceAll(" ", "").toLowerCase().trim();
+                    if (word.trim().length() != 0 && wordIsValid(word)) { // Added wordIsValid here for now -atoe-
+                        listOfWords.add(word);
+                    }
                 }
             }
-        }
-        if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
-            if (checkForDublicates(usedUrls, url))
-                return null;
-            sites.add(new Website(url, title, listOfWords));
-        }
-
+            if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {
+                if (checkForDublicates(usedUrls, url)) {
+                    System.out.println("Duplicate website");
+                } else if (websiteIsUsable) {
+                    sites.add(new Website(url, title, listOfWords));
+                }
+            }
         return sites;
     }
 
@@ -162,7 +170,7 @@ public class FileHelper {
             return true;
         } else
             System.out.println("Invalid URL: " + URL);
-            return false;
+        return false;
     }
 
     /**
@@ -178,7 +186,7 @@ public class FileHelper {
             return false;
         String firstLetter = String.valueOf(title.charAt(0));
         Matcher ttl = CAPITALLETTERS.matcher(firstLetter);
-        if(!title.contains(illegalCharacters) && ttl.matches()){
+        if (!title.contains(illegalCharacters) && ttl.matches()) {
 //            System.out.println("titleIsValid passed the title");
             return true;
         } else {

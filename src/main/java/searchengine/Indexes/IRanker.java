@@ -16,6 +16,6 @@ public interface IRanker {
      * @param index Input Index. Takes the index we want to use.
      * @return The ranking of the website based on the word.
      */
-    public long getScore(String word, Website website, Index index);
+    public double getScore(String word, Website website, Index index);
 
 }

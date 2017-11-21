@@ -14,19 +14,19 @@ public class RankerIDF implements IRanker {
     }
 
     @Override
-    public long getScore(String word, Website website, Index index) {
+    public double getScore(String word, Website website, Index index) {
         return idf(word, index) * tf(word, website);
     }
 
-    public long tf(String word, Website website) {
+    public double tf(String word, Website website) {
         return Collections.frequency(website.getWords(), word);
     }
 
-    public long idf(String word, Index index) {
+    public double idf(String word, Index index) {
         double d = sites.size();
         double n = index.lookup(word).size();
 
-        return (long) (Math.log(d / n) / Math.log(2));
+        return (Math.log(d / n) / Math.log(2));
     }
 
 
