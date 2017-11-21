@@ -16,17 +16,17 @@ public class RankerBM25 extends RankerIDF {
         // I added tfplus instead of tf (by the formula from slides)
         // so this method becomes actually bm25
     @Override
-    public long getScore(String word, Website website, Index index) {
+    public double getScore(String word, Website website, Index index) {
         return idf(word, index) * tfPlus(word, website);            
     }
 
-    private long tfPlus(String word, Website website) {
-        long tf = this.tf(word, website);
+    private double tfPlus(String word, Website website) {
+        double tf = this.tf(word, website);
         double k = 1.75;
         double b = 0.75;
         int dL = website.getWords().size();
         int avdL = totalAmountOfWords / (sites.size() > 0 ? sites.size() : 1);  // division by zero Exception
 
-        return (long) (tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf));  // just needed this parenthesis to be correct
+        return (tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf));  // just needed this parenthesis to be correct
     }
 }
