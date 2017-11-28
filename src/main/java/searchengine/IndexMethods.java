@@ -162,19 +162,16 @@ public class IndexMethods {
             // sites also contains the rest of the search words.
             for (int j = 1; j < andSeparatedSearchWords.size(); j++) {
                 String queryWord = andSeparatedSearchWords.get(j);
-                List<Website> sitesToRemove = new ArrayList<>();
-
-                Set<Website> currentSites = new HashSet<>(index.lookup(initialSearchWord));
-
-                for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
-                    Website site = mapEntry.getKey();
-                    Float currentRank = mapEntry.getValue();
-                    if (currentSites.contains(site)) {
-                        currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
+                List<Website> currentSites = index.lookup(queryWord);
+                Set<Website> currentKeys = new HashSet<>(currentRanks.keySet());
+                for (Website site : currentKeys){
+                    if (currentSites.contains(site)){
+                        Float currentRank = currentRanks.get(site);
+                        if (currentRank != null) // In case the
+                            currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
                     } else
-                        sitesToRemove.add(site);
+                        currentRanks.remove(site);
                 }
-                sitesToRemove.forEach(currentRanks::remove);
             }
             for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
                 Website site = mapEntry.getKey();

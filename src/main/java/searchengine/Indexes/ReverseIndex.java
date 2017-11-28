@@ -11,9 +11,6 @@ import java.util.*;
 abstract public class ReverseIndex implements Index {
     protected Map<String, HashSet<Website>> wordMap;
 
-    public static void main(String args[]){
-    }
-
     /**
      * This method returns information about all websites matching the query.
      * It contain information about where the words occurs in the website and how many times.
