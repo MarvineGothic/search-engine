@@ -71,6 +71,7 @@ class QueryHandlerTest {
         assertEquals(1, IndexMethods.multiWordQuery(idx, " word1,", ranker).size());
         assertEquals(0, IndexMethods.multiWordQuery(idx, " ", ranker).size());
         assertEquals(0, IndexMethods.multiWordQuery(idx, ". ", ranker).size());
+        assertEquals(0, IndexMethods.multiWordQuery(idx, " OR OR OR ", ranker).size());
         assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ", ranker).size());
         assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR Germany", ranker).size());
     }
@@ -83,14 +84,23 @@ class QueryHandlerTest {
     void testMultiWordLookupOneVsTwo() {
         String[] lookupQueries = new String[]{
                 "word1 OR word2 OR word word3",
-                "word1",
-                "word3 OR word11 OR word4",
+                "word2 OR word3",
+                "word1 OR word4",
+                "word1 OR word1",
+                "word2 OR word3 OR word5 OR word6",
+                "word1 OR word4 OR ",
+                "word1 OR word1 OR OR word1",
+                " word1,",
+                " ",
+                ". ",
+                "word1 OR ",
+                "Denmark OR Germany",
+                "word1 OR word8 OR wordX",
         };
         for (String lookupQuery : lookupQueries) {
             List<Website> expected = IndexMethods.multiWordQuery(idx, lookupQuery, ranker2);
             List<Website> actual = IndexMethods.multiWordQuery2(idx, lookupQuery, ranker2);
-            assertEquals(true, expected.size() > 0);
-            assertEquals(expected, actual);
+            assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }
 
