@@ -16,5 +16,4 @@ class RankerIDFTest {
     @Test
     void idf() {
     }
-
 }
