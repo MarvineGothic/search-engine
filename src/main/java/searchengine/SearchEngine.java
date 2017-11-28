@@ -4,10 +4,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
-import searchengine.Indexes.IRanker;
-import searchengine.Indexes.Index;
-import searchengine.Indexes.RankerBM25;
-import searchengine.Indexes.SimpleIndex;
+import searchengine.Indexes.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -59,6 +56,7 @@ public class SearchEngine extends ResourceConfig {
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);
         currentRanker = new RankerBM25(sites);
+//        currentRanker = new NoRanker();
         long t2 = System.nanoTime();
         System.out.println("Processing the data set and building the currentIndex took " +
                 (t2 - t1) / 10e6 + " milliseconds.");
@@ -81,6 +79,7 @@ public class SearchEngine extends ResourceConfig {
     public List<Website> search(@Context HttpServletResponse response, @QueryParam("query") String query) {
         // Set cross domain access. Otherwise your browser will complain that it does not want
         // to load code from a different location.
+        long t1 = System.nanoTime();
         response.setHeader("Access-Control-Allow-Origin", "*");
 
 
@@ -89,11 +88,12 @@ public class SearchEngine extends ResourceConfig {
         }
 
         String line = query;
-
         System.out.println("Handling request for query word \"" + query + "\"");
 
         List<Website> resultList = IndexMethods.multiWordQuery(currentIndex, line, currentRanker);
-        System.out.println("Found " + resultList.size() + " websites.");
+        long t2 = System.nanoTime();
+        System.out.println("Found " + resultList.size() + " websites in " + (t2 - t1) / 10e6 + " milliseconds.");
+
         return resultList;
     }
 }
