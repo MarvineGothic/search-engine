@@ -1,12 +1,10 @@
 package searchengine;
 
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Website implements Comparable<Website>{
+public class Website implements Comparable<Website> {
     private String title;
     private String url;
     private List<String> words;
@@ -41,28 +39,33 @@ public class Website implements Comparable<Website>{
         return setOfWords.contains(word);
     }
 
+    public Boolean containsAllWords(List<String> words) {
+        return setOfWords.containsAll(words);
+    }
+
     /**
      * Author Rasmus F
      */
     @Override
-    public String toString(){
-        String output = "Title: " +  title + "\n";
-        output += "url: " +  url + "\n";
-        output += "words: " +  String.join("; ", words) + "\n";
+    public String toString() {
+        String output = "Title: " + title + "\n";
+        output += "url: " + url + "\n";
+        output += "words: " + String.join("; ", words) + "\n";
         return output;
     }
 
     /**
      * Author: Rasmus F
      * Get a list of what where the word occurs on the website.
+     *
      * @param word The word to check for.
      * @return A list of positions, where the positions is defined as the number of other words that occurs on the
      * website before the given word.
      */
-    public List<Integer> getWordPositions(String word){
+    public List<Integer> getWordPositions(String word) {
         List<Integer> wordPositions = new ArrayList<>();
-        for (int i = 0; i < words.size(); i++){
-            if (words.get(i).equals(word)){
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).equals(word)) {
                 wordPositions.add(i);
             }
         }
