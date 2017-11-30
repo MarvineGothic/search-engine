@@ -39,6 +39,40 @@ public class IndexMethods {
         System.out.println(modifyQuery(splitQuery(string)));
     }
 
+    /**
+     * Sergio
+     * splitQuery method is processing the query line such that:
+     * 1. if it's a single word - it stays as a query;
+     * 2. if query contains 'OR' it splits on OR-statements
+     * 3. if in every OR-statement there is " " so it splits on words and makes a group with AND-statement
+     *
+     * @param query is a String parameter of query
+     * @return result is a List of OR-statements that are Lists of AND-statements.
+     * <p>
+     * So when we process the query, we iterate through OR, looking for ANY OF THEM on the site,
+     * but inside each of OR-statement ALL words shall be presenting on the site.
+     */
+    public static List<List<String>> splitQuery(String query) {
+        ArrayList<List<String>> result = new ArrayList<>();
+        ArrayList<String> andWords;
+        //String line = query.trim();
+        String[] splitOR = new String[]{query};
+
+        if (query.matches(".*?\\s+OR\\s+.*?")) {
+            splitOR = query.split("\\s+OR\\s+");
+        }
+        for (String andSentence : splitOR) {
+            andWords = new ArrayList<>();
+            String[] temp = new String[]{andSentence};
+            if (andSentence.contains(" ")) temp = andSentence.split(" ");
+            for (String words : temp) {
+                String word;
+                if (!(word = words.trim()).isEmpty()) andWords.add(word);
+            }
+            if (!result.contains(andWords) && andWords.size() != 0) result.add(andWords);
+        }
+        return result;
+    }
 
     /**
      * modifyQuery modifies the query, to ease use of regular expressions. This is done by the following:
@@ -67,9 +101,11 @@ public class IndexMethods {
                         .replaceAll("\\p{Punct}", " ")
                         .replaceAll("\\s+", " ")
                         .replaceAll("\\s+$|^\\s+", "");
-                tempSubList.add(modifiedWord);
+                if (!modifiedWord.isEmpty())                                    // no empty lines in query Lists
+                    tempSubList.add(modifiedWord);
             }
-            tempQuery.add(tempSubList);
+            if (!tempSubList.isEmpty())                                         // no empty lines in query Lists
+                tempQuery.add(tempSubList);
         }
         return tempQuery;
     }
@@ -77,32 +113,76 @@ public class IndexMethods {
     /**
      * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
      * NOTE: This method also uses modifiesQuery on the given query
+     * 28.11.17 added a check if sites contains all of AND-separated words. If not, it just jumps to next AND-separated line.
+     * If at least one site contains all words, it runs normally.
      *
      * @param index          The Index that will perform the singleLookup on the search words
-     * @param multiWordWuery The query to match. each whitespace is treated as an AND condition and each " OR " is
+     * @param multiWordQuery The query to match. Each whitespace is treated as an AND condition and each " OR " is
      *                       treated as an OR condition.
+     * @return A list of websites matching at least one of the OR conditions of the query.
+     */
+    public static List<Website> multiWordQuery(Index index, String multiWordQuery, IRanker ranker) {
+        List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
+        Map<Website, Float> allRanks = new HashMap<>();
+        // We loop over each OR separated list of query words
+        for (int i = 0; i < splitQueries.size(); i++) {
+            List<String> andSeparatedSearchWords = splitQueries.get(i);
+            Map<Website, Float> currentRanks = new HashMap<>();      // Ranks for the current list of AND separated words.
+            String initialSearchWord = andSeparatedSearchWords.get(0);
+            List<Website> lookUp = index.lookup(initialSearchWord);
+
+            for (Website site : lookUp) {
+                if (site.containsAllWords(andSeparatedSearchWords)) {                    // 28.11.17 checks all words
+                    currentRanks.put(site, ranker.getScore(initialSearchWord, site, index));
+                    for (int j = 1; j < andSeparatedSearchWords.size(); j++) {
+                        currentRanks.merge(site, ranker.getScore(andSeparatedSearchWords.get(j), site, index), Float::sum);
+                    }
+                }
+            }
+
+            for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
+                Website site = mapEntry.getKey();
+                Float currentRank = mapEntry.getValue();
+                Float newRank = Math.max(allRanks.getOrDefault(site, (float) 0), currentRank);
+                allRanks.put(site, newRank);
+            }
+        }
+        // The line below selects all the Websites to a List and sorts them according to the key (score).
+        return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
+                compareTo(x.getValue())).map(Map.Entry::getKey).collect(
+                Collectors.toList());
+    }
+
+    /**
+     * NOTE This method is identical to multiWordQuery but uses a different algorithm
+     * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
+     * NOTE: This method also uses modifiesQuery on the given query
+     *
+     * @param index          The Index that will perform the singleLookup on the search words
+     * @param multiWordQuery The query to match. each whitespace is treated as an AND condition and each " OR " is
+     *                       treated as an OR condition
      * @return A list of websites matching at least one of the or conditions of the query.
      */
-    public static List<Website> multiWordQuery(Index index, String multiWordWuery, IRanker ranker) {
-        List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordWuery));
+    /*public static List<Website> multiWordQuery2(Index index, String multiWordQuery, IRanker ranker) {
+        List<List<String>> splitQueries = splitQuery(multiWordQuery);
 
         Map<Website, Float> allRanks = new HashMap<>();
 
         // We loop over each OR separated list of query words
         for (int i = 0; i < splitQueries.size(); i++) {
-            List<String> andSeperatedSearchWords = splitQueries.get(i);
+            List<String> andSeparatedSearchWords = splitQueries.get(i);
             Map<Website, Float> currentRanks = new HashMap<>(); // Ranks for the current list of AND seperated words.
 
             // TODO: 31-Oct-17 Improve speed by using longest (least frequent) word here
-            String initialSearchWord = andSeperatedSearchWords.get(0);
+            String initialSearchWord = andSeparatedSearchWords.get(0);
             for (Website site : index.lookup(initialSearchWord)) {
                 currentRanks.put(site, ranker.getScore(initialSearchWord, site, index));
             }
 
             // For each other searchword than the initial search words, we check the initial sites found if these
             // sites also contains the rest of the search words.
-            for (int j = 1; j < andSeperatedSearchWords.size(); j++) {
-                String queryWord = andSeperatedSearchWords.get(j);
+            for (int j = 1; j < andSeparatedSearchWords.size(); j++) {
+                String queryWord = andSeparatedSearchWords.get(j);
                 List<Website> sitesToRemove = new ArrayList<>();
 
 
@@ -127,18 +207,7 @@ public class IndexMethods {
         return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
                 compareTo(x.getValue())).map(Map.Entry::getKey).collect(
                 Collectors.toList());
-    }
-
-    /**
-     * NOTE This method is identical to multiWordQuery but uses a different algorithm
-     * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
-     * NOTE: This method also uses modifiesQuery on the given query
-     *
-     * @param index          The Index that will perform the singleLookup on the search words
-     * @param multiWordQuery The query to match. each whitespace is treated as an AND condition and each " OR " is
-     *                       treated as an OR condition
-     * @return A list of websites matching at least one of the or conditions of the query.
-     */
+    }*/
     public static List<Website> multiWordQuery2(Index index, String multiWordQuery, IRanker ranker) {
         // TODO: 31-Oct-17 This method can be improved by making a dictionary with all words in the query and
         // TODO: 31-Oct-17 corresponding search results so the same single query word is not looked up multiple times
@@ -164,8 +233,8 @@ public class IndexMethods {
                 String queryWord = andSeparatedSearchWords.get(j);
                 List<Website> currentSites = index.lookup(queryWord);
                 Set<Website> currentKeys = new HashSet<>(currentRanks.keySet());
-                for (Website site : currentKeys){
-                    if (currentSites.contains(site)){
+                for (Website site : currentKeys) {
+                    if (currentSites.contains(site)) {
                         Float currentRank = currentRanks.get(site);
                         if (currentRank != null) // In case the
                             currentRanks.put(site, currentRank + ranker.getScore(queryWord, site, index));
@@ -184,46 +253,5 @@ public class IndexMethods {
         return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
                 compareTo(x.getValue())).map(Map.Entry::getKey).collect(
                 Collectors.toList());
-    }
-
-    /**
-     * Sergio
-     * splitQuery method is processing the query line such that:
-     * 1. if it's a single word - it stays as a query;
-     * 2. if query contains 'OR' it splits on OR-statements
-     * 3. if in every OR-statement there is " " so it splits on words and makes a group with AND-statement
-     *
-     * @param query is a String parameter of query
-     * @return result is a List of OR-statements that are Lists of AND-statements.
-     * <p>
-     * So when we process the query, we iterate through OR, looking for ANY OF THEM on the site,
-     * but inside each of OR-statement ALL words shall be presenting on the site.
-     */
-    public static List<List<String>> splitQuery(String query) {
-        ArrayList<List<String>> result = new ArrayList<>();
-        ArrayList<String> subList;
-        //String line = query.trim();
-        String[] array = new String[]{query};
-
-        if (query.matches(".*?\\s+OR\\s+.*?")) {
-            array = query.split("\\s+OR\\s+");
-        }
-        for (String sentence : array) {
-            subList = new ArrayList<>();
-            String[] temp = new String[]{sentence};
-            if (sentence.contains(" ")) {
-                temp = sentence.split(" ");
-            }
-            for (String words : temp) {
-                if (!words.matches("") && words.length() > 0) {
-                    String word = words.trim();
-                    subList.add(word);
-                }
-            }
-            if (!result.contains(subList) && subList.size() != 0) {
-                result.add(subList);
-            }
-        }
-        return result;
     }
 }
