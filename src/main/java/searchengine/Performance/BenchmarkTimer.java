@@ -51,21 +51,21 @@ public class BenchmarkTimer {
     /**
      * @return The averate run time when Callable is called.
      */
-    public float getMeanRuntime() {
+    public long getMeanRuntime() {
         return meanRuntime;
     }
 
     /**
      * @return The toal runtime of all iterations
      */
-    public float getTotalRuntime() {
+    public long getTotalRuntime() {
         return totalRuntime;
     }
 
     /**
      * @return The standard deviation of all calls
      */
-    public float getStdRuntime() {
+    public long getStdRuntime() {
         return stdRuntime;
     }
 
