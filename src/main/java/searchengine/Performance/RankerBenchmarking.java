@@ -1,6 +1,5 @@
 package searchengine.Performance;
 
-import bb.util.Benchmark;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.*;
@@ -15,7 +14,7 @@ public class RankerBenchmarking implements Callable<Integer> {
     private static List<String> queries;
     private static Index index;
     private IRanker ranker;
-
+    private int currentQueryIndex = 0;
 
     public RankerBenchmarking(IRanker ranker) {
         this.ranker = ranker;
@@ -26,7 +25,11 @@ public class RankerBenchmarking implements Callable<Integer> {
         List<Website> sites = FileHelper.loadFile("enwiki-small.txt");
         index = new ReverseHashMapIndex();
         index.build(sites);
-        queries = generateQueryList(wordList, 100);
+
+        int iterations = 1000;
+        int warmUpiterations = iterations / 100;
+
+        queries = generateQueryList(wordList, (iterations + warmUpiterations));
 
         IRanker[] rankerList = new IRanker[]{
                 new RankerBM25(sites),
@@ -38,18 +41,15 @@ public class RankerBenchmarking implements Callable<Integer> {
             Callable<Integer> callable = new RankerBenchmarking(ranker);
             String className = ranker.getClass().getSimpleName();
             try {
-                Benchmark benchmark1 = new Benchmark(callable);
-//                System.out.println("Average time for " + className + ": " + benchmark1.getMean());
+                BenchmarkTimer benchmark = new BenchmarkTimer(callable, iterations, warmUpiterations);
                 System.out.println(className + ":");
-                System.out.println(benchmark1.toString());
+                System.out.println(benchmark.toString());
 
             } catch (Exception e) {
                 System.out.println("Bencmarking failed for " + className);
                 e.printStackTrace();
             }
-
         }
-
     }
 
     /**
@@ -66,8 +66,8 @@ public class RankerBenchmarking implements Callable<Integer> {
         List<String> queryList = new ArrayList<>();
         for (int i = 0; i < numberOfQueries; i++) {
             List<String> queryWords = new ArrayList<>();
-            int wordInQuery = rnd.nextInt(5) + 1;
-            for (int j = 0; j < wordInQuery; j++) {
+            int wordsInQuery = rnd.nextInt(5) + 1;
+            for (int j = 0; j < wordsInQuery; j++) {
                 queryWords.add(wordList.get(rnd.nextInt(wordList.size())));
             }
             queryList.add(String.join(" ", queryWords));
@@ -77,10 +77,19 @@ public class RankerBenchmarking implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        for (String query : queries) {
-            IndexMethods.multiWordQuery(index, query, ranker);
-        }
+        String query = queries.get(currentQueryIndex);
+        currentQueryIndex++;
+        IndexMethods.multiWordQuery(index, query, ranker);
         return 0;
+    }
+
+    class myClass implements Callable<Integer> {
+
+        @Override
+        public Integer call() throws Exception {
+            //
+            return null;
+        }
     }
 
 
