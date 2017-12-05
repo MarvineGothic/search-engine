@@ -25,6 +25,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
     private List<String> queryList;
     private boolean methodType;
     private IRanker ranker;
+    private int currentQueryIndex = 0;
 
     /**
      * Creates a new instance for performance testing.
@@ -55,7 +56,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         int winsFor1 = 0;
         int winsFor2 = 0;
         for (int i = 2; i < 12; i++) {
-            int winner = comparePerformance("enwiki-small.txt", i, 100);
+            int winner = comparePerformance("enwiki-small.txt", i, 100000);
             if (winner == 1)
                 winsFor1++;
             else
@@ -85,38 +86,32 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         IRanker ranker = new RankerBM25(sites);
         System.out.println("Comparing multiWordQuery using wordsPerQuery: " + wordsPerQuery + ", iterations: " + iterations);
 
-        List<String> queryList = generateQueryList(wordsInFile, wordsPerQuery, iterations);
+        int warmUpIterations = iterations / 100;
+        List<String> queryList = generateQueryList(wordsInFile, wordsPerQuery, iterations + warmUpIterations);
 
 
-//        Benchmarking multiWordQuery1
+//        Benchmarking multiWordQuery
 //        --------------------------------------------------------------------------------------------------------------
-
 
         Callable callable1 = new QueryPerformanceBenchmarkning(iterations, index, queryList, true, ranker);
         Callable callable2 = new QueryPerformanceBenchmarkning(iterations, index, queryList, false, ranker);
 
-        double elapsedTime1 = -1;
-        double elapsedTime2 = -1;
-        double stderr1 = -1;
-        double stderr2 = -1;
-        Benchmark benchmark1;
-        Benchmark benchmark2;
+        BenchmarkTimer benchmark1;
+        BenchmarkTimer benchmark2;
         try {
-            benchmark1 = new Benchmark(callable1);
-            benchmark2 = new Benchmark(callable2);
-            elapsedTime1 = benchmark1.getMean();
-            elapsedTime2 = benchmark2.getMean();
-            System.out.printf("multiWordQuery:  {avr=%s stderr=%s} units of microseconds\n", benchmark1.getMean() / 1000, benchmark1.getSd() / 1000);
-            System.out.printf("multiWordQuery2: {avr=%s stderr=%s} units of microseconds\n", benchmark2.getMean() / 1000, benchmark2.getSd() / 1000);
-            System.out.println("--------------");
+            benchmark1 = new BenchmarkTimer(callable1, iterations, warmUpIterations);
+            System.out.println("multiWordQuery");
+            System.out.println(benchmark1.toString());
+            benchmark2 = new BenchmarkTimer(callable2, iterations, warmUpIterations);
+            System.out.println("multiWordQuery2");
+            System.out.println(benchmark2.toString());
+            if (benchmark1.getMeanRuntime() < benchmark2.getMeanRuntime())
+                return 1;
+            return 2;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        if (elapsedTime1 < elapsedTime2)
-            return 1;
-        return 2;
+        return 0;
     }
 
     /**
@@ -150,13 +145,11 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
      * @throws Exception If something goes wrong it throws an exception.
      */
     public Integer call() throws Exception {
-        for (int i = 0; i < iterations; i++) {
             if (methodType)
-                IndexMethods.multiWordQuery(index, queryList.get(i), ranker);
+                IndexMethods.multiWordQuery(index, queryList.get(currentQueryIndex), ranker);
             else
-                IndexMethods.multiWordQuery2(index, queryList.get(i), ranker);
-            // TODO: 14-Nov-17 multiWordQuery2 should implement ranking also to properly compare
-        }
+                IndexMethods.multiWordQuery2(index, queryList.get(currentQueryIndex), ranker);
+        currentQueryIndex++;
         return 0;
     }
 }
