@@ -51,7 +51,7 @@ public class SearchEngine extends ResourceConfig {
             return;
         }
 
-        currentIndex = new SimpleIndex();
+        currentIndex = new ReverseHashMapIndex();
         long t1 = System.nanoTime();
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);

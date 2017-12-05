@@ -16,41 +16,37 @@ class FileHelperTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
     @BeforeEach
-    public void setUpStreams() {
+    public void setUp() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
     @AfterEach
-    public void cleanUpStreams() {
+    public void tearDown() {
         System.setOut(null);
         System.setErr(null);
     }
 
 
     /**
-     * Test if the Searchengine skips sites that does not contain a title or any words
+     * Test if the FileHelper's parseFile method skips sites that does not contain a title or any words.
+     *
+     * Case 1a:
+     * Case 2a:
      */
+
+
+
     @Test
     void fileHelperIncompleteSitesTest() {
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "incompleteSites.txt";
         List<Website> sites = FileHelper.parseFile(path);
-
-        assertEquals(sites != null, true);
-        assertEquals(sites.size(), 3);
+        assertEquals(sites != null, true, "Case 1a failed");
+        assertEquals(sites.size(), 3, "Case 2a failed");
     }
 
     /**
-     * Test if the Searchengine returns null when trying to load files with duplicate websites
-     */
-    @Test
-    void testOutput() {
-        System.out.println("testoutput");
-        assertEquals("testoutput\r\n", outContent.toString());
-    }
-
-    /**
-     * Test if the Searchengine returns null when trying to load files with duplicate websites
+     * Test if the FileHelper returns null when trying to load files with duplicate websites
      */
     @Test
     void fileHelperDuplicateSitesTest() {
@@ -63,7 +59,7 @@ class FileHelperTest {
 
 
     /**
-     * Test if the Searchengine returns null (error) if a webpage has more more words on a line
+     * Test if the FileHelper returns null (error) if a webpage has more more words on a line
      */
     @Test
     void fileHelperSingleWordsTest() {

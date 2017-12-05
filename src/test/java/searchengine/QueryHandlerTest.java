@@ -78,11 +78,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             assertEquals(3, IndexMethods.multiWordQuery(idx,"w1 w2 w3 w12 OR w3 w0 w", ranker).size());
         }
 
-        // Test for problematic input
+        /**
+         *  Test for problematic input
+         *  Case 1a: No word after OR
+         *  Case 2a: Use of both upper- and lower-case letters in query elements
+         */
         @Test
         void testCornerCases() {
-            assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ", ranker).size());
-            assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR germany", ranker).size());
+            assertEquals(1, IndexMethods.multiWordQuery(idx, "word1 OR ", ranker).size(), "Case 1a");
+            assertEquals(1, IndexMethods.multiWordQuery(idx, "Denmark OR germany", ranker).size(), "Case 2a");
         }
 
 

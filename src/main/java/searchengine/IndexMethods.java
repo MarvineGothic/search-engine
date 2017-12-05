@@ -75,39 +75,47 @@ public class IndexMethods {
     }
 
     /**
-     * modifyQuery modifies the query, to ease use of regular expressions. This is done by the following:
+     * modifyQuery modifies the query, to ease use of regular expressions, by passing the elements of the query through the modifyWordList method.
+     * The modifyQuery method requires that queries have already been processed by the splitQuery method.
+     *
+     * @param query is a List of OR-statements, that are Lists of AND-statements.
+     * @return returns a List of OR-statements, that are Lists of AND-statements, that have been converted to lower-case,
+     * and had punctuation and unnecessary spaces removed.
+     * <p>
+     * When running this method we iterate through the Lists of strings in query, passing them to the modifyWordList method.
+     */
+    public static List<List<String>> modifyQuery(List<List<String>> query) {
+        List<List<String>> tempQuery = new ArrayList<>();
+        for (List<String> wordList : query) {
+            List<String> tempWordList = modifyWordList(wordList);
+            if (!tempWordList.isEmpty()) tempQuery.add(tempWordList);       // no empty lines in query Lists
+        }
+        return tempQuery;
+    }
+
+    /**
+     * modifyWordList modifies a list of words, to ease use of regular expressions.
+     * This is done by the following:
      * 1. converting query words to lower-case
      * 2. converting any use of punctuation to single space // TODO: 24-Oct-17 This could become a problem since two words might get treated as a single word
      * 3. converting any longer spaces in queries, e.g. uses of tab or double space to single space
      * 4. removing any space after a query word
      * <p>
-     * The modifyQuery method requires that queries have already been processed by the splitQuery method.
+     * @param wordList is a list of keywords, either from a query String or from a given website.
+     * @return a list of strings that have been converted to lower case and had punctuation and unnecessary spaces removed.
      *
-     * @param query is a List of OR-statements, that are Lists of AND-statements.
-     * @return returns a List of OR-statements, that are Lists of AND-statements, that have been converted to lower-case.
-     * <p>
-     * When running this method we iterate through the Lists of strings in query, and within that iteration, we iterate through the strings
-     * in those lists.
+     * When running this method, we iterate through the strings in lists of strings.
      */
-
-    public static List<List<String>> modifyQuery(List<List<String>> query) {
-        List<List<String>> tempQuery = new ArrayList<>();
-        for (List<String> subList : query) {
-
-            List<String> tempSubList = new ArrayList<>();
-            for (String word : subList) {
-                String modifiedWord;
-                modifiedWord = word.toLowerCase()
-                        .replaceAll("\\p{Punct}", " ")
-                        .replaceAll("\\s+", " ")
-                        .replaceAll("\\s+$|^\\s+", "");
-                if (!modifiedWord.isEmpty())                                    // no empty lines in query Lists
-                    tempSubList.add(modifiedWord);
-            }
-            if (!tempSubList.isEmpty())                                         // no empty lines in query Lists
-                tempQuery.add(tempSubList);
+    public static List<String> modifyWordList(List<String> wordList){
+        List<String> tempList = new ArrayList<>();
+        for (String word : wordList) {
+            String modifiedWord = word.toLowerCase()
+                    .replaceAll("\\p{Punct}", " ")
+                    .replaceAll("\\s+", " ")
+                    .replaceAll("\\s+$|^\\s+", "");
+            if (!modifiedWord.isEmpty()) tempList.add(modifiedWord);    // no empty lines in word Lists
         }
-        return tempQuery;
+        return tempList;
     }
 
     /**

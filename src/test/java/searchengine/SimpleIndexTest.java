@@ -1,4 +1,3 @@
-
 import searchengine.IndexMethods;
 import searchengine.Indexes.*;
 import searchengine.Website;
