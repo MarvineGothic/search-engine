@@ -28,15 +28,15 @@ abstract public class ReverseIndex implements Index {
     public void build(List<Website> websiteList) {
         InitializeWordMap();
         for (Website currentSite : websiteList){
-            for (String wordOnSite : currentSite.getWords()){
+            for (String indexWord : currentSite.getWords()){
 //                The statement in this for loop is equivalent to the two lines below, but should be faster.
 //                wordMap.computeIfAbsent(wordOnSite, key -> new HashSet<>());
-//                wordMap.get(wordOnSite).add(new IndexItem(currentSite, wordOnSite));
-                wordMap.compute(wordOnSite, (key, oldValue) -> {
+//                wordMap.get(wordOnSite).add(new IndexedWebsite(currentSite, wordOnSite));
+                wordMap.compute(indexWord, (key, oldValue) -> {
                     if (oldValue == null) {
                         oldValue = new HashSet<>();
                     }
-                    oldValue.add(new IndexedWebsite(currentSite, wordOnSite));
+                    oldValue.add(new IndexedWebsite(currentSite, indexWord));
                     return oldValue;
                 });
             }

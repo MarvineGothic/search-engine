@@ -1,5 +1,6 @@
 package searchengine.Ranking;
 
+import searchengine.IndexedWebsite;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.IndexItem;
 import searchengine.Website;
@@ -15,21 +16,18 @@ public class RankerIDF implements IRanker {
         sites = websiteList;
     }
 
-    public float getScore(IndexItem indexItem, Index index) {
-        return idf(indexItem.word, index) * tf(indexItem);
-    }
-
     @Override
     public float getScore(String word, Website website, Index index) {
         return idf(word, index) * tf(word, website);
     }
 
     public float tf(String word, Website website) {
+//        try {
+//            return ((IndexedWebsite)website).getWordFrequency();
+//        } catch (ClassCastException e){
+//            return Collections.frequency(website.getWords(), word);
+//        }
         return Collections.frequency(website.getWords(), word);
-    }
-
-    public float tf(IndexItem indexItem) {
-        return indexItem.getWordCount();
     }
 
     public float idf(String word, Index index) {

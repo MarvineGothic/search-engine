@@ -29,11 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             sites.add(new Website("7.com","example7", Arrays.asList("Denmark", "Germany")));
 
             sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00" )));
+            sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00", "W100" )));
             sites.add(new Website("8.com","example8", Arrays.asList("w1", "w0", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00" )));
             sites.add(new Website("8.com","example8", Arrays.asList("w1", "w0", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w" )));
-            sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00" )));
             sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12" )));
-            sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12" )));
+            sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12", "W100")));
             sites.add(new Website("8.com","example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w" )));
             idx = new SimpleIndex();
             idx.build(sites);

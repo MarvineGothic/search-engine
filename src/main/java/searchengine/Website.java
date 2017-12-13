@@ -93,7 +93,6 @@ public class Website implements Comparable<Website> {
         if (other == null)
             return false;
         if (getClass() == other.getClass() || IndexedWebsite.class.equals(other.getClass())) {
-
             Website website = (Website) other;
 
             if (!title.equals(website.title)) return false;

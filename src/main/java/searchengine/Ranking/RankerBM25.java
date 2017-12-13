@@ -21,24 +21,6 @@ public class RankerBM25 extends RankerIDF {
         return idf(word, index) * tfPlus(word, website);
     }
 
-    @Override
-    public float getScore(IndexItem indexItem, Index index) {
-        return idf(indexItem.word, index) * tfPlus(indexItem);
-    }
-
-    // TODO: 05-Dec-17: This code can be done cleaner. Perhaps completely remove
-    // TODO: 05-Dec-17: getScore(String word, Website website, Index index) as a method for IRanker
-    private float tfPlus(IndexItem indexItem){
-        float tf = this.tf(indexItem);
-        float k = 1.75f;
-        float b = 0.75f;
-        float dL = indexItem.website.getWords().size();
-        float avdL = totalAmountOfWords / (sites.size() > 0 ? sites.size() : 1);  // division by zero Exception
-        return (tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf));  // just needed this parenthesis to be correct
-
-    }
-
-
     private float tfPlus(String word, Website website) {
         float tf = this.tf(word, website);
         float k = 1.75f;
