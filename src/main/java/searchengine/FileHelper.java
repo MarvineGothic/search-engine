@@ -184,13 +184,9 @@ public class FileHelper {
             return false;
         String firstLetter = String.valueOf(title.charAt(0));
         Matcher ttl = CAPITALLETTERS.matcher(firstLetter);
-        if (!title.contains(illegalCharacters) && ttl.matches()) {
-//            System.out.println("titleIsValid passed the title");
-            return true;
-        } else {
+        //            System.out.println("titleIsValid passed the title");
 //            System.out.println("titleIsValid didn't pass the title: " + title);
-            return false;
-        }
+        return !title.contains(illegalCharacters) && ttl.matches();
     }
 
     /**

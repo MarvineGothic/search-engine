@@ -37,6 +37,9 @@ public class Website implements Comparable<Website> {
         setOfWords = new HashSet<>(this.words);
     }
 
+    protected Website() {
+    }
+
     public List<String> getWords() {
         return words;
     }
@@ -92,7 +95,10 @@ public class Website implements Comparable<Website> {
         if (this == other) return true;
         if (other == null)
             return false;
-        if (getClass() == other.getClass() || IndexedWebsite.class.equals(other.getClass())) {
+        if (IndexedWebsite.class.equals(other.getClass())){
+            return equals(((IndexedWebsite)other).getParent());
+        }
+        if (getClass() == other.getClass()) {
             Website website = (Website) other;
 
             if (!title.equals(website.title)) return false;

@@ -1,6 +1,5 @@
 package searchengine.Indexes;
 
-import org.apache.catalina.util.ResourceSet;
 import searchengine.IndexedWebsite;
 import searchengine.Website;
 
@@ -39,6 +38,12 @@ abstract public class ReverseIndex implements Index {
                     oldValue.add(new IndexedWebsite(currentSite, indexWord));
                     return oldValue;
                 });
+            }
+        }
+        for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()){
+            int count = entry.getValue().size();
+            for (IndexedWebsite website : entry.getValue()){
+                website.setWebsitesContainingWordCount(count);
             }
         }
     }

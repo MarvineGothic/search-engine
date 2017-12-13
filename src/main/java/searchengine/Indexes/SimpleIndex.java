@@ -7,8 +7,6 @@ import java.util.*;
 
 public class SimpleIndex implements Index {
 
-    public static void main(String[] args) {}
-
     private List<Website> sites;
 
     public SimpleIndex() {

@@ -7,7 +7,7 @@ import searchengine.Website;
 import java.util.List;
 
 public class RankerBM25 extends RankerIDF {
-    private float totalAmountOfWords;
+    protected float totalAmountOfWords;
 
     public RankerBM25(List<Website> websiteList) {
         super(websiteList);
@@ -19,6 +19,16 @@ public class RankerBM25 extends RankerIDF {
     @Override
     public float getScore(String word, Website website, Index index) {
         return idf(word, index) * tfPlus(word, website);
+    }
+
+    protected float tfPlusUsingIndex(String word, Website website) {
+        float tf = this.tfUsingIndex(word, website);
+        float k = 1.75f;
+        float b = 0.75f;
+        float dL = website.getWords().size();
+        float avdL = totalAmountOfWords / (sites.size() > 0 ? sites.size() : 1);  // division by zero Exception
+
+        return (tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf));  // just needed this parenthesis to be correct
     }
 
     private float tfPlus(String word, Website website) {

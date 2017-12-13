@@ -21,12 +21,15 @@ public class RankerIDF implements IRanker {
         return idf(word, index) * tf(word, website);
     }
 
+    public float tfUsingIndex(String word, Website website) {
+        try {
+            return ((IndexedWebsite)website).getWordFrequency();
+        } catch (ClassCastException e){
+            return Collections.frequency(website.getWords(), word);
+        }
+    }
+
     public float tf(String word, Website website) {
-//        try {
-//            return ((IndexedWebsite)website).getWordFrequency();
-//        } catch (ClassCastException e){
-//            return Collections.frequency(website.getWords(), word);
-//        }
         return Collections.frequency(website.getWords(), word);
     }
 
@@ -36,7 +39,16 @@ public class RankerIDF implements IRanker {
         return (float) (Math.log(d / n) / Math.log(2));
     }
 
-
+    public float idfUsingIndex(String word, Index index, Website website) {
+        float d = sites.size();
+        float n;
+        try {
+            n = ((IndexedWebsite)website).getWebsitesContainingWordCount();
+        } catch (ClassCastException e){
+            n = index.lookup(word).size();
+        }
+        return (float) (Math.log(d / n) / Math.log(2));
+    }
 }
 
 
