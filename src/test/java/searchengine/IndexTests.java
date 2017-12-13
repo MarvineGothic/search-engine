@@ -1,5 +1,7 @@
 import searchengine.IndexMethods;
 import searchengine.Indexes.*;
+import searchengine.Ranking.IRanker;
+import searchengine.Ranking.NoRanker;
 import searchengine.Website;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

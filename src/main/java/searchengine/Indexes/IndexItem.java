@@ -15,33 +15,38 @@ import java.util.List;
  * - The number times the word occur
  */
 public class IndexItem {
-    public Website website;
-    public String word;
-    public List<Integer> wordPositions;
-
-    public IndexItem(Website website, String word, List<Integer> wordPositions) {
-        this.website = website;
-        this.word = word;
-        this.wordPositions = wordPositions;
-    }
+    public final Website website;
+    public final String word;
+    public final List<Integer> wordPositions;
 
     public IndexItem(Website website, String word) {
         this.website = website;
         this.word = word;
-        this.wordPositions = new ArrayList<>();
+        this.wordPositions = website.getWordPositions(word);
     }
 
-    public IndexItem(Website website, String word, int wordPosition) {
-        this.website = website;
-        this.word = word;
-        this.wordPositions = new ArrayList<>();
-        this.wordPositions.add(wordPosition);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IndexItem indexItem = (IndexItem) o;
+
+        if (!website.equals(indexItem.website)) return false;
+        return word.equals(indexItem.word);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = website.hashCode();
+        result = 31 * result + word.hashCode();
+        return result;
     }
 
     /**
      * @return The number times the word occurs in the website
      */
-    public int getWordCount(){
+    public int getWordCount() {
         return wordPositions.size();
     }
 

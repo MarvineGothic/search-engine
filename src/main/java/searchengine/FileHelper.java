@@ -38,7 +38,7 @@ public class FileHelper {
             if (line.startsWith("*PAGE:")) {
                 // create previous website from data gathered
                 if (!url.isEmpty() && !title.isEmpty() && title.trim().length() > 0 && !listOfWords.isEmpty()) {  // Sergiy & RL
-                    if (checkForDuplicates(usedUrls, url)) {
+                    if (checkForDublicates(usedUrls, url)) {
                         System.out.println("ERROR: Duplicate site when parsing file: " + url);
                     } else {
                         sites.add(new Website(url, title, listOfWords));

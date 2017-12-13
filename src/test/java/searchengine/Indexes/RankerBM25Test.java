@@ -3,6 +3,7 @@ package searchengine.Indexes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import searchengine.Ranking.RankerBM25;
 import searchengine.Website;
 
 import java.util.ArrayList;

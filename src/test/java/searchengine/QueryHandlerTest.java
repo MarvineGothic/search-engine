@@ -3,6 +3,8 @@ package searchengine;
 import searchengine.Indexes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import searchengine.Ranking.IRanker;
+import searchengine.Ranking.RankerIDF;
 
 
 import java.util.ArrayList;

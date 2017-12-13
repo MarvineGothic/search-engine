@@ -2,6 +2,7 @@ package searchengine.Indexes;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import searchengine.Ranking.RankerIDF;
 import searchengine.Website;
 
 import java.util.ArrayList;

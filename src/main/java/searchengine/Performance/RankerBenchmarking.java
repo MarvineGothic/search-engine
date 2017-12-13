@@ -3,6 +3,10 @@ package searchengine.Performance;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.*;
+import searchengine.Ranking.IRanker;
+import searchengine.Ranking.NoRanker;
+import searchengine.Ranking.RankerBM25;
+import searchengine.Ranking.RankerIDF;
 import searchengine.Website;
 
 import java.util.ArrayList;

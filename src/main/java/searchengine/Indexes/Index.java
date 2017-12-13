@@ -2,6 +2,7 @@ package searchengine.Indexes;
 
 import searchengine.Website;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -23,4 +24,10 @@ public interface Index {
      * @return A collection of matching websites
      */
     List<Website> lookup(String query);
+
+    /**
+     * @param query
+     * @return
+     */
+//    HashSet<IndexItem> lookupIndexItems(String query);
 }

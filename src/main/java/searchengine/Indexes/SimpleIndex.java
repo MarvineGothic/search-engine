@@ -1,6 +1,7 @@
 package searchengine.Indexes;
 
 import searchengine.Website;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -43,6 +44,19 @@ public class SimpleIndex implements Index {
         }
         return newList;
     }
+
+//    @Override
+//    public HashSet<IndexItem> lookupIndexItems(String queryWord) {
+//        HashSet<IndexItem> indexItems = new HashSet<>();
+//        // Go through all websites and check if query is present
+//        for (Website website : sites) {
+//            // If query is present, add it to list of websites newList
+//            if (website.containsWord(queryWord)) {
+//                indexItems.add(new IndexItem(website, queryWord));
+//            }
+//        }
+//        return indexItems;
+//    }
 
     /**
      * Method used for test purposes to compare expected and actual sites results

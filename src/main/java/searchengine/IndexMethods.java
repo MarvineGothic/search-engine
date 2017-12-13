@@ -1,7 +1,7 @@
 package searchengine;
 
-import searchengine.Indexes.IRanker;
 import searchengine.Indexes.Index;
+import searchengine.Ranking.IRanker;
 
 import java.util.*;
 import java.util.stream.Collectors;

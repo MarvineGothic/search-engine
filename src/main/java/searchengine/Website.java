@@ -1,5 +1,8 @@
 package searchengine;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,10 +12,10 @@ import java.util.List;
  * as well as searching the database.
  */
 public class Website implements Comparable<Website> {
-    private String title;
-    private String url;
-    private List<String> words;
-    private HashSet<String> setOfWords;
+    protected String title;
+    protected String url;
+    protected List<String> words;
+    protected HashSet<String> setOfWords;
 
     /**
      * Upon construction of a new Website element, the modifyWordlist method of IndexMethods is called on the list
@@ -25,7 +28,9 @@ public class Website implements Comparable<Website> {
      * @param title is the name of the Website element
      * @param words is a list of the most commonly used keywords on a given website
      */
-    public Website(String url, String title, List<String> words) {
+    public Website(@NotNull String url, @NotNull String title, @NotNull List<String> words) {
+        if (url == null || title == null || words == null)
+            throw new IllegalArgumentException();
         this.url = url;
         this.title = title;
         this.words = IndexMethods.modifyWordList(words);
@@ -80,6 +85,30 @@ public class Website implements Comparable<Website> {
             }
         }
         return wordPositions;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null)
+            return false;
+        if (getClass() == other.getClass() || IndexedWebsite.class.equals(other.getClass())) {
+
+            Website website = (Website) other;
+
+            if (!title.equals(website.title)) return false;
+            if (!url.equals(website.url)) return false;
+            return words.equals(website.words);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + url.hashCode();
+        result = 31 * result + words.hashCode();
+        return result;
     }
 
     /**

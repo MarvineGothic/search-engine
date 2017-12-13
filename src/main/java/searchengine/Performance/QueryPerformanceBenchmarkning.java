@@ -1,11 +1,10 @@
 package searchengine.Performance;
 
-import bb.util.Benchmark;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
-import searchengine.Indexes.IRanker;
+import searchengine.Ranking.IRanker;
 import searchengine.Indexes.Index;
-import searchengine.Indexes.RankerBM25;
+import searchengine.Ranking.RankerBM25;
 import searchengine.Indexes.ReverseHashMapIndex;
 import searchengine.Website;
 
