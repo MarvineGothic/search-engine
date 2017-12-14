@@ -32,7 +32,7 @@ public class FileHelper {
         while (sc.hasNext()) {
             String line = sc.nextLine();
             if (line.startsWith("*PAGE:")) {
-                sites = addSiteIfValid(url, title, listOfWords, sites);
+                addSiteIfValid(url, title, listOfWords, sites);
                 resetWebsite();
                 url = line.substring(6);
             } else if (title.equals("")) {
@@ -42,7 +42,7 @@ public class FileHelper {
                 listOfWords.add(word);
             }
         }
-        sites = addSiteIfValid(url, title, listOfWords, sites);
+        addSiteIfValid(url, title, listOfWords, sites);
         usedUrls.clear();
         sc.close();
         return sites;
@@ -62,9 +62,8 @@ public class FileHelper {
      * @param title title of the site we wish to add to the list of sites
      * @param listOfWords keywords responding to the site we wish to add to the list of sites
      * @param sites the list of sites
-     * @return the list of websites given as parameter, with the extra website added, if it is not already
      */
-    private static List<Website> addSiteIfValid(String url, String title, List<String> listOfWords, List<Website> sites) {
+    private static void addSiteIfValid(String url, String title, List<String> listOfWords, List<Website> sites) {
         if (checkForDuplicates(usedUrls, url)) {System.out.println("ERROR: Duplicate site when parsing file: " + url);}
         for (String word:listOfWords) {
             if (word.replaceAll("\\s", "").length() != word.length()) {
@@ -75,7 +74,6 @@ public class FileHelper {
             sites.add(new Website(url, title, listOfWords));
             usedUrls.add(url);
         }
-        return sites;
     }
 
     /**
