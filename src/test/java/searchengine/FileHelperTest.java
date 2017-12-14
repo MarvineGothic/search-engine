@@ -77,7 +77,7 @@ class FileHelperTest {
         FileHelper.parseFile(path);
 
         String expectedOutput = "ERROR: parseFile with multiple words int the URL: *PAGE:https://site3.com/ Title\r\n";
-        expectedOutput += "ERROR: parseFile with multiple words on the same line: Word1 Word2\r\n";
+        expectedOutput += "ERROR: parseFile with multiple words on the same line: word1 word2\r\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 }

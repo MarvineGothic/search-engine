@@ -29,5 +29,4 @@ public interface Index {
      * @param query
      * @return
      */
-//    HashSet<IndexItem> lookupIndexItems(String query);
 }

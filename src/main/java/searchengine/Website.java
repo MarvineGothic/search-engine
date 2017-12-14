@@ -1,7 +1,5 @@
 package searchengine;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,13 +16,14 @@ public class Website implements Comparable<Website> {
     protected HashSet<String> setOfWords;
 
     /**
-     * Upon construction of a new Website element, the modifyWordlist method of IndexMethods is called on the list
+     * Upon construction of a new Website element, the modifyWordList method of IndexMethods is called on the list
      * of keywords given to the constructor. This removes unnecessary punctuation and spaces, and converts the keywords
      * to lower case, to remove case sensitivity in searches.
-     *
+     * <p>
      * To allow finding keywords in a Website without having to iterate through elements of a List, the words are
      * deposited into a HashSet.
-     * @param url gives the location of the Website element
+     *
+     * @param url   gives the location of the Website element
      * @param title is the name of the Website element
      * @param words is a list of the most commonly used keywords on a given website
      */
@@ -37,11 +36,10 @@ public class Website implements Comparable<Website> {
         setOfWords = new HashSet<>(this.words);
     }
 
+    /**
+     * This constructor is used for the IndexedWebsite subclass.
+     */
     protected Website() {
-    }
-
-    public HashSet<String> getSetOfWords() {
-        return setOfWords;
     }
 
     public List<String> getWords() {
@@ -52,21 +50,47 @@ public class Website implements Comparable<Website> {
         return title;
     }
 
+    public HashSet<String> getSetOfWords() {
+        return setOfWords;
+    }
+
     public String getUrl() {
         return url;
     }
 
     /**
+     * The method checks whether the Website's HashSet of keywords contains a given single query word
      *
-     * @param word
-     * @return
+     * @param word is a query word given by the user
+     * @return returns true if the HashSet containing the Website's keywords contains the query word, and false if
+     * if it doesn't
      */
     public Boolean containsWord(String word) {
         return setOfWords.contains(word);
     }
 
+    /**
+     * The method checks whether the Website's HashSet of keywords contains a list given single query words
+     *
+     * @param words is a list of query words given by the user
+     * @return returns true if the HashSet containing the Website's keywords contains the query word, and false if
+     * if it doesn't
+     */
     public Boolean containsAllWords(List<String> words) {
         return setOfWords.containsAll(words);
+    }
+
+    /**
+     * The method compares a given Website with another by comparing the websites' URL, used for sorting URLs
+     * alphabetically. This is used for testing purposes.
+     *
+     * @param website a Website element to be compared with this Website
+     * @return returns 0 if the elements are lexicographically equal, less than 0 if the argument is lexicographically
+     * greater than this Website and greater than 0 if the argument is lexicographically lesser.
+     */
+    @Override
+    public int compareTo(Website website) {
+        return url.compareTo(website.url);
     }
 
     @Override
@@ -78,7 +102,7 @@ public class Website implements Comparable<Website> {
     }
 
     /**
-     * Get a list of where the word occurs on the website.
+     * Get a list of where the word occurs on the website. Can be used in advanced ranking algorithms in the future.
      *
      * @param word The word to check for.
      * @return A list of positions, where the positions is defined as the number of other words that occurs on the
@@ -99,8 +123,8 @@ public class Website implements Comparable<Website> {
         if (this == other) return true;
         if (other == null)
             return false;
-        if (IndexedWebsite.class.equals(other.getClass())){
-            return equals(((IndexedWebsite)other).getParent());
+        if (IndexedWebsite.class.equals(other.getClass())) {
+            return equals(((IndexedWebsite) other).getParent());
         }
         if (getClass() == other.getClass()) {
             Website website = (Website) other;
@@ -120,13 +144,5 @@ public class Website implements Comparable<Website> {
         return result;
     }
 
-    /**
-     * The method compares a given Website with another by comparing the websites' URL.
-     * @param website a Website element to be compared with this Website
-     * @return returns true if the URLs are the same and false if they are not
-     */
-    @Override
-    public int compareTo(Website website) {
-        return url.compareTo(website.url);
-    }
+
 }
