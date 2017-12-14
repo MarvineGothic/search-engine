@@ -159,8 +159,6 @@ public class IndexMethods {
         return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
                 compareTo(x.getValue())).map(Map.Entry::getKey).collect(
                 Collectors.toList());
-//        return allRanks.entrySet().stream().sorted((x, y) -> 0).map(Map.Entry::getKey).collect(
-//                Collectors.toList());
     }
 
     /**

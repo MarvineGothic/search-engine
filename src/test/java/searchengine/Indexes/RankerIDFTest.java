@@ -100,23 +100,30 @@ class RankerIDFTest {
     @Test
     void testIDFValues() {
         float expectedValue;
+        // For IDF website doesn't do anything unless is a IndexedWebsite
+        Website website = new Website("www.site.com", "website", new ArrayList<>());
+
         //Here the word occurs on 3 sites, and D=3 => log2(3/3) = 0
         expectedValue = (float) (Math.log(sites.size() / (float) index.lookup("word2").size()) / Math.log(2));
-        assertEquals(expectedValue, ranker.idf("word2", index), 1e-6, "idfValues test 1 failed for word0");
+        assertEquals(expectedValue, ranker.idf("word2", index, website), 1e-6, "idfValues test 1 failed for word0");
         //Here the word occurs on 1 site, and D=3 => log2(3/1) = 1,6 (ish)
         expectedValue = (float) (Math.log(sites.size() / (float) index.lookup("word1").size()) / Math.log(2));
-        assertEquals(expectedValue, ranker.idf("word1", index), 1e-6, "idfValues test 2 failed for word1");
+        assertEquals(expectedValue, ranker.idf("word1", index, website), 1e-6, "idfValues test 2 failed for word1");
         //Here the word occurs on 2 sites, and D=3 => log2/3/2) = 0,6 (ish)
         expectedValue = (float) (Math.log(sites.size() / (float) index.lookup("word3").size()) / Math.log(2));
-        assertEquals(expectedValue, ranker.idf("word3", index), 1e-6, "idfValues test 3 failed for word3");
+        assertEquals(expectedValue, ranker.idf("word3", index, website), 1e-6, "idfValues test 3 failed for word3");
     }
 
     @Test
     void testIDFCornerValues() {
         float expectedValue = 0;
+
+        // For IDF website doesn't do anything unless is a IndexedWebsite
+        Website website = new Website("www.site.com", "website", new ArrayList<>());
+
         //Here the word occurs on 0 sites, and D=3 => log2(3/0) = infinity
-        assertEquals(expectedValue, ranker.idf("word0", index), 1e-6, "idfCornerValues test 1 failed for word0, non-empty index");
+        assertEquals(expectedValue, ranker.idf("word0", index, website), 1e-6, "idfCornerValues test 1 failed for word0, non-empty index");
         //Here the word occurs on 0 sites, and D=0 => log2(0/0) = infinity
-        assertEquals(expectedValue, ranker.idf("word0", emptyIndex), 1e-6, "idfCornerValues test 2 failed for word0, empty index");
+        assertEquals(expectedValue, ranker.idf("word0", emptyIndex, website), 1e-6, "idfCornerValues test 2 failed for word0, empty index");
     }
 }

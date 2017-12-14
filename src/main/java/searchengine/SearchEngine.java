@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import searchengine.Indexes.*;
 import searchengine.Ranking.IRanker;
 import searchengine.Ranking.RankerBM25;
-import searchengine.Ranking.RankerBM25Indexed;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -58,7 +57,7 @@ public class SearchEngine extends ResourceConfig {
         long t1 = System.nanoTime();
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);
-        currentRanker = new RankerBM25Indexed(sites);
+        currentRanker = new RankerBM25(sites);
 //        currentRanker = new NoRanker();
         long t2 = System.nanoTime();
         System.out.println("Processing the data set and building the currentIndex took " +

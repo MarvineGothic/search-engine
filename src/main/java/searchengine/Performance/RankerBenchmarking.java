@@ -11,31 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
-
-//Meidum size db  - Quick
-//
-//
-//        RankerBM25:
-//        BenchmarkTimer{meanRuntime=2.671249 ms, stdError=2.629239 ms, stdRuntime=83.10227 ms, totalRuntime=2671.2495 ms}
-//        RankerIDF:
-//        BenchmarkTimer{meanRuntime=1.611038 ms, stdError=1.590845 ms, stdRuntime=50.2818 ms, totalRuntime=1611.0388 ms}
-//        NoRanker:
-//        BenchmarkTimer{meanRuntime=0.044538 ms, stdError=0.026841 ms, stdRuntime=0.848389 ms, totalRuntime=44.53878 ms}
-//
-//        Process finished with exit code 0
-//
-//        Long
-//
-//        RankerBM25:
-//        BenchmarkTimer{meanRuntime=2.414873 ms, stdError=2.37475 ms, stdRuntime=75.058655 ms, totalRuntime=2414.8733 ms}
-//        RankerIDF:
-//        BenchmarkTimer{meanRuntime=1.470146 ms, stdError=1.447804 ms, stdRuntime=45.760693 ms, totalRuntime=1470.1465 ms}
-//        NoRanker:
-//        BenchmarkTimer{meanRuntime=0.047911 ms, stdError=0.028499 ms, stdRuntime=0.900778 ms, totalRuntime=47.911335 ms}
-//
-//        Process finished with exit code 0
-
-
 public class RankerBenchmarking implements Callable<Integer> {
     private static List<String> queries;
     private static Index index;
@@ -52,14 +27,16 @@ public class RankerBenchmarking implements Callable<Integer> {
         index = new ReverseHashMapIndex();
         index.build(sites);
 
-        int iterations = 1000;
+        int iterations = 10000;
         int warmUpiterations = Math.max(1, iterations / 100);
 
         queries = generateQueryList(wordList, (iterations + warmUpiterations));
 
         IRanker[] rankerList = new IRanker[]{
                 new RankerBM25(sites),
-                new RankerBM25Indexed(sites),
+                new RankerIDF(sites),
+                new RankerNotIndexedIDF(sites),
+                new RankerNotIndexedBM25(sites),
                 new NoRanker(),
         };
 
@@ -108,15 +85,4 @@ public class RankerBenchmarking implements Callable<Integer> {
         IndexMethods.multiWordQuery(index, query, ranker);
         return 0;
     }
-
-    class myClass implements Callable<Integer> {
-
-        @Override
-        public Integer call() throws Exception {
-            //
-            return null;
-        }
-    }
-
-
 }

@@ -1,15 +1,14 @@
 package searchengine.Ranking;
 
 import searchengine.Indexes.Index;
-import searchengine.Indexes.IndexItem;
 import searchengine.Website;
 
 import java.util.List;
 
-public class RankerBM25 extends RankerIDF {
-    private float totalAmountOfWords;
+public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
+    protected float totalAmountOfWords;
 
-    public RankerBM25(List<Website> websiteList) {
+    public RankerNotIndexedBM25(List<Website> websiteList) {
         super(websiteList);
         for (Website site : sites) {
             this.totalAmountOfWords += site.getWords().size();
@@ -18,7 +17,7 @@ public class RankerBM25 extends RankerIDF {
 
     @Override
     public float getScore(String word, Website website, Index index) {
-        return idf(word, index, website) * tfPlus(word, website);
+        return idf(word, index) * tfPlus(word, website);
     }
 
     private float tfPlus(String word, Website website) {

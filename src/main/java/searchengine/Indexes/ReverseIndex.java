@@ -27,7 +27,7 @@ abstract public class ReverseIndex implements Index {
     public void build(List<Website> websiteList) {
         InitializeWordMap();
         for (Website currentSite : websiteList){
-            for (String indexWord : currentSite.getWords()){
+            for (String indexWord : currentSite.getSetOfWords()){
 //                The statement in this for loop is equivalent to the two lines below, but should be faster.
 //                wordMap.computeIfAbsent(wordOnSite, key -> new HashSet<>());
 //                wordMap.get(wordOnSite).add(new IndexedWebsite(currentSite, wordOnSite));

@@ -40,6 +40,10 @@ public class Website implements Comparable<Website> {
     protected Website() {
     }
 
+    public HashSet<String> getSetOfWords() {
+        return setOfWords;
+    }
+
     public List<String> getWords() {
         return words;
     }
