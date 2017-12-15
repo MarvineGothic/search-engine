@@ -2,6 +2,7 @@ package searchengine.Performance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
@@ -17,6 +18,30 @@ public class BenchmarkTimer {
     private long totalRuntime;
     private long stdRuntime;
     private long confInterval;
+
+    /**
+     * Generates a list of queries, each containing a specified number of words. Words are selected using seed(0) so
+     * this method will generate the same list each time as long as the input arguments are the same.
+     *
+     * @param wordList        The list of words to build the random queries from. (words are selected random)
+     * @param wordsPerQuery   How many words should each query contain
+     * @param numberOfQueries How many random queries do you want to generate
+     * @return A list of string in the format af multi-word queries (without any OR statements)
+     */
+    public static List<String> generateQueryList(ArrayList<String> wordList, int wordsPerQuery, int numberOfQueries) {
+        Random rnd = new Random();
+        rnd.setSeed(0);
+        List<String> queryList = new ArrayList<>();
+        for (int i = 0; i < numberOfQueries; i++) {
+            List<String> queryWords = new ArrayList<>();
+
+            for (int j = 0; j < wordsPerQuery; j++) {
+                queryWords.add(wordList.get(rnd.nextInt(wordList.size())));
+            }
+            queryList.add(String.join(" ", queryWords));
+        }
+        return queryList;
+    }
 
     /**
      * Create a benchmark of a method.

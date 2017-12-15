@@ -24,8 +24,8 @@ public class RankerIDF implements IRanker {
     protected List<Website> sites = new ArrayList<>();
 
     /**
+     * <pre>
      * Instantiates the current ranker
-     *
      * @param websiteList A list of all websites in the index used to perform the queries.
      *                    </pre>
      */
@@ -39,8 +39,8 @@ public class RankerIDF implements IRanker {
     }
 
     /**
+     * <pre>
      * Calculates the term frequency as the number of times a word occurs on a website
-     *
      * @param word    The query word
      * @param website The website the query word is found on.
      * @return term frequency
@@ -55,8 +55,8 @@ public class RankerIDF implements IRanker {
     }
 
     /**
+     * <pre>
      * Calculates the Inverse Document Frequency for the given website and query word
-     *
      * @param word    The query word
      * @param index   The index where the query is performed
      * @param website The website the query word is found on.

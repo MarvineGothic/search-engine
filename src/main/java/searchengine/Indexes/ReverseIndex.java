@@ -39,7 +39,15 @@ abstract public class ReverseIndex implements Index {
                 });
             }
         }
-        // TODO: 14-Dec-17  mmake seperate
+        assignWebsitesContaningWordCount();
+    }
+
+    /**
+     * <pre>
+     * For each word, this method assigns all the the number of websites containing that word to each IndexedWebsites
+     * </pre>
+     */
+    private void assignWebsitesContaningWordCount(){
         for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()) {
             int count = entry.getValue().size();
             for (IndexedWebsite website : entry.getValue()) {

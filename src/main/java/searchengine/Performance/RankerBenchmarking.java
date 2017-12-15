@@ -49,14 +49,14 @@ public class RankerBenchmarking implements Callable<Integer> {
         int iterations = 10000;
         int warmUpIterations = Math.max(1, iterations / 100);
 
-        queries = generateQueryList(wordList, (iterations + warmUpIterations));
+        queries = BenchmarkTimer.generateQueryList(wordList, (iterations + warmUpIterations), 1);
 
         IRanker[] rankerList = new IRanker[]{
-                new RankerBM25(sites),
-                new RankerIDF(sites),
+                new NoRanker(),
                 new RankerNotIndexedIDF(sites),
                 new RankerNotIndexedBM25(sites),
-                new NoRanker(),
+                new RankerIDF(sites),
+                new RankerBM25(sites),
         };
 
         for (IRanker ranker : rankerList) {
@@ -72,31 +72,6 @@ public class RankerBenchmarking implements Callable<Integer> {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * <pre>
-     * Generates a list of queries, each containing 1-5 random words from the wordList. Words are selected using seed(0) so
-     * this method will generate the same list each time as long as the input arguments are the same.
-     *
-     * @param wordList        The list of words to build the random queries from. (words are selected random)
-     * @param numberOfQueries How many random queries do you want to generate
-     * @return A list of string in the format af multi-word queries (without any OR statements)
-     * </pre>
-     */
-    private static List<String> generateQueryList(ArrayList<String> wordList, int numberOfQueries) {
-        Random rnd = new Random();
-        rnd.setSeed(0);
-        List<String> queryList = new ArrayList<>();
-        for (int i = 0; i < numberOfQueries; i++) {
-            List<String> queryWords = new ArrayList<>();
-            int wordsInQuery = rnd.nextInt(5) + 1;
-            for (int j = 0; j < wordsInQuery; j++) {
-                queryWords.add(wordList.get(rnd.nextInt(wordList.size())));
-            }
-            queryList.add(String.join(" ", queryWords));
-        }
-        return queryList;
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.Set;
  * ReverseTreeMap, ReverseHashMap and Simple
  */
 
-
+// TODO: 14-Dec-17 Clean this code, and consider using the BenchmarkTimer class
 public class Benchmarking {
     public static void main(String[] args) {
         runTimeIndex(new SimpleIndex());
