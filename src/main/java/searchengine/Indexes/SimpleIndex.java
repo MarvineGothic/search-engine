@@ -2,26 +2,23 @@ package searchengine.Indexes;
 
 import searchengine.Website;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+
+/**
+ * <pre>
+ * Implements the Index interface using a simplest possible algorithm
+ * </pre>
+ */
 public class SimpleIndex implements Index {
-
-    public static void main(String[] args) {}
-
     private List<Website> sites;
 
     public SimpleIndex() {
         this.sites = new ArrayList<>();
     }
 
-
     /**
-     * Returns a list of the indexed websites
-     */
-
-
-    /**
-     *
      * @param websiteList The full list of websites that should be processed
      *                    it "builds" a List of websites from given parameter
      *                    then removes repeated words and sort in alphabetic order

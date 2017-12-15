@@ -1,10 +1,11 @@
 
 JavaDoc/
 
-# data/
+data
 !data/enwiki-medium.txt
 !data/enwiki-small.txt
 !data/enwiki-tiny.txt
+!data/enwiki-GoT-tiny.txt
 
 
 # Compiled class file

@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import searchengine.Indexes.*;
+import searchengine.Ranking.IRanker;
+import searchengine.Ranking.RankerBM25;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;

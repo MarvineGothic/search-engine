@@ -3,6 +3,7 @@ package searchengine.Indexes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import searchengine.Ranking.RankerBM25;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ class RankerBM25Test {
         for (Website site : sites) {
             for (String word : words) {
                 float tf = ranker.tf(word, site);
-                float idf = ranker.idf(word, index);
+                float idf = ranker.idf(word, index, site);
                 float DL = site.getWords().size();
                 //float DL = (sites.size() > 0 ? sites.size() : 1);
                 expectedValue = idf * (tf * (1.75f + 1f) / (1.75f * (1f - 0.75f + 0.75f * DL / AVDLSites) + tf));

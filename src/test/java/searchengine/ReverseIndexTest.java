@@ -1,4 +1,5 @@
 
+import searchengine.IndexedWebsite;
 import searchengine.Indexes.ReverseHashMapIndex;
 import searchengine.Indexes.ReverseTreeMapIndex;
 import searchengine.Website;
@@ -59,7 +60,7 @@ class ReverseIndexTest {
 
     private void buildHashMapIndex() {
         //Case 1a - Empty websiteList
-        Map<String, HashSet<Website>> emptyHashWordMap = new ReverseHashMapIndex().getWordMap();
+        Map<String, HashSet<IndexedWebsite>> emptyHashWordMap = new ReverseHashMapIndex().getWordMap();
         assertNull(emptyHashWordMap, "Case 1a failed, actual output was: "+emptyHashWordMap);
 
         //Case 2a - Single website in websiteList
@@ -82,7 +83,7 @@ class ReverseIndexTest {
 
     private void buildTreeMapIndex(){
         //Case 4a - Empty websiteList
-        Map<String, HashSet<Website>> emptyTreeWordMap = new ReverseTreeMapIndex().getWordMap();
+        Map<String, HashSet<IndexedWebsite>> emptyTreeWordMap = new ReverseTreeMapIndex().getWordMap();
         assertNull(emptyTreeWordMap, "Case 4a failed, actual output was: "+emptyTreeWordMap);
 
         //Case 5a - Single website in websiteList

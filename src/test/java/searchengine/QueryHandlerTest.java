@@ -3,6 +3,10 @@ package searchengine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import searchengine.Indexes.*;
+import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
+import searchengine.Ranking.IRanker;
+import searchengine.Ranking.NoRanker;
+import searchengine.Ranking.RankerBM25;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +57,7 @@ class QueryHandlerTest {
         simpleidx.build(sites);
         idx = new ReverseHashMapIndex();
         idx.build(sites);
-        simpleRanker = new RankerIDF(sites);
+        simpleRanker = new NoRanker();
         ranker = new RankerBM25(sites);
         indexMethods = new IndexMethods();
     }
@@ -134,7 +138,7 @@ class QueryHandlerTest {
         };
         for (String lookupQuery : lookupQueries) {
             List<Website> expected = IndexMethods.multiWordQuery(idx, lookupQuery, ranker);
-            List<Website> actual = IndexMethods.multiWordQuery2(idx, lookupQuery, ranker);
+            List<Website> actual = IndexMethodsOld.multiWordQuery(idx, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }
