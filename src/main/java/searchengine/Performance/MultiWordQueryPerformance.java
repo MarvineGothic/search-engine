@@ -2,6 +2,7 @@ package searchengine.Performance;
 
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
+import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Ranking.IRanker;
 import searchengine.Indexes.Index;
 import searchengine.Ranking.RankerBM25;
@@ -17,7 +18,7 @@ import java.util.List;
  * ReverseTreeMap, ReverseHashMap and Simple
  */
 
-
+// TODO: 14-Dec-17 Clean this code, and consider using the BenchmarkTimer class
 public class MultiWordQueryPerformance {
     public static void main(String[] args) {
         final int multiWordQuery = 1;
@@ -64,7 +65,7 @@ public class MultiWordQueryPerformance {
             elapsedTime = System.nanoTime() - startTime;
         } else {
             long startTime = System.nanoTime();
-            IndexMethods.multiWordQuery2(index, query, ranker);
+            IndexMethodsOld.multiWordQuery(index, query, ranker);
             elapsedTime = System.nanoTime() - startTime;
         }
         //printing result

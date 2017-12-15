@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * This class gives a benchmark with average runtime, total run time and standard deviations of all run times
+ * This class gives a benchmark with average runtime, total run time and 95% confidence interval of the average
+ * of all run times
  */
 public class BenchmarkTimer {
     private Callable<Integer> callable;
@@ -20,8 +21,8 @@ public class BenchmarkTimer {
     /**
      * Create a benchmark of a method.
      *
-     * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the function called
-     *                         when benchmarking.
+     * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the
+     *                         function called when benchmarking.
      * @param iterations       The number of iterations the benchmark is based on.
      * @param warmUpIterations The number of warm up iterations used for the benchmark.
      * @throws Exception If the Callable method throws an axception it needs to be caught.

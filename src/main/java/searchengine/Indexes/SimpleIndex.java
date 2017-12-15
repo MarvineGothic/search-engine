@@ -1,12 +1,17 @@
 package searchengine.Indexes;
 
 import searchengine.Website;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+
+/**
+ * <pre>
+ * Implements the Index interface using a simplest possible algorithm
+ * </pre>
+ */
 public class SimpleIndex implements Index {
-
     private List<Website> sites;
 
     public SimpleIndex() {

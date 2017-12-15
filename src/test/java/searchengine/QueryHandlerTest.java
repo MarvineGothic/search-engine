@@ -3,6 +3,7 @@ package searchengine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import searchengine.Indexes.*;
+import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Ranking.IRanker;
 import searchengine.Ranking.NoRanker;
 import searchengine.Ranking.RankerBM25;
@@ -137,7 +138,7 @@ class QueryHandlerTest {
         };
         for (String lookupQuery : lookupQueries) {
             List<Website> expected = IndexMethods.multiWordQuery(idx, lookupQuery, ranker);
-            List<Website> actual = IndexMethods.multiWordQuery2(idx, lookupQuery, ranker);
+            List<Website> actual = IndexMethodsOld.multiWordQuery(idx, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }
