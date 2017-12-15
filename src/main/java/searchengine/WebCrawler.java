@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,10 +13,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Author: Rasmus F
- * This class will start with webpage domain (fx http://gameofthrones.wikia.com/wiki/), and continue to search all
- * webpages linked in that webpage as ling as the links are under the same domain.
- * For each webpage visited the webpage's url, title and html stripped text will be saved in format
+ * <pre>
+ * This class will start with website domain (fx http://gameofthrones.wikia.com/wiki/), and continue to search all
+ * websites linked in that website as ling as the links are under the same domain.
+ * For each website visited the website's url, title and html stripped text will be saved in format
  *      *PAGE:[url]
  *      [Title]
  *      Word1
@@ -29,6 +30,7 @@ import java.util.*;
  * Inspired by:
  *      https://www.mkyong.com/java/jsoup-basic-web-crawler-example/
  *      https://stackoverflow.com/questions/1600291/validating-url-in-java
+ * </pre>
  */
 public class WebCrawler {
     private String illgalCharacters;
@@ -40,22 +42,7 @@ public class WebCrawler {
     private HashMap<String, Integer> retryLinks; // Hashmap of failed links: Key: urls, Value: Number of failed attempts
     private boolean continueCrawling = true;
 
-    /**
-     * The main program will start to crawl the domain given until you ask it to quit or it cannot find any
-     * urls mathing the sub domain anymore.
-     * @param args First element of args is the webpage domain (fx http://gameofthrones.wikia.com/wiki/)
-     */
-    public static void main(String[] args){
-        if (args.length == 0){
-            System.out.println("Missing starting page argument");
-            return;
-        }
-        WebCrawler webCrawler = new WebCrawler(args[0]);
-        webCrawler.crawl();
-    }
-
-
-    private WebCrawler(String startPage){
+    private WebCrawler(String startPage) {
         illgalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
         exploredLinks = new HashSet<>();
         unexploredLinks = new HashSet<>();
@@ -74,7 +61,7 @@ public class WebCrawler {
         // Check if file exists
         boolean fileExits1 = new File(fileName).isFile();
         boolean fileExits2 = new File(fileNameVisited).isFile();
-        if (fileExits1 || fileExits2){
+        if (fileExits1 || fileExits2) {
             if (!(fileExits1 && fileExits2))
                 throw new Error("Both " + fileName + " and " + " must exist");
             // Load data
@@ -85,7 +72,7 @@ public class WebCrawler {
         }
 
         try {
-            dataWriter = new FileWriter(fileName,true);
+            dataWriter = new FileWriter(fileName, true);
         } catch (IOException e) {
             System.out.println("Failed to open the data file for writing");
             e.printStackTrace();
@@ -96,10 +83,28 @@ public class WebCrawler {
     }
 
     /**
+     * <pre>
+     * The main program will start to crawl the domain given until you ask it to quit or it cannot find any
+     * urls mathing the sub domain anymore.
+     * @param args First element of args is the website domain (fx http://gameofthrones.wikia.com/wiki/)
+     * </pre>
+     */
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Missing starting page argument");
+            return;
+        }
+        WebCrawler webCrawler = new WebCrawler(args[0]);
+        webCrawler.crawl();
+    }
+
+    /**
+     * <pre>
      * This method loads the datafiles corresponding to the domain url, so you are ready to continue crawling
      * @return true if the files were successfully loaded. Otherwise false.
+     * </pre>
      */
-    private boolean loadData(){
+    private boolean loadData() {
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
         String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
         String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
@@ -126,7 +131,7 @@ public class WebCrawler {
 
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
-            if (line.startsWith("*PAGE:")){
+            if (line.startsWith("*PAGE:")) {
                 String url = line.replace("*PAGE:", "");
                 assert urlValidator.isValid(url);
                 exploredLinks.add(url);
@@ -136,16 +141,18 @@ public class WebCrawler {
     }
 
     /**
-     * Finds the links of the given webpage and adds them to unexplored links if not yet visited. It also saves the
-     * webpage's url, title and html-stripped text in the format
+     * <pre>
+     * Finds the links of the given website and adds them to unexplored links if not yet visited. It also saves the
+     * website's url, title and html-stripped text in the format
      *      *PAGE:[url]
      *      [Title]
      *      Word1
      *      Word2
      *      ...
-     * @param url The webpage to be processed
+     * @param url The website to be processed
+     * </pre>
      */
-    private void processLink(String url){
+    private void processLink(String url) {
 
         exploredLinks.add(url);
 
@@ -166,8 +173,7 @@ public class WebCrawler {
             title = "Mainpage";
         sb.append("\n").append(title);
 
-        // TODO Maybe add features to only parse selected html elements (custom for different domains)
-        for (String word : document.text().split(" ")){
+        for (String word : document.text().split(" ")) {
             String strippedWord = wordStrip(word);
             if (!strippedWord.equals(""))
                 sb.append("\n").append(strippedWord);
@@ -193,14 +199,16 @@ public class WebCrawler {
     }
 
     /**
+     * <pre>
      * Author: Rasmus F
      * strips a word to remove illegal characters (fx ,.'?!)
      * It also removes foreign words such as é, à or á.
-     * Finally it removes some webpages
+     * Finally it removes some websites
      * @param word:  Word to be stripped
      * @return stripped word
+     * </pre>
      */
-    private String wordStrip(String word){
+    private String wordStrip(String word) {
         if (word.contains(illgalCharacters))
             return "";
         if (word.contains(domain))
@@ -211,18 +219,20 @@ public class WebCrawler {
     }
 
     /**
+     * <pre>
      * Saved a files with all unexplored links so if the program is terminated it can still load unexplored links
+     * </pre>
      */
-    private void saveUnexploredLinks(){
+    private void saveUnexploredLinks() {
 
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
         String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
 
         // Tries 5 times if an error occurs.
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < 5; j++) {
             try {
                 FileWriter unexploredWriter = new FileWriter(fileNameVisited, false);
-                for (String url : unexploredLinks){
+                for (String url : unexploredLinks) {
                     unexploredWriter.append(url + "\n");
                 }
                 unexploredWriter.close();
@@ -239,39 +249,12 @@ public class WebCrawler {
         }
     }
 
-
     /**
-     * This class is used in a thread that scans for the user to quit the process.
-     */
-    private static class AbortScanner implements Runnable {
-        private WebCrawler crawler;
-
-        AbortScanner(WebCrawler crawler){
-            this.crawler = crawler;
-        }
-
-        public void run() {
-            Scanner sc = new Scanner(System.in);
-            List<String> abortConditions = new ArrayList<>();
-            abortConditions.add("q");
-
-            System.out.println("type q (and enter) to quit");
-            System.out.println("Your progress will be saved and you can continue later\n");
-            while (sc.hasNext()) {
-                String line = sc.nextLine();
-                if (abortConditions.contains(line.toLowerCase())) {
-                    crawler.continueCrawling = false;
-                    break;
-                }
-            }
-        }
-    }
-
-
-    /**
+     * <pre>
      * This method handles the while loop that does the actual web-crawling
+     * </pre>
      */
-    private void crawl(){
+    private void crawl() {
         // Monitor for user termination
         Thread thread = new Thread(new AbortScanner(this));
         thread.start();
@@ -279,16 +262,13 @@ public class WebCrawler {
         System.out.println("Starting web crawling\n");
         int loopcount = 0;
         int interruptetSleepCount = -1;
-        while (unexploredLinks.size() > 0 && continueCrawling){
+        while (unexploredLinks.size() > 0 && continueCrawling) {
             loopcount += 1;
 
             // Sleep for 2 seconds to avoid overloading target server
-            try
-            {
+            try {
                 Thread.sleep(2000);
-            }
-            catch(InterruptedException ex)
-            {
+            } catch (InterruptedException ex) {
                 interruptetSleepCount += 1;
             }
 
@@ -301,7 +281,7 @@ public class WebCrawler {
 
 
             // Stop if to many interruptions errors
-            if (interruptetSleepCount > loopcount / 5){
+            if (interruptetSleepCount > loopcount / 5) {
                 System.out.println("Error: Stopped crawling. To many interruptions");
                 break;
             }
@@ -322,6 +302,35 @@ public class WebCrawler {
             System.out.println("\nCrawling of " + domain + "stopped\nProgress has been saved for next session");
 
 
+    }
+
+    /**
+     * <pre>
+     * This class is used in a thread that scans for the user to quit the process.
+     * </pre>
+     */
+    private static class AbortScanner implements Runnable {
+        private WebCrawler crawler;
+
+        AbortScanner(WebCrawler crawler) {
+            this.crawler = crawler;
+        }
+
+        public void run() {
+            Scanner sc = new Scanner(System.in);
+            List<String> abortConditions = new ArrayList<>();
+            abortConditions.add("q");
+
+            System.out.println("type q (and enter) to quit");
+            System.out.println("Your progress will be saved and you can continue later\n");
+            while (sc.hasNext()) {
+                String line = sc.nextLine();
+                if (abortConditions.contains(line.toLowerCase())) {
+                    crawler.continueCrawling = false;
+                    break;
+                }
+            }
+        }
     }
 
 

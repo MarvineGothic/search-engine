@@ -4,12 +4,13 @@ import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.ReverseHashMapIndex;
+import searchengine.Performance.BenchmarkingResources.RankerNotIndexedBM25;
+import searchengine.Performance.BenchmarkingResources.RankerNotIndexedIDF;
 import searchengine.Ranking.*;
 import searchengine.Website;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**

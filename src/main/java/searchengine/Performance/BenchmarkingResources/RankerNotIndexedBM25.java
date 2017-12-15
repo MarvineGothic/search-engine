@@ -1,4 +1,4 @@
-package searchengine.Ranking;
+package searchengine.Performance.BenchmarkingResources;
 
 import searchengine.Indexes.Index;
 import searchengine.Website;
@@ -20,6 +20,7 @@ import java.util.List;
  * </pre>
  */
 @SuppressWarnings("Duplicates")
+@Deprecated
 public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
     private float totalAmountOfWords;
     private float avdL;

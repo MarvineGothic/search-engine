@@ -1,7 +1,8 @@
-package searchengine.Ranking;
+package searchengine.Performance.BenchmarkingResources;
 
 import searchengine.IndexedWebsite;
 import searchengine.Indexes.Index;
+import searchengine.Ranking.IRanker;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
  * idf: Inverse Document Frequency = log2(d/n)
  * </pre>
  */
+@Deprecated
 public class RankerNotIndexedIDF implements IRanker {
     protected List<Website> sites = new ArrayList<>();
 

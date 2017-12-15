@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * NOTE This class is identical to IndexMethod except for a single method and is only used for benchmarking
  * </pre>
  */
+@Deprecated
 public class IndexMethodsOld extends IndexMethods {
     /**
      * <pre>
