@@ -4,10 +4,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import searchengine.Indexes.*;
+import searchengine.Indexes.Index;
+import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Ranking.BM25Score;
-import searchengine.Ranking.PreScore;
 import searchengine.Ranking.Score;
 
 import javax.servlet.http.HttpServletResponse;
@@ -59,8 +58,6 @@ public class SearchEngine extends ResourceConfig {
         long t1 = System.nanoTime();
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);
-//        Score baseScore = new BM25Score(sites);
-//        currentRanker = new PreScore(baseScore, (InvertedIndex)currentIndex);
         currentRanker = new BM25Score(sites);
         long t2 = System.nanoTime();
         System.out.println("Processing the data set and building the currentIndex took " +
@@ -75,7 +72,7 @@ public class SearchEngine extends ResourceConfig {
      * It assumes that a GET request of the form "search?query=word" is made.
      *
      * @param response Http response object
-     * @param query the query string
+     * @param query    the query string
      * @return the list of websites matching the query
      */
 
@@ -90,7 +87,7 @@ public class SearchEngine extends ResourceConfig {
 
 
         if (query == null) {
-            return new ArrayList<Website>();
+            return new ArrayList<>();
         }
 
         String line = query;

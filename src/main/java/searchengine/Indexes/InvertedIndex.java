@@ -1,10 +1,8 @@
 package searchengine.Indexes;
 
 import searchengine.IndexedWebsite;
-import searchengine.PreScoredWebsite;
 import searchengine.Ranking.Score;
 import searchengine.Website;
-import sun.reflect.generics.scope.Scope;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +16,7 @@ import java.util.Map;
  * </pre>
  */
 abstract public class InvertedIndex implements Index {
-    protected Map<String, HashSet<PreScoredWebsite>> wordMap;
+    protected Map<String, HashSet<IndexedWebsite>> wordMap;
 
     /**
      * <pre>
@@ -37,11 +35,12 @@ abstract public class InvertedIndex implements Index {
                     if (value == null) {
                         value = new HashSet<>();
                     }
-                    value.add(new PreScoredWebsite(currentSite, indexWord));
+                    value.add(new IndexedWebsite(currentSite, indexWord));
                     return value;
                 });
             }
         }
+        assignWebsitesContaningWordCount();
     }
 
     /**
@@ -49,11 +48,11 @@ abstract public class InvertedIndex implements Index {
      * For each word, this method assigns all the the number of websites containing that word to each IndexedWebsites
      * </pre>
      */
-    public void preCalculateScores(Score score){
-        for (Map.Entry<String, HashSet<PreScoredWebsite>> entry : wordMap.entrySet()) {
-            for (PreScoredWebsite website : entry.getValue()) {
-                float f = score.getScore(entry.getKey(), website, this);
-                website.setScore(f);
+    private void assignWebsitesContaningWordCount(){
+        for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()) {
+            int count = entry.getValue().size();
+            for (IndexedWebsite website : entry.getValue()) {
+                website.setWebsitesContainingWordCount(count);
             }
         }
     }
@@ -79,7 +78,7 @@ abstract public class InvertedIndex implements Index {
      * @return the mapping of queryWords to websites.
      * </pre>
      */
-    public Map<String, HashSet<PreScoredWebsite>> getWordMap() {
+    public Map<String, HashSet<IndexedWebsite>> getWordMap() {
         return wordMap;
     }
 }

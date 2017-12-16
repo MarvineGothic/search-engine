@@ -59,7 +59,7 @@ class InvertedIndexTest {
 
     private void buildHashMapIndex() {
         //Case 1a - Empty websiteList
-        Map<String, HashSet<PreScoredWebsite>> emptyHashWordMap = new InvertedHashMapIndex().getWordMap();
+        Map<String, HashSet<IndexedWebsite>> emptyHashWordMap = new InvertedHashMapIndex().getWordMap();
         assertNull(emptyHashWordMap, "Case 1a failed, actual output was: "+emptyHashWordMap);
 
         //Case 2a - Single website in websiteList
@@ -82,7 +82,7 @@ class InvertedIndexTest {
 
     private void buildTreeMapIndex(){
         //Case 4a - Empty websiteList
-        Map<String, HashSet<PreScoredWebsite>> emptyTreeWordMap = new InvertedTreeMapIndex().getWordMap();
+        Map<String, HashSet<IndexedWebsite>> emptyTreeWordMap = new InvertedTreeMapIndex().getWordMap();
         assertNull(emptyTreeWordMap, "Case 4a failed, actual output was: "+emptyTreeWordMap);
 
         //Case 5a - Single website in websiteList
