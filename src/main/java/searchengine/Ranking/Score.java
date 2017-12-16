@@ -8,7 +8,7 @@ import searchengine.Website;
  * This interface can rank a website matching a query provided as an input
  * </pre>
  */
-public interface IRanker {
+public interface Score {
 
     /**
      * <pre>

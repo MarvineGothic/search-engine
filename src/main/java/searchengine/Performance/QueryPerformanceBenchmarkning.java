@@ -3,15 +3,14 @@ package searchengine.Performance;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
-import searchengine.Indexes.ReverseHashMapIndex;
+import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
-import searchengine.Ranking.IRanker;
-import searchengine.Ranking.RankerBM25;
+import searchengine.Ranking.BM25Score;
+import searchengine.Ranking.Score;
 import searchengine.Website;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
@@ -25,7 +24,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
     private Index index;
     private List<String> queryList;
     private boolean methodType;
-    private IRanker ranker;
+    private Score ranker;
     private int currentQueryIndex = 0;
 
     /**
@@ -39,7 +38,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
      * @param ranker
      * </pre>
      */
-    public QueryPerformanceBenchmarkning(Index index, List<String> queryList, boolean methodType, IRanker ranker) {
+    public QueryPerformanceBenchmarkning(Index index, List<String> queryList, boolean methodType, Score ranker) {
         this.index = index;
         this.queryList = queryList;
         this.methodType = methodType;
@@ -86,9 +85,9 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
     static private int comparePerformance(String filename, int wordsPerQuery, int iterations) {
         ArrayList<String> wordsInFile = new ArrayList<>(FileHelper.loadWordsInFile(filename));
         List<Website> sites = FileHelper.loadFile(filename);
-        Index index = new ReverseHashMapIndex();
+        Index index = new InvertedHashMapIndex();
         index.build(sites);
-        IRanker ranker = new RankerBM25(sites);
+        Score ranker = new BM25Score(sites);
         System.out.println("Comparing multiWordQuery using wordsPerQuery: " + wordsPerQuery + ", iterations: " + iterations);
 
         int warmUpIterations = iterations / 100;

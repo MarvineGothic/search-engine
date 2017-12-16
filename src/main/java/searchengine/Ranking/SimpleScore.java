@@ -8,7 +8,7 @@ import searchengine.Website;
  * This ranker gives all site the same score (Used when no ranking is desired)
  * </pre>
  */
-public class NoRanker implements IRanker {
+public class SimpleScore implements Score {
 
     @Override
     public float getScore(String word, Website website, Index index) {

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import searchengine.Indexes.*;
 import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
-import searchengine.Ranking.IRanker;
-import searchengine.Ranking.NoRanker;
-import searchengine.Ranking.RankerBM25;
+import searchengine.Ranking.SimpleScore;
+import searchengine.Ranking.Score;
+import searchengine.Ranking.BM25Score;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +18,8 @@ class QueryHandlerTest {
     private IndexMethods indexMethods = null;
     private Index idx;
     private Index simpleidx;
-    private IRanker ranker;
-    private IRanker simpleRanker;
+    private Score ranker;
+    private Score simpleRanker;
 
     private Website one = new Website("1.com", "example1", Arrays.asList("word1", "word2"));
     private Website two = new Website("2.com", "example2", Arrays.asList("word2", "word3"));
@@ -55,10 +55,10 @@ class QueryHandlerTest {
 
         simpleidx = new SimpleIndex();
         simpleidx.build(sites);
-        idx = new ReverseHashMapIndex();
+        idx = new InvertedHashMapIndex();
         idx.build(sites);
-        simpleRanker = new NoRanker();
-        ranker = new RankerBM25(sites);
+        simpleRanker = new SimpleScore();
+        ranker = new BM25Score(sites);
         indexMethods = new IndexMethods();
     }
 

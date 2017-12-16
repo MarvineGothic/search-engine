@@ -2,8 +2,8 @@ package searchengine.Performance;
 
 import searchengine.FileHelper;
 import searchengine.Indexes.Index;
-import searchengine.Indexes.ReverseHashMapIndex;
-import searchengine.Indexes.ReverseTreeMapIndex;
+import searchengine.Indexes.InvertedHashMapIndex;
+import searchengine.Indexes.InvertedTreeMapIndex;
 import searchengine.Indexes.SimpleIndex;
 import searchengine.Website;
 
@@ -21,8 +21,8 @@ import java.util.Set;
 public class Benchmarking {
     public static void main(String[] args) {
         runTimeIndex(new SimpleIndex());
-        runTimeIndex(new ReverseTreeMapIndex());
-        runTimeIndex(new ReverseHashMapIndex());
+        runTimeIndex(new InvertedTreeMapIndex());
+        runTimeIndex(new InvertedHashMapIndex());
     }
 
 

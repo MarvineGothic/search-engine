@@ -1,7 +1,10 @@
 package searchengine.Indexes;
 
 import searchengine.IndexedWebsite;
+import searchengine.PreScoredWebsite;
+import searchengine.Ranking.Score;
 import searchengine.Website;
+import sun.reflect.generics.scope.Scope;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,8 +17,8 @@ import java.util.Map;
  * Implements the Index interface using a reverse index method
  * </pre>
  */
-abstract public class ReverseIndex implements Index {
-    protected Map<String, HashSet<IndexedWebsite>> wordMap;
+abstract public class InvertedIndex implements Index {
+    protected Map<String, HashSet<PreScoredWebsite>> wordMap;
 
     /**
      * <pre>
@@ -34,12 +37,11 @@ abstract public class ReverseIndex implements Index {
                     if (value == null) {
                         value = new HashSet<>();
                     }
-                    value.add(new IndexedWebsite(currentSite, indexWord));
+                    value.add(new PreScoredWebsite(currentSite, indexWord));
                     return value;
                 });
             }
         }
-        assignWebsitesContaningWordCount();
     }
 
     /**
@@ -47,19 +49,17 @@ abstract public class ReverseIndex implements Index {
      * For each word, this method assigns all the the number of websites containing that word to each IndexedWebsites
      * </pre>
      */
-    private void assignWebsitesContaningWordCount(){
-        for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()) {
-            int count = entry.getValue().size();
-            for (IndexedWebsite website : entry.getValue()) {
-                website.setWebsitesContainingWordCount(count);
+    public void preCalculateScores(Score score){
+        for (Map.Entry<String, HashSet<PreScoredWebsite>> entry : wordMap.entrySet()) {
+            for (PreScoredWebsite website : entry.getValue()) {
+                float f = score.getScore(entry.getKey(), website, this);
+                website.setScore(f);
             }
         }
     }
 
     @Override
     public List<Website> lookup(String queryWord) {
-        if (wordMap == null)
-            return null;
         return new ArrayList<>(wordMap.getOrDefault(queryWord, new HashSet<>()));
     }
 
@@ -79,7 +79,7 @@ abstract public class ReverseIndex implements Index {
      * @return the mapping of queryWords to websites.
      * </pre>
      */
-    public Map<String, HashSet<IndexedWebsite>> getWordMap() {
+    public Map<String, HashSet<PreScoredWebsite>> getWordMap() {
         return wordMap;
     }
 }

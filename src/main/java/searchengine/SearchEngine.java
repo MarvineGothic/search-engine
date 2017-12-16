@@ -4,9 +4,11 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import searchengine.Indexes.*;
-import searchengine.Ranking.IRanker;
-import searchengine.Ranking.RankerBM25;
+import searchengine.Ranking.BM25Score;
+import searchengine.Ranking.PreScore;
+import searchengine.Ranking.Score;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -30,7 +32,7 @@ import java.util.List;
 @Path("/")
 public class SearchEngine extends ResourceConfig {
     private static Index currentIndex; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
-    private static IRanker currentRanker; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
+    private static Score currentRanker; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
 
     public SearchEngine() {
         packages("searchengine");
@@ -53,15 +55,17 @@ public class SearchEngine extends ResourceConfig {
             return;
         }
 
-        currentIndex = new ReverseHashMapIndex();
+        currentIndex = new InvertedHashMapIndex();
         long t1 = System.nanoTime();
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);
-        currentRanker = new RankerBM25(sites);
-//        currentRanker = new NoRanker();
+//        Score baseScore = new BM25Score(sites);
+//        currentRanker = new PreScore(baseScore, (InvertedIndex)currentIndex);
+        currentRanker = new BM25Score(sites);
         long t2 = System.nanoTime();
         System.out.println("Processing the data set and building the currentIndex took " +
                 (t2 - t1) / 10e6 + " milliseconds.");
+
         // run the search engine
         SpringApplication.run(SearchEngine.class);
     }

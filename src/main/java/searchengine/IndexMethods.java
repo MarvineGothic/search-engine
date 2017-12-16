@@ -1,7 +1,7 @@
 package searchengine;
 
 import searchengine.Indexes.Index;
-import searchengine.Ranking.IRanker;
+import searchengine.Ranking.Score;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -103,7 +103,7 @@ public class IndexMethods {
      * @param ranker         A ranker used to sort the found websites
      * @return A list of websites matching at least one of the OR conditions of the query.
      </pre> */
-    public static List<Website> multiWordQuery(@NotNull Index index, @NotNull String multiWordQuery, @NotNull IRanker ranker) {
+    public static List<Website> multiWordQuery(@NotNull Index index, @NotNull String multiWordQuery, @NotNull Score ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
         Map<Website, Float> allRanks = new HashMap<>();
         // We loop over each OR separated list of query words

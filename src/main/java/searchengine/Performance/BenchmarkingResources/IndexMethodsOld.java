@@ -2,7 +2,7 @@ package searchengine.Performance.BenchmarkingResources;
 
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
-import searchengine.Ranking.IRanker;
+import searchengine.Ranking.Score;
 import searchengine.Website;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class IndexMethodsOld extends IndexMethods {
      * @return A list of websites matching at least one of the OR conditions of the query.
      * </pre>
      */
-    public static List<Website> multiWordQuery(Index index, String multiWordQuery, IRanker ranker) {
+    public static List<Website> multiWordQuery(Index index, String multiWordQuery, Score ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
 
         Map<Website, Float> allRanks = new HashMap<>();

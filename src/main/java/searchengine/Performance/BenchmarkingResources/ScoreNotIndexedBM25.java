@@ -1,4 +1,4 @@
-package searchengine.Ranking;
+package searchengine.Performance.BenchmarkingResources;
 
 import searchengine.Indexes.Index;
 import searchengine.Website;
@@ -7,7 +7,9 @@ import java.util.List;
 
 /**
  * <pre>
- * Implements a the IRanker class using the Okapi BM25 algorithm to score the websites.
+ *     NOTE: This class is identical to the BM25Score class except it does not use IndexedWebsites and is
+ *     only used for performance.
+ * Implements a the Score class using the Okapi BM25 algorithm to score the websites.
  * Read https://en.wikipedia.org/wiki/Okapi_BM25 for more information.
  *
  * Formulas and definitions used:
@@ -18,7 +20,8 @@ import java.util.List;
  * </pre>
  */
 @SuppressWarnings("Duplicates")
-public class RankerBM25 extends RankerIDF {
+@Deprecated
+public class ScoreNotIndexedBM25 extends ScoreNotIndexedIDF {
     private float totalAmountOfWords;
     private float avdL;
 
@@ -28,7 +31,7 @@ public class RankerBM25 extends RankerIDF {
      * @param websiteList A list of all websites in the index used to perform the queries.
      * </pre>
      */
-    public RankerBM25(List<Website> websiteList) {
+    public ScoreNotIndexedBM25(List<Website> websiteList) {
         super(websiteList);
         for (Website site : sites) {
             this.totalAmountOfWords += site.getWords().size();
@@ -39,7 +42,7 @@ public class RankerBM25 extends RankerIDF {
 
     @Override
     public float getScore(String word, Website website, Index index) {
-        return idf(word, index, website) * tfPlus(word, website);
+        return idf(word, index) * tfPlus(word, website);
     }
 
     /**

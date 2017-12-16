@@ -1,4 +1,4 @@
-package searchengine.Performance.BenchmarkingResources;
+package searchengine.Ranking;
 
 import searchengine.Indexes.Index;
 import searchengine.Website;
@@ -7,9 +7,7 @@ import java.util.List;
 
 /**
  * <pre>
- *     NOTE: This class is identical to the RankerBM25 class except it does not use IndexedWebsites and is
- *     only used for performance.
- * Implements a the IRanker class using the Okapi BM25 algorithm to score the websites.
+ * Implements a the Score class using the Okapi BM25 algorithm to score the websites.
  * Read https://en.wikipedia.org/wiki/Okapi_BM25 for more information.
  *
  * Formulas and definitions used:
@@ -20,8 +18,7 @@ import java.util.List;
  * </pre>
  */
 @SuppressWarnings("Duplicates")
-@Deprecated
-public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
+public class BM25Score extends TFIDFScore {
     private float totalAmountOfWords;
     private float avdL;
 
@@ -31,7 +28,7 @@ public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
      * @param websiteList A list of all websites in the index used to perform the queries.
      * </pre>
      */
-    public RankerNotIndexedBM25(List<Website> websiteList) {
+    public BM25Score(List<Website> websiteList) {
         super(websiteList);
         for (Website site : sites) {
             this.totalAmountOfWords += site.getWords().size();
@@ -42,7 +39,7 @@ public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
 
     @Override
     public float getScore(String word, Website website, Index index) {
-        return idf(word, index) * tfPlus(word, website);
+        return idf(word, index, website) * tfPlus(word, website);
     }
 
     /**
@@ -55,7 +52,7 @@ public class RankerNotIndexedBM25 extends RankerNotIndexedIDF {
      * </pre>
      */
     private float tfPlus(String word, Website website) {
-        float tf = this.tf(word, website);
+        float tf = TFScore.tf(word, website);
         float b = 0.75f;
         float k = 1.75f;
         float dL = website.getWords().size();

@@ -1,9 +1,12 @@
-package searchengine.Indexes;
+package searchengine.Ranking;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import searchengine.Ranking.RankerBM25;
+import searchengine.Indexes.Index;
+import searchengine.Indexes.InvertedHashMapIndex;
+import searchengine.Ranking.BM25Score;
+import searchengine.Ranking.TFScore;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -12,38 +15,33 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RankerBM25Test {
+class ScoreBM25Test {
 
-    List<Website> sites;
-    List<Website> emptySites;
-    float totalAmountOfWordsSites = 0;
-    float AVDLSites;
-    float getTotalAmountOfWordsEmptySites = 0;
-    float AVDLEmptySites = 0;
-    private RankerBM25 ranker;
+    private List<Website> sites;
+    private float totalAmountOfWordsSites = 0;
+    private float AVDLSites;
+    private BM25Score ranker;
     private Index index;
-    private Index emptyIndex;
 
     @BeforeEach
     void setUp() {
         sites = new ArrayList<>();
-        sites.add(new Website("example1.com", "example1", Arrays.asList("word1", "word2", "word2", "word6", "word7")));
-        sites.add(new Website("example2.com", "example2", Arrays.asList("word2", "word3", "word6", "word3", "word7", "word8", "word8", "word3")));
-        sites.add(new Website("example3.com", "example3", Arrays.asList("word2", "word3", "word4", "word3", "word5", "word6", "word7")));
-        ranker = new RankerBM25(sites);
-        index = new ReverseHashMapIndex();
+        sites.add(new Website("example1.com", "example1", Arrays.asList("a", "b", "c")));
+        sites.add(new Website("example2.com", "example2", Arrays.asList("a", "b", "b", "c", "c", "c")));
+        sites.add(new Website("example3.com", "example3", Arrays.asList("a", "b", "c", "d")));
+        ranker = new BM25Score(sites);
+        index = new InvertedHashMapIndex();
         index.build(sites);
         for (Website site : sites) {
             totalAmountOfWordsSites += site.getWords().size();
         }
         AVDLSites = totalAmountOfWordsSites / sites.size();
-        emptySites = new ArrayList<>();
-        emptyIndex = new ReverseHashMapIndex();
     }
 
 
     @AfterEach
     void tearDown() {
+
         totalAmountOfWordsSites = 0;
     }
 
@@ -63,14 +61,14 @@ class RankerBM25Test {
     @Test
     void testGetScoreValues() {
         float expectedValue;
-        String[] words = new String[]{"word1", "word2", "word3"};
-        //Here word1 on site1 is tested.
+        String[] words = new String[]{"a", "b", "c"};
+
         for (Website site : sites) {
             for (String word : words) {
-                float tf = ranker.tf(word, site);
+                float tf = TFScore.tf(word, site);
                 float idf = ranker.idf(word, index, site);
                 float DL = site.getWords().size();
-                //float DL = (sites.size() > 0 ? sites.size() : 1);
+
                 expectedValue = idf * (tf * (1.75f + 1f) / (1.75f * (1f - 0.75f + 0.75f * DL / AVDLSites) + tf));
                 assertEquals(expectedValue, ranker.getScore(word, site, index), 1e-6, "getScoreValues failed for " + word + " and site " + site);
             }
