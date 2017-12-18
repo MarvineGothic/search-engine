@@ -89,7 +89,7 @@ public class SearchEngine extends ResourceConfig {
 
         System.out.println("Handling request for query word \""+query+"\"");
 
-        List<Website> resultList = IndexMethods.multiWordQuery(currentIndex, query, currentRanker);
+        List<Website> resultList = QueryHandler.multiWordQuery(currentIndex, query, currentRanker);
         long endTime = System.nanoTime();
         System.out.println("Found " + resultList.size() + " websites in " + (endTime - startTime) / 10e6 + " milliseconds.");
 

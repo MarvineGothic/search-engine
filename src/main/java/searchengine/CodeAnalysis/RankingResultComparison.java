@@ -1,7 +1,7 @@
 package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
-import searchengine.IndexMethods;
+import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Ranking.*;
@@ -84,7 +84,7 @@ public class RankingResultComparison {
 
         for (Score score : scoreList) {
             headers.add(score.getClass().getSimpleName());
-            List<Website> lookupResult = IndexMethods.multiWordQuery(index, query, score);
+            List<Website> lookupResult = QueryHandler.multiWordQuery(index, query, score);
             resultDict.put(score, lookupResult);
         }
         resultMatrix.add(headers);

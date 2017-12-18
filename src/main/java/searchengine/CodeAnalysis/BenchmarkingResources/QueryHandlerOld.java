@@ -1,6 +1,6 @@
 package searchengine.CodeAnalysis.BenchmarkingResources;
 
-import searchengine.IndexMethods;
+import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Ranking.Score;
 import searchengine.Website;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * </pre>
  */
 @Deprecated
-public class IndexMethodsOld extends IndexMethods {
+public class QueryHandlerOld extends QueryHandler {
     /**
      * <pre>
      * NOTE This method is identical to multiWordQuery from the parent class but uses a different algorithm. It is

@@ -6,10 +6,12 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
+ * <pre>
  * This class gives a benchmark with average runtime, total run time and 95% confidence interval of the average
  * of all run times
+ * </pre>
  */
-public class BenchmarkTimer {
+public class Benchmark {
     private Callable<Integer> callable;
     private int warmUpIterations;
     private int iterations;
@@ -20,6 +22,7 @@ public class BenchmarkTimer {
     private long confInterval;
 
     /**
+     * <pre>
      * Create a benchmark of a method.
      *
      * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the
@@ -27,26 +30,29 @@ public class BenchmarkTimer {
      * @param iterations       The number of iterations the benchmark is based on.
      * @param warmUpIterations The number of warm up iterations used for the benchmark.
      * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * </pre>
      */
-    public BenchmarkTimer(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
+    public Benchmark(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
         this.callable = callable;
         this.warmUpIterations = warmUpIterations;
         this.iterations = iterations;
         if (iterations <= 1) {
-            System.out.println("Error in BenchmarkTimer: iterations must be 2 or larger");
+            System.out.println("Error in Benchmark: iterations must be 2 or larger");
             return;
         }
         run();
     }
 
     /**
+     * <pre>
      * Create a benchmark of a method. The number of iterations is set to 100 with 1 warm up iterations as default.
      *
      * @param callable An implementation of the Callable<Integer> interface. The Call() method is the function called
      *                 when benchmarking.
      * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * </pre>
      */
-    public BenchmarkTimer(Callable<Integer> callable) throws Exception {
+    public Benchmark(Callable<Integer> callable) throws Exception {
         this.callable = callable;
         this.iterations = 100;
         this.warmUpIterations = 1;
@@ -55,6 +61,7 @@ public class BenchmarkTimer {
 
 
     /**
+     * <pre>
      * Generates a list of queries, each containing a specified number of words. Words are selected using seed(0) so
      * this method will generate the same list each time as long as the input arguments are the same.
      *
@@ -62,6 +69,7 @@ public class BenchmarkTimer {
      * @param wordsPerQuery   How many words should each query contain
      * @param numberOfQueries How many random queries do you want to generate
      * @return A list of string in the format af multi-word queries (without any OR statements)
+     * </pre>
      */
     public static List<String> generateQueryList(ArrayList<String> wordList, int wordsPerQuery, int numberOfQueries) {
         Random rnd = new Random();
@@ -79,40 +87,50 @@ public class BenchmarkTimer {
     }
 
     /**
+     * <pre>
      * @return The averate run time when Callable is called.
+     * </pre>
      */
     public long getMeanRuntime() {
         return meanRuntime;
     }
 
     /**
+     * <pre>
      * @return The toal runtime of all iterations
+     * </pre>
      */
     public long getTotalRuntime() {
         return totalRuntime;
     }
 
     /**
+     * <pre>
      * @return The standard deviation of all calls
+     * </pre>
      */
     public long getStdRuntime() {
         return stdRuntime;
     }
 
     /**
+     * <pre>
      * The standard deviation of the average runtime (standard deviation divided by sqrt(iterations)
      *
      * @return standard error on the mean.
+     * </pre>
      */
     public long getConfInterval() {
         return confInterval;
     }
 
     /**
+     * <pre>
      * This method runs the actual benchmark.
      * For the calculation of the 95% confidence interval see https://en.wikipedia.org/wiki/1.96
      *
      * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * </pre>
      */
     private void run() throws Exception {
         // Warm up
@@ -147,7 +165,7 @@ public class BenchmarkTimer {
 
     @Override
     public String toString() {
-        return String.format("BenchmarkTimer{" +
+        return String.format("Benchmark{" +
                 "meanRuntime=%s ms" +
                 ", 95%%confInterval=+/-%s ms" +
                 ", stdRuntime=%s ms" +

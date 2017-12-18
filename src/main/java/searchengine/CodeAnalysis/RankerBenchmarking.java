@@ -2,7 +2,7 @@ package searchengine.CodeAnalysis;
 
 import searchengine.CodeAnalysis.BenchmarkingResources.BM25ScoreNotIndexed;
 import searchengine.FileHelper;
-import searchengine.IndexMethods;
+import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Ranking.*;
@@ -50,7 +50,7 @@ public class RankerBenchmarking implements Callable<Integer> {
         int iterations = 10000;
         int warmUpIterations = Math.max(1, iterations / 100);
 
-        queries = BenchmarkTimer.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
+        queries = Benchmark.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
 
 
         Score[] rankerList = new Score[]{
@@ -72,7 +72,7 @@ public class RankerBenchmarking implements Callable<Integer> {
             Callable<Integer> callable = new RankerBenchmarking(ranker);
             String className = ranker.getClass().getSimpleName();
             try {
-                BenchmarkTimer benchmark = new BenchmarkTimer(callable, iterations, warmUpIterations);
+                Benchmark benchmark = new Benchmark(callable, iterations, warmUpIterations);
                 System.out.println(className + ":");
                 System.out.println(benchmark.toString());
             } catch (Exception e) {
@@ -86,7 +86,7 @@ public class RankerBenchmarking implements Callable<Integer> {
     public Integer call() throws Exception {
         String query = queries.get(currentQueryIndex);
         currentQueryIndex++;
-        IndexMethods.multiWordQuery(index, query, ranker);
+        QueryHandler.multiWordQuery(index, query, ranker);
         return 0;
     }
 }

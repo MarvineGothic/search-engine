@@ -46,14 +46,14 @@ public class IndexBenchmarking implements Callable<Integer> {
      */
     public static void main(String[] args) {
         int iterations = 5000;
-        int warmUpIterations = Math.max(1, iterations);
+        int warmUpIterations = Math.max(1, iterations/100);
         String filename = "enwiki-medium.txt";
         if (args.length > 0) {
             filename = args[0];
         }
         ArrayList<String> wordList = new ArrayList<>(FileHelper.loadWordsInFile(filename));
         List<Website> websiteList = FileHelper.loadFile(filename);
-        listOfQueries = BenchmarkTimer.generateQueryList(wordList, 1, iterations + warmUpIterations);
+        listOfQueries = Benchmark.generateQueryList(wordList, 1, iterations + warmUpIterations);
 
         List<Index> indexList = Arrays.asList(
                 new SimpleIndex(),
@@ -64,7 +64,7 @@ public class IndexBenchmarking implements Callable<Integer> {
         for (Index index : indexList) {
             index.build(websiteList);
             try {
-                BenchmarkTimer benchmark = new BenchmarkTimer(new IndexBenchmarking(index), iterations, warmUpIterations);
+                Benchmark benchmark = new Benchmark(new IndexBenchmarking(index), iterations, warmUpIterations);
                 String name = index.getClass().getSimpleName();
                 System.out.println(String.format("%-25s", name + ":") + benchmark.toString());
             } catch (Exception e) {

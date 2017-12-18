@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static searchengine.IndexMethods.splitQuery;
+import static searchengine.QueryHandler.splitQuery;
 
 class SplitQueryTest {
 
@@ -69,16 +69,16 @@ class SplitQueryTest {
         assertEquals("[[.]]", splitQuery(". ").toString());
         assertEquals(1, splitQuery("word1 OR ").size());
         // mistaken query
-        assertEquals(1, IndexMethods.splitQuery(" OR OROROR OR ").size());
+        assertEquals(1, QueryHandler.splitQuery(" OR OROROR OR ").size());
         assertEquals(2, splitQuery("Denmark OR Germany").size());
         assertEquals("Denmark", splitQuery("Denmark OR Germany").get(0).get(0));
-        assertEquals("denmark", IndexMethods.modifyQuery(splitQuery("Denmark OR Germany")).get(0).get(0));
+        assertEquals("denmark", QueryHandler.modifyQuery(splitQuery("Denmark OR Germany")).get(0).get(0));
 
         // spaces and punctuation
-        assertEquals(1, IndexMethods.modifyQuery(splitQuery(" word1,")).size());
-        assertEquals(0, IndexMethods.modifyQuery(splitQuery(" ")).size());
-        assertEquals("[]", IndexMethods.modifyQuery(splitQuery(" ")).toString());
-        assertEquals("[]", IndexMethods.modifyQuery(splitQuery(". ")).toString());
-        assertEquals(0, IndexMethods.modifyQuery(splitQuery(". ")).size());
+        assertEquals(1, QueryHandler.modifyQuery(splitQuery(" word1,")).size());
+        assertEquals(0, QueryHandler.modifyQuery(splitQuery(" ")).size());
+        assertEquals("[]", QueryHandler.modifyQuery(splitQuery(" ")).toString());
+        assertEquals("[]", QueryHandler.modifyQuery(splitQuery(". ")).toString());
+        assertEquals(0, QueryHandler.modifyQuery(splitQuery(". ")).size());
     }
 }

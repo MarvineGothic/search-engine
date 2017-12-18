@@ -81,27 +81,27 @@ public class IndexTests {
             assertEquals(0, index.lookup("wordX").size(), "Case 4b failed for " + index);
 
             // Tests each Index type using multiple query words
-            assertEquals(1, IndexMethods.multiWordQuery(index, "word1 word2", ranker).size(),
+            assertEquals(1, QueryHandler.multiWordQuery(index, "word1 word2", ranker).size(),
                     "Case 5b failed for " + index);
-            assertEquals(2, IndexMethods.multiWordQuery(index, "word2 word3", ranker).size(),
+            assertEquals(2, QueryHandler.multiWordQuery(index, "word2 word3", ranker).size(),
                     "Case 6b failed for " + index);
-            assertEquals(3, IndexMethods.multiWordQuery(index, "word2 word6", ranker).size(),
+            assertEquals(3, QueryHandler.multiWordQuery(index, "word2 word6", ranker).size(),
                     "Case 7b failed for " + index);
-            assertEquals(0, IndexMethods.multiWordQuery(index, "word1 word4", ranker).size(),
+            assertEquals(0, QueryHandler.multiWordQuery(index, "word1 word4", ranker).size(),
                     "Case 8b failed for " + index);
-            assertEquals(1, IndexMethods.multiWordQuery(index, "word1 word2 word7", ranker).size(),
+            assertEquals(1, QueryHandler.multiWordQuery(index, "word1 word2 word7", ranker).size(),
                     "Case 9b failed for " + index);
 
             // Tests each Index type using varying number of query words and OR statements
-            assertEquals(2, IndexMethods.multiWordQuery(index, "word1 OR word8", ranker).size(),
+            assertEquals(2, QueryHandler.multiWordQuery(index, "word1 OR word8", ranker).size(),
                     "Case 10b failed " + index);
-            assertEquals(2, IndexMethods.multiWordQuery(index, "word3 OR word4", ranker).size(),
+            assertEquals(2, QueryHandler.multiWordQuery(index, "word3 OR word4", ranker).size(),
                     "Case 11b failed " + index);
-            assertEquals(3, IndexMethods.multiWordQuery(index, "word1 word2 OR word3", ranker).size(),
+            assertEquals(3, QueryHandler.multiWordQuery(index, "word1 word2 OR word3", ranker).size(),
                     "Case 12b failed " + index);
-            assertEquals(1, IndexMethods.multiWordQuery(index, "word1 word7 OR wordX", ranker).size(),
+            assertEquals(1, QueryHandler.multiWordQuery(index, "word1 word7 OR wordX", ranker).size(),
                     "Case 13b failed " + index);
-            assertEquals(2, IndexMethods.multiWordQuery(index, "word1 OR word8 OR wordX", ranker).size(),
+            assertEquals(2, QueryHandler.multiWordQuery(index, "word1 OR word8 OR wordX", ranker).size(),
                     "Case 13b failed " + index);
         }
     }
