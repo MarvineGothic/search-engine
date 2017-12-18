@@ -19,38 +19,37 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * The main class of our search engine program.
- *
- * @author Martin Aumüller
- * @author Leonid Rusnac
+ * <pre>
+ * The main class of the search engine program, through which communication with the graphical web interface
+ * is run, and input arguments are received.
+ * </pre>
  */
 @Configuration
 @EnableAutoConfiguration
 @Path("/")
 public class SearchEngine extends ResourceConfig {
-    private static Index currentIndex; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
-    private static Score currentRanker; // TODO: 07-Nov-17 Should be improved to allow multiple instances???
+    private static Index currentIndex;
+    private static Score currentRanker;
 
     public SearchEngine() {
         packages("searchengine");
     }
 
-
     /**
-     * The main method of our search engine program.
-     * Expects exactly one argument being provided. This
-     * argument is the filename of the file containing the
-     * websites.
+     * <pre>
+     * The main method of our search engine program. Expects exactly one argument being provided.
+     * This argument is the filename of a database .txt file containing website elements.
      *
-     * @param args command line arguments.
+     * @param args command line arguments. The name of a .txt file containing website data.
+     *            The file must be placed in the data folder of the project.
+     * </pre>
      */
     public static void main(String[] args) {
         System.out.println("Welcome to the Search Engine!");
 
         if (args.length != 1) {
-            System.out.println("Error: Filename is missing");
+            System.out.println("Error: Filename is missing or has an incorrect format");
             return;
         }
 
@@ -63,39 +62,38 @@ public class SearchEngine extends ResourceConfig {
         System.out.println("Processing the data set and building the currentIndex took " +
                 (t2 - t1) / 10e6 + " milliseconds.");
 
-        // run the search engine
         SpringApplication.run(SearchEngine.class);
     }
 
     /**
-     * This methods handles requests to GET requests at search.
+     * <pre>
+     * This methods handles requests to GET at search.
      * It assumes that a GET request of the form "search?query=word" is made.
+     * The response header is set to allow cross domain access
      *
      * @param response Http response object
      * @param query    the query string
      * @return the list of websites matching the query
+     * </pre>
      */
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
     public List<Website> search(@Context HttpServletResponse response, @QueryParam("query") String query) {
-        // Set cross domain access. Otherwise your browser will complain that it does not want
-        // to load code from a different location.
-        long t1 = System.nanoTime();
+        long startTime = System.nanoTime();
         response.setHeader("Access-Control-Allow-Origin", "*");
-
 
         if (query == null) {
             return new ArrayList<>();
         }
 
-        String line = query;
-        System.out.println("Handling request for query word \"" + query + "\"");
+        System.out.println("Handling request for query word \""+query+"\"");
 
-        List<Website> resultList = IndexMethods.multiWordQuery(currentIndex, line, currentRanker);
-        long t2 = System.nanoTime();
-        System.out.println("Found " + resultList.size() + " websites in " + (t2 - t1) / 10e6 + " milliseconds.");
+        List<Website> resultList = IndexMethods.multiWordQuery(currentIndex, query, currentRanker);
+        long endTime = System.nanoTime();
+        System.out.println("Found " + resultList.size() + " websites in " + (endTime - startTime) / 10e6 + " milliseconds.");
+
+        if (resultList.isEmpty())System.out.println("No website contains the query word.");
 
         return resultList;
     }
