@@ -80,7 +80,6 @@ public class Website implements Comparable<Website> {
         return title;
     }
 
-    @Deprecated
     public String getUrl() {
         return url;
     }
@@ -91,7 +90,6 @@ public class Website implements Comparable<Website> {
      * @return A list of positions, where the positions is defined as the number of other words that occurs on the
      * website before the given word.
      */
-    @Deprecated
     public List<Integer> getWordPositions(String word) {
         List<Integer> wordPositions = new ArrayList<>();
         for (int i = 0; i < words.size(); i++) {

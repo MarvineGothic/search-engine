@@ -27,22 +27,27 @@ class FileHelperTest {
         System.setErr(null);
     }
 
+    /**
+     * Test if parseFile throws an error message when given a faulty file directory
+     */
+    @Test
+    void fileHelperFaultyDirectoryTest(){
+        FileHelper.parseFile("This is very much a faulty file directory!");
+        String expectedOutput = "Couldn't load the given file\r\n";
+        assertEquals(expectedOutput, outContent.toString());
+    }
 
     /**
      * Test if the FileHelper's parseFile method skips sites that does not contain a title or any words.
-     *
-     * Case 1a:
-     * Case 2a:
+     * Case 1a: Check if the method skips null value site lists
+     * Case 2a: Check if the method skips empty site lists
      */
-
-
-
     @Test
     void fileHelperIncompleteSitesTest() {
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "incompleteSites.txt";
         List<Website> sites = FileHelper.parseFile(path);
-        assertEquals(sites != null, true, "Case 1a failed");
-        assertEquals(sites.size(), 3, "Case 2a failed");
+        assertEquals(true, sites != null, "Case 1a failed");
+        assertEquals(3, sites.size(), "Case 2a failed");
     }
 
     /**
@@ -59,14 +64,12 @@ class FileHelperTest {
 
 
     /**
-     * Test if the FileHelper returns null (error) if a webpage has more more words on a line
+     * Test if the FileHelper returns null (error) if a website has more more words on a line
      */
     @Test
     void fileHelperSingleWordsTest() {
         String path;
-        List<Website> sites;
 
-        // We allow for multiple word pr line for the title
         path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "multiTitleLineSites.txt";
         FileHelper.parseFile(path);
 
