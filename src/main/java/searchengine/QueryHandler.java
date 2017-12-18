@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /** <pre>
  * This class contains a methods that are useful for all indexes.
  </pre> */
-public class IndexMethods {
+public class QueryHandler {
 
     /** <pre>
      * splitQuery method is processing the query line such that:
@@ -93,7 +93,7 @@ public class IndexMethods {
         return tempList;
     }
 
-    /** <pre> <pre>
+    /** <pre>
      * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
      * NOTE: This method also uses modifiesQuery on the given query
      * 28.11.17 added a check if sites contains all of AND-separated words. If not, it just jumps to next AND-separated line.

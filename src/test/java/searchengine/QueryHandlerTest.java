@@ -6,6 +6,7 @@ import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Indexes.SimpleIndex;
+
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
 import searchengine.Ranking.SimpleScore;
@@ -125,6 +126,7 @@ class QueryHandlerTest {
         assertEquals(2, multiWordQuery(index, "a OR a OR a", ranker).size());
     }
 
+
     /**
      * <pre>
      * Test that multiWordLookup1 has the same results as multiWordLookup2
@@ -193,5 +195,4 @@ class QueryHandlerTest {
         expectedSites.add(four);
         assertEquals(expectedSites.toString(), multiWordQuery(index, "b c", ranker).toString());
     }
-
 }
