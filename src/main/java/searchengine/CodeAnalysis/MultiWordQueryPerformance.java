@@ -1,12 +1,12 @@
-package searchengine.Performance;
+package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
-import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
-import searchengine.Ranking.IRanker;
+import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
+import searchengine.Ranking.Score;
 import searchengine.Indexes.Index;
-import searchengine.Ranking.RankerBM25;
-import searchengine.Indexes.ReverseHashMapIndex;
+import searchengine.Ranking.BM25Score;
+import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Website;
 
 import java.util.List;
@@ -49,9 +49,9 @@ public class MultiWordQueryPerformance {
         String query = "artist woman movie city OR danish home island snow tragedy OR theater people man crowd war OR civil war wanted never century OR fire OR swedish OR danish OR Australia";
         //Loading the file and the words
         List<Website> sites = FileHelper.loadFile("enwiki-medium.txt");
-        Index index = new ReverseHashMapIndex();
+        Index index = new InvertedHashMapIndex();
         index.build(sites);
-        IRanker ranker = new RankerBM25(sites);
+        Score ranker = new BM25Score(sites);
         long elapsedTime;
 
         //Adding a for-loop to warm up the test

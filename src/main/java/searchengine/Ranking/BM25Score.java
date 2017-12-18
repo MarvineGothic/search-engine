@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <pre>
- * Implements a the IRanker class using the Okapi BM25 algorithm to score the websites.
+ * Implements a the Score class using the Okapi BM25 algorithm to score the websites.
  * Read https://en.wikipedia.org/wiki/Okapi_BM25 for more information.
  *
  * Formulas and definitions used:
@@ -18,7 +18,7 @@ import java.util.List;
  * </pre>
  */
 @SuppressWarnings("Duplicates")
-public class RankerBM25 extends RankerIDF {
+public class BM25Score extends TFIDFScore {
     private float totalAmountOfWords;
     private float avdL;
 
@@ -28,7 +28,7 @@ public class RankerBM25 extends RankerIDF {
      * @param websiteList A list of all websites in the index used to perform the queries.
      * </pre>
      */
-    public RankerBM25(List<Website> websiteList) {
+    public BM25Score(List<Website> websiteList) {
         super(websiteList);
         for (Website site : sites) {
             this.totalAmountOfWords += site.getWords().size();
@@ -52,7 +52,7 @@ public class RankerBM25 extends RankerIDF {
      * </pre>
      */
     private float tfPlus(String word, Website website) {
-        float tf = this.tf(word, website);
+        float tf = TFScore.tf(word, website);
         float b = 0.75f;
         float k = 1.75f;
         float dL = website.getWords().size();

@@ -34,7 +34,6 @@ class SplitQueryTest {
         assertEquals(1, splitQuery("  word4  word1  word5  ").size());
         assertEquals("word4", splitQuery("  word4  word1  word5  ").get(0).get(0));
         assertEquals("word1", splitQuery("  word4  word1  word5  ").get(0).get(1));
-        System.out.println(splitQuery("  word4  word1  word5  ").toString());
         assertEquals("[[word4, word1, word5]]", splitQuery("  word4  word1  word5  ").toString());
     }
 

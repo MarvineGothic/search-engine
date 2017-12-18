@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * <pre>
  * This Website contains all the information used of an original website while also containing information on a
- * search word used to find this page. For example, when making a lookup using the ReverseIndex and the word "apple" a
+ * search word used to find this page. For example, when making a lookup using the InvertedIndex and the word "apple" a
  * list of IndexedWebsites will be returned. In addition to all the information of normal Website the IndexedWebsite
  * also has pre-calculated the number of time the word "apple" occurs on the site, and also knows the total number of
  * websites containing the word "apple" in the index.

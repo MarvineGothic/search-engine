@@ -1,6 +1,7 @@
 package searchengine.Indexes;
 
 import searchengine.IndexedWebsite;
+import searchengine.Ranking.Score;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Implements the Index interface using a reverse index method
  * </pre>
  */
-abstract public class ReverseIndex implements Index {
+abstract public class InvertedIndex implements Index {
     protected Map<String, HashSet<IndexedWebsite>> wordMap;
 
     /**
@@ -58,8 +59,6 @@ abstract public class ReverseIndex implements Index {
 
     @Override
     public List<Website> lookup(String queryWord) {
-        if (wordMap == null)
-            return null;
         return new ArrayList<>(wordMap.getOrDefault(queryWord, new HashSet<>()));
     }
 

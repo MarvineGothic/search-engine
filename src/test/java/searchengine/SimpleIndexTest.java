@@ -1,7 +1,7 @@
 import searchengine.IndexMethods;
 import searchengine.Indexes.*;
-import searchengine.Ranking.IRanker;
-import searchengine.Ranking.NoRanker;
+import searchengine.Ranking.SimpleScore;
+import searchengine.Ranking.Score;
 import searchengine.Website;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ class SimpleIndexTest {
     private Index fullSimpleIndex = null;
     private Index minSimpleIndex = null;
     private Index emptySimpleIndex = null;
-    private IRanker ranker = new NoRanker();
+    private Score ranker = new SimpleScore();
 
     @BeforeEach
     void setUp() {
