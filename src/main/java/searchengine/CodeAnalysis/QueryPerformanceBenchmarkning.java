@@ -1,10 +1,10 @@
-package searchengine.Performance;
+package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
+import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
 import searchengine.Website;

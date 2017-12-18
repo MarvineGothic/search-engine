@@ -1,4 +1,4 @@
-package searchengine.Performance.BenchmarkingResources;
+package searchengine.CodeAnalysis.BenchmarkingResources;
 
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;

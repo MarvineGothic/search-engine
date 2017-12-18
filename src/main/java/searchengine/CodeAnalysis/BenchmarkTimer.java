@@ -1,4 +1,4 @@
-package searchengine.Performance;
+package searchengine.CodeAnalysis;
 
 import java.util.ArrayList;
 import java.util.List;

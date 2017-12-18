@@ -20,21 +20,6 @@ public class TFScoreTest {
     private Website site = new Website("www.example1.com", "example1", Arrays.asList("a", "b", "b", "c", "c", "c"));
 
     @Test
-    void castTest(){
-
-        boolean error = false;
-        try {
-            Float f = null;
-            float f2 = f;
-            error = false;
-        } catch (Exception e){
-            error = true;
-
-        }
-        assertEquals(false, error);
-    }
-
-    @Test
     void testTFValues() {
         //Here the word occurs 1 time on a site => m=1
         assertEquals(1, TFScore.tf("a", site), "tfValues test 1 failed for a");

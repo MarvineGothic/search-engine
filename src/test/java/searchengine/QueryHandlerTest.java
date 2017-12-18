@@ -3,7 +3,7 @@ package searchengine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import searchengine.Indexes.*;
-import searchengine.Performance.BenchmarkingResources.IndexMethodsOld;
+import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Ranking.SimpleScore;
 import searchengine.Ranking.Score;
 import searchengine.Ranking.BM25Score;

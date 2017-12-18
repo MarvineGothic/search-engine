@@ -2,6 +2,7 @@ package searchengine;
 
 import searchengine.Indexes.Index;
 import searchengine.Ranking.Score;
+import searchengine.Stemming.Stemmer;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -86,6 +87,7 @@ public class IndexMethods {
                     .replaceAll("\\p{Punct}", " ")
                     .replaceAll("\\s+", " ")
                     .replaceAll("\\s+$|^\\s+", "");
+//            modifiedWord = Stemmer.StemWord(modifiedWord);
             if (!modifiedWord.isEmpty()) tempList.add(modifiedWord);    // no empty lines in word Lists
         }
         return tempList;

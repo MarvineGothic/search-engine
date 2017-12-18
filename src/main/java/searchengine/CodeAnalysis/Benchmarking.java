@@ -1,4 +1,4 @@
-package searchengine.Performance;
+package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
 import searchengine.Indexes.Index;

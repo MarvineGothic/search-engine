@@ -1,11 +1,9 @@
-package searchengine.Performance;
+package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Performance.BenchmarkingResources.ScoreNotIndexedBM25;
-import searchengine.Performance.BenchmarkingResources.ScoreNotIndexedIDF;
 import searchengine.Ranking.*;
 import searchengine.Website;
 
@@ -17,7 +15,7 @@ import java.util.concurrent.Callable;
  * <pre>
  * This class will run do a perform a different multi word query whenever it is called. This is used to benchmark the
  * performance of calls using different implementations of the Score class.
- * </pre> </pre>
+ * </pre>
  */
 public class RankerBenchmarking implements Callable<Integer> {
     private static List<String> queries;
@@ -42,22 +40,25 @@ public class RankerBenchmarking implements Callable<Integer> {
      * </pre>
      */
     public static void main(String[] args) {
-        ArrayList<String> wordList = new ArrayList<String>(FileHelper.loadWordsInFile("enwiki-medium.txt"));
-        List<Website> sites = FileHelper.loadFile("enwiki-medium.txt");
+        String fileName = "enwiki-medium.txt";
+        ArrayList<String> wordList = new ArrayList<>(FileHelper.loadWordsInFile(fileName));
+        List<Website> sites = FileHelper.loadFile(fileName);
         index = new InvertedHashMapIndex();
         index.build(sites);
 
         int iterations = 10000;
         int warmUpIterations = Math.max(1, iterations / 100);
 
-        queries = BenchmarkTimer.generateQueryList(wordList, (iterations + warmUpIterations), 1);
+        queries = BenchmarkTimer.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
 
         Score[] rankerList = new Score[]{
-                new SimpleScore(),
-                new ScoreNotIndexedIDF(sites),
-                new ScoreNotIndexedBM25(sites),
-                new TFIDFScore(sites),
                 new BM25Score(sites),
+                new SimpleScore(),
+//                new TFIDFScoreNotIndexed(sites),
+//                new BM25ScoreNotIndexed(sites),
+//                new TFIDFScore(sites),
+                new BM25Score(sites),
+                new SimpleScore(),
         };
 
         for (Score ranker : rankerList) {

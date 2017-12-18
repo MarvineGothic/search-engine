@@ -1,4 +1,4 @@
-package searchengine.Performance.BenchmarkingResources;
+package searchengine.CodeAnalysis.BenchmarkingResources;
 
 import searchengine.Indexes.Index;
 import searchengine.Website;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @SuppressWarnings("Duplicates")
 @Deprecated
-public class ScoreNotIndexedBM25 extends ScoreNotIndexedIDF {
+public class BM25ScoreNotIndexed extends TFIDFScoreNotIndexed {
     private float totalAmountOfWords;
     private float avdL;
 
@@ -31,7 +31,7 @@ public class ScoreNotIndexedBM25 extends ScoreNotIndexedIDF {
      * @param websiteList A list of all websites in the index used to perform the queries.
      * </pre>
      */
-    public ScoreNotIndexedBM25(List<Website> websiteList) {
+    public BM25ScoreNotIndexed(List<Website> websiteList) {
         super(websiteList);
         for (Website site : sites) {
             this.totalAmountOfWords += site.getWords().size();

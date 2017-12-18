@@ -1,4 +1,4 @@
-package searchengine.Performance.BenchmarkingResources;
+package searchengine.CodeAnalysis.BenchmarkingResources;
 
 import searchengine.Indexes.Index;
 import searchengine.Ranking.Score;
@@ -23,7 +23,7 @@ import java.util.List;
  * </pre>
  */
 @Deprecated
-public class ScoreNotIndexedIDF implements Score {
+public class TFIDFScoreNotIndexed implements Score {
     protected List<Website> sites = new ArrayList<>();
 
     /**
@@ -32,7 +32,7 @@ public class ScoreNotIndexedIDF implements Score {
      * @param websiteList A list of all websites in the index used to perform the queries.
      *                    </pre>
      */
-    public ScoreNotIndexedIDF(List<Website> websiteList) {
+    public TFIDFScoreNotIndexed(List<Website> websiteList) {
         sites = websiteList;
     }
 
