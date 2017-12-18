@@ -2,20 +2,17 @@ package searchengine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Indexes.SimpleIndex;
 
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
-import searchengine.Ranking.SimpleScore;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static searchengine.IndexMethods.multiWordQuery;
-//import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;
+import static searchengine.QueryHandler.multiWordQuery;
+//import static searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld.multiWordQuery;
 
 
 /**
@@ -30,8 +27,7 @@ import static searchengine.IndexMethods.multiWordQuery;
 
 class QueryHandlerTest {
     private Index index;
-    private Index simpleindex;
-
+    private Score ranker;
 
     private Website one = new Website("1.com", "example1", Collections.singletonList("a"));
     private Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));
@@ -39,10 +35,6 @@ class QueryHandlerTest {
     private Website four = new Website("4.com", "example4", Arrays.asList("b", "c", "d"));
     private Website five = new Website("5.com", "example5", Collections.singletonList("e"));
     private Website six = new Website("6.com", "example6", Collections.singletonList("f"));
-
-    private Score ranker;
-    private Score simpleRanker;
-
 
     @BeforeEach
     void setUp() {
@@ -54,13 +46,9 @@ class QueryHandlerTest {
         sites.add(five);
         sites.add(six);
 
-        simpleindex = new SimpleIndex();
-        simpleindex.build(sites);
-
         index = new InvertedHashMapIndex();
         index.build(sites);
 
-        simpleRanker = new SimpleScore();
         ranker = new BM25Score(sites);
     }
 
@@ -133,6 +121,7 @@ class QueryHandlerTest {
      * </pre>
      */
     // TODO: 18/12/17 Should this be included?
+    /*
     @Test
     void testMultiWordLookupOneVsTwo() {
         String[] lookupQueries = new String[]{
@@ -157,11 +146,11 @@ class QueryHandlerTest {
                 "w6 w5 w5",
         };
         for (String lookupQuery : lookupQueries) {
-            List<Website> expected = IndexMethods.multiWordQuery(index, lookupQuery, ranker);
-            List<Website> actual = IndexMethodsOld.multiWordQuery(index, lookupQuery, ranker);
+            List<Website> expected = QueryHandler.multiWordQuery(index, lookupQuery, ranker);
+            List<Website> actual = QueryHandlerOld.multiWordQuery(index, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
-    }
+    }*/
 
     @Test
     void testMultiWordQueryRankingOrderWithOR() {
