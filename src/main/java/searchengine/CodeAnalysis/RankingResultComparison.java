@@ -76,9 +76,6 @@ public class RankingResultComparison {
         for (Score score : scoreList) {
             headers.add(score.getClass().getSimpleName());
             List<Website> lookupResult = IndexMethods.multiWordQuery(index, query, score);
-            for (int i = 0; i < Math.min(shownSearchResults, lookupResult.size()); i++) {
-                maxStringLength = Math.max(lookupResult.get(i).getTitle().length(), maxStringLength);
-            }
             resultDict.put(score, lookupResult);
         }
         resultMatrix.add(headers);
@@ -89,7 +86,6 @@ public class RankingResultComparison {
             for (Score score : scoreList) {
                 List<Website> resultList = resultDict.get(score);
                 try {
-//                    row.add(resultList.get(i).getUrl().replace("https://en.wikipedia.org/", ""));
                     row.add(resultList.get(i).getTitle());
                 } catch (IndexOutOfBoundsException e){
                     break;
@@ -110,8 +106,7 @@ public class RankingResultComparison {
         String separator = ";";
 
         Map<Integer, Integer> rowWidthMap = new HashMap<>();
-        for (Integer i = 0; i < matrix.size(); i++) {
-            List<String> row = matrix.get(i);
+        for (List<String> row : matrix) {
             for (int j = 0; j < row.size(); j++) {
                 String element = row.get(j);
                 int maxStringLength = rowWidthMap.getOrDefault(j, 1);
