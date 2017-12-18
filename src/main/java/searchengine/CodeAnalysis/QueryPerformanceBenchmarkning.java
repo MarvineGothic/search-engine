@@ -58,7 +58,7 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         int winsFor1 = 0;
         int winsFor2 = 0;
         for (int i = 2; i < 12; i++) {
-            int winner = comparePerformance("enwiki-small.txt", i, 100000);
+            int winner = comparePerformance("enwiki-small.txt", i, 10000);
             if (winner == 1)
                 winsFor1++;
             else
@@ -88,12 +88,11 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         Index index = new InvertedHashMapIndex();
         index.build(sites);
         Score ranker = new BM25Score(sites);
-        System.out.println("Comparing multiWordQuery using wordsPerQuery: " + wordsPerQuery + ", iterations: " + iterations);
+        System.out.println("Comparing multiWordQuery using wordsPerQuery: " + wordsPerQuery + ", iterations: " + iterations + "\n");
 
         int warmUpIterations = iterations / 100;
         List<String> queryList = BenchmarkTimer.generateQueryList(wordsInFile, wordsPerQuery,
                 iterations + warmUpIterations);
-
 
         Callable<Integer> callable1 = new QueryPerformanceBenchmarkning(index, queryList, true, ranker);
         Callable<Integer> callable2 = new QueryPerformanceBenchmarkning(index, queryList, false, ranker);
@@ -102,17 +101,17 @@ public class QueryPerformanceBenchmarkning implements Callable<Integer> {
         BenchmarkTimer benchmark2;
         try {
             benchmark1 = new BenchmarkTimer(callable1, iterations, warmUpIterations);
-            System.out.println("multiWordQuery");
-            System.out.println(benchmark1.toString());
+            System.out.println("multiWordQuery:  " + benchmark1.toString());
             benchmark2 = new BenchmarkTimer(callable2, iterations, warmUpIterations);
-            System.out.println("multiWordQuery2");
-            System.out.println(benchmark2.toString());
+            System.out.println("multiWordQuery2: " + benchmark2.toString());
+            System.out.println("---------------------------------------------------");
             if (benchmark1.getMeanRuntime() < benchmark2.getMeanRuntime())
                 return 1;
             return 2;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return 0;
     }
 

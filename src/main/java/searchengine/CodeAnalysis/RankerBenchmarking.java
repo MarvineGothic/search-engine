@@ -1,5 +1,6 @@
 package searchengine.CodeAnalysis;
 
+import searchengine.CodeAnalysis.BenchmarkingResources.BM25ScoreNotIndexed;
 import searchengine.FileHelper;
 import searchengine.IndexMethods;
 import searchengine.Indexes.Index;
@@ -51,26 +52,31 @@ public class RankerBenchmarking implements Callable<Integer> {
 
         queries = BenchmarkTimer.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
 
+
         Score[] rankerList = new Score[]{
-                new BM25Score(sites),
                 new SimpleScore(),
-//                new TFIDFScoreNotIndexed(sites),
-//                new BM25ScoreNotIndexed(sites),
-//                new TFIDFScore(sites),
                 new BM25Score(sites),
+                new BM25ScoreNotIndexed(sites),
+                // Warm ups
+
                 new SimpleScore(),
+                new SimpleScore(),
+                new BM25Score(sites),
+                new BM25Score(sites),
+                new BM25ScoreNotIndexed(sites),
+                new BM25ScoreNotIndexed(sites),
         };
 
-        for (Score ranker : rankerList) {
+        for (int i = 0; i < rankerList.length; i++) {
+            Score ranker = rankerList[i];
             Callable<Integer> callable = new RankerBenchmarking(ranker);
             String className = ranker.getClass().getSimpleName();
             try {
                 BenchmarkTimer benchmark = new BenchmarkTimer(callable, iterations, warmUpIterations);
                 System.out.println(className + ":");
                 System.out.println(benchmark.toString());
-
             } catch (Exception e) {
-                System.out.println("Bencmarking failed for " + className);
+                System.out.println("Benchmarking failed for " + className);
                 e.printStackTrace();
             }
         }

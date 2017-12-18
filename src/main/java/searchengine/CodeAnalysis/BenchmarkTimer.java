@@ -20,6 +20,41 @@ public class BenchmarkTimer {
     private long confInterval;
 
     /**
+     * Create a benchmark of a method.
+     *
+     * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the
+     *                         function called when benchmarking.
+     * @param iterations       The number of iterations the benchmark is based on.
+     * @param warmUpIterations The number of warm up iterations used for the benchmark.
+     * @throws Exception If the Callable method throws an axception it needs to be caught.
+     */
+    public BenchmarkTimer(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
+        this.callable = callable;
+        this.warmUpIterations = warmUpIterations;
+        this.iterations = iterations;
+        if (iterations <= 1) {
+            System.out.println("Error in BenchmarkTimer: iterations must be 2 or larger");
+            return;
+        }
+        run();
+    }
+
+    /**
+     * Create a benchmark of a method. The number of iterations is set to 100 with 1 warm up iterations as default.
+     *
+     * @param callable An implementation of the Callable<Integer> interface. The Call() method is the function called
+     *                 when benchmarking.
+     * @throws Exception If the Callable method throws an axception it needs to be caught.
+     */
+    public BenchmarkTimer(Callable<Integer> callable) throws Exception {
+        this.callable = callable;
+        this.iterations = 100;
+        this.warmUpIterations = 1;
+        run();
+    }
+
+
+    /**
      * Generates a list of queries, each containing a specified number of words. Words are selected using seed(0) so
      * this method will generate the same list each time as long as the input arguments are the same.
      *
@@ -44,41 +79,6 @@ public class BenchmarkTimer {
     }
 
     /**
-     * Create a benchmark of a method.
-     *
-     * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the
-     *                         function called when benchmarking.
-     * @param iterations       The number of iterations the benchmark is based on.
-     * @param warmUpIterations The number of warm up iterations used for the benchmark.
-     * @throws Exception If the Callable method throws an axception it needs to be caught.
-     */
-    public BenchmarkTimer(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
-        this.callable = callable;
-        this.warmUpIterations = warmUpIterations;
-        this.iterations = iterations;
-        if (iterations <= 1){
-            System.out.println("Error in BenchmarkTimer: iterations must be 2 or larger");
-            return;
-        }
-        run();
-    }
-
-    /**
-     * Create a benchmark of a method. The number of iterations is set to 100 with 1 warm up iterations as default.
-     *
-     * @param callable An implementation of the Callable<Integer> interface. The Call() method is the function called
-     *                 when benchmarking.
-     * @throws Exception If the Callable method throws an axception it needs to be caught.
-     */
-    public BenchmarkTimer(Callable<Integer> callable) throws Exception {
-        this.callable = callable;
-        this.iterations = 100;
-        this.warmUpIterations = 1;
-        run();
-    }
-
-
-    /**
      * @return The averate run time when Callable is called.
      */
     public long getMeanRuntime() {
@@ -101,6 +101,7 @@ public class BenchmarkTimer {
 
     /**
      * The standard deviation of the average runtime (standard deviation divided by sqrt(iterations)
+     *
      * @return standard error on the mean.
      */
     public long getConfInterval() {
@@ -110,6 +111,7 @@ public class BenchmarkTimer {
     /**
      * This method runs the actual benchmark.
      * For the calculation of the 95% confidence interval see https://en.wikipedia.org/wiki/1.96
+     *
      * @throws Exception If the Callable method throws an axception it needs to be caught.
      */
     private void run() throws Exception {
@@ -141,8 +143,6 @@ public class BenchmarkTimer {
 
         stdRuntime = (long) Math.sqrt((double) (stdRuntime / (runTimes.size() - 1)));
         confInterval = (long) (stdRuntime / Math.sqrt(runTimes.size() - 1) * 1.96);
-
-
     }
 
     @Override

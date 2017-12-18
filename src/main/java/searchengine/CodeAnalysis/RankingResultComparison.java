@@ -7,43 +7,30 @@ import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Ranking.*;
 import searchengine.Website;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/** <pre>
+/**
+ * <pre>
  * This class provides functionality to print a matrix (List of lists of strings) and to get the top 10 search results
  * for different implementations of the Score interface to see how the ranking compares to each other.
+ * </pre>
  */
 public class RankingResultComparison {
     private List<Score> scoreList;
     private Index index;
 
-    /** <pre>
-     * Prints out the top 10 search results for different implementation of the Score interface for a list of quries
-     * to easily compare results
-     * @param args A list of queries. Each query can contain more than one word and you can use OR the create
-     *             or-conditions
-     */
-    public static void main(String[] args){
-        if (args.length == 0){
-            args = new String[]{
-                    "america",
-                    "queen",
-                    "animal",
-                    "computer OR PC OR laptop",
-                    "clothes",
-                    "president america OR united states OR queen england",
-            };
-        }
-        new RankingResultComparison("enwiki-medium.txt", args);
-    }
-
-    /** <pre>
+    /**
+     * <pre>
      * Prints out the top 10 search results for different implementation of the Score interface for a list of quries
      * to easily compare results
      * @param queries A list of queries. Each query can contain more than one word and you can use OR the create
      *             or-conditions
+     * </pre>
      */
-    public RankingResultComparison(String filename, String[] queries){
+    public RankingResultComparison(String filename, String[] queries) {
         List<Website> listOfWebsites = FileHelper.loadFile(filename);
         scoreList = new ArrayList<>();
         scoreList.add(new BM25Score(listOfWebsites));
@@ -59,14 +46,36 @@ public class RankingResultComparison {
         }
     }
 
-    /** <pre>
+    /**
+     * <pre>
+     * Prints out the top 10 search results for different implementation of the Score interface for a list of quries
+     * to easily compare results
+     * @param args A list of queries. Each query can contain more than one word and you can use OR the create
+     *             or-conditions
+     * </pre>
+     */
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            args = new String[]{
+                    "america",
+                    "queen",
+                    "animal",
+                    "computer OR PC OR laptop",
+                    "clothes",
+                    "president america OR united states OR queen england",
+            };
+        }
+        new RankingResultComparison("enwiki-medium.txt", args);
+    }
+
+    /**
+     * <pre>
      * This method shows the top 10 search results for different Score implemetation to easily compare the outputs.
      * @param query The given query. Can contain more than one word and you can use OR the create or-conditions
+     * </pre>
      */
     private void compareSearchResults(String query) {
         int shownSearchResults = 10;
-        int maxStringLength = 0;
-
         List<List<String>> resultMatrix = new ArrayList<>();
 
         Map<Score, List<Website>> resultDict = new HashMap<>();
@@ -87,7 +96,7 @@ public class RankingResultComparison {
                 List<Website> resultList = resultDict.get(score);
                 try {
                     row.add(resultList.get(i).getTitle());
-                } catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e) {
                     break;
                 }
             }
@@ -98,11 +107,13 @@ public class RankingResultComparison {
         printMatrix(resultMatrix);
     }
 
-    /** <pre>
+    /**
+     * <pre>
      * This method prints a matrix (list of list of strings) in a nice formatted way.
      * @param matrix A list of lists of strings, representing a "matrix".
+     * </pre>
      */
-    public void printMatrix(List<List<String>> matrix){
+    public void printMatrix(List<List<String>> matrix) {
         String separator = ";";
 
         Map<Integer, Integer> rowWidthMap = new HashMap<>();
