@@ -2,117 +2,137 @@ package searchengine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
-import searchengine.Indexes.*;
-import searchengine.Ranking.SimpleScore;
-import searchengine.Ranking.Score;
-import searchengine.Ranking.BM25Score;
+import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
+import searchengine.Indexes.Index;
+import searchengine.Indexes.InvertedHashMapIndex;
+import searchengine.Indexes.SimpleIndex;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import searchengine.Ranking.BM25Score;
+import searchengine.Ranking.Score;
+import searchengine.Ranking.SimpleScore;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static searchengine.IndexMethods.multiWordQuery;
+//import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;
+
+
+/**
+ * <pre>
+ * The QueryHandlerTest class tests the different outputs from the multiWordQuery method based on different inputs.
+ *
+ * If you want to test the older version from the deprecated class "IndexMethodsOld" simply comment out the import
+ * statement above "import static searchengine.IndexMethods.multiWordQuery;" and instead use the import statement
+ * "import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;"
+ * </pre>
+ */
 
 class QueryHandlerTest {
-    private QueryHandler queryHandler = null;
-    private Index idx;
-    private Index simpleidx;
+    private Index index;
+    private Index simpleindex;
+
+
+    private Website one = new Website("1.com", "example1", Collections.singletonList("a"));
+    private Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));
+    private Website three = new Website("3.com", "example3", Arrays.asList("b", "c"));
+    private Website four = new Website("4.com", "example4", Arrays.asList("b", "c", "d"));
+    private Website five = new Website("5.com", "example5", Collections.singletonList("e"));
+    private Website six = new Website("6.com", "example6", Collections.singletonList("f"));
+
     private Score ranker;
     private Score simpleRanker;
 
-    private Website one = new Website("1.com", "example1", Arrays.asList("word1", "word2"));
-    private Website two = new Website("2.com", "example2", Arrays.asList("word2", "word3"));
-    private Website four = new Website("4.com", "example4", Arrays.asList("word3", "word4", "word5"));
-    private Website five = new Website("5.com", "example5", Arrays.asList("word6", "word7", "word8", "word9", "word10", "word11"));
-    private Website six = new Website("6.com", "example6", Arrays.asList("OROROR", "word20"));
-    private Website seven = new Website("7.com", "example7", Arrays.asList("Denmark", "Germany"));
-    private Website eight = new Website("8.com", "example8", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00"));
-    private Website nine = new Website("9.com", "example9", Arrays.asList("w1", "w0", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00"));
-    private Website ten = new Website("10.com", "example10", Arrays.asList("w1", "w0", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w"));
-    private Website elleven = new Website("11.com", "example11", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w00"));
-    private Website twelve = new Website("12.com", "example12", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12"));
-    private Website thirteen = new Website("13.com", "example13", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w12"));
-    private Website fourteen = new Website("14.com", "example14", Arrays.asList("w1", "w2", "w3", "w4", "w5", "w6", "w7", "w8", "w9", "w10", "w11", "w"));
 
     @BeforeEach
     void setUp() {
         List<Website> sites = new ArrayList<>();
         sites.add(one);
         sites.add(two);
+        sites.add(three);
         sites.add(four);
         sites.add(five);
         sites.add(six);
-        sites.add(seven);
 
-        sites.add(eight);
-        sites.add(nine);
-        sites.add(ten);
-        sites.add(elleven);
-        sites.add(twelve);
-        sites.add(thirteen);
-        sites.add(fourteen);
+        simpleindex = new SimpleIndex();
+        simpleindex.build(sites);
 
-        simpleidx = new SimpleIndex();
-        simpleidx.build(sites);
-        idx = new InvertedHashMapIndex();
-        idx.build(sites);
+        index = new InvertedHashMapIndex();
+        index.build(sites);
+
         simpleRanker = new SimpleScore();
         ranker = new BM25Score(sites);
-        queryHandler = new QueryHandler();
+    }
+
+    @Test
+    void testActualSitesFound() {
+        //Adding the sites with "a" in them
+        HashSet<Website> expectedSites = new HashSet<>();
+        expectedSites.add(one);
+        expectedSites.add(two);
+        //Adding the result from the multiWordQuery on "a" to a new HashSet
+        HashSet<Website> actualSites = new HashSet<>(multiWordQuery(index, "a", ranker));
+        //comparing the two HashSets
+        assertEquals(expectedSites, actualSites);
     }
 
     @Test
     void testSingleWord() {
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word1", ranker).size());
-        assertEquals("example1", QueryHandler.multiWordQuery(idx, "word1", ranker).get(0).getTitle());
-        assertEquals(2, QueryHandler.multiWordQuery(idx, "word2", ranker).size());
+        //One site has "d" in it
+        assertEquals(1, multiWordQuery(index, "d", ranker).size());
+        //Two sites have "a" in them
+        assertEquals(2, multiWordQuery(index, "a", ranker).size());
+        //Three sites have "b" in them
+        assertEquals(3, multiWordQuery(index, "b", ranker).size());
     }
 
     @Test
     void testMultipleWords() {
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word1 word2", ranker).size());
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word2 word1", ranker).size());
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word3 word4", ranker).size());
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word4 word3 word5", ranker).size());
-        // checks if only all words are in the website
-        assertEquals(0, QueryHandler.multiWordQuery(idx, "word1 word3", ranker).size());
-        assertEquals(0, QueryHandler.multiWordQuery(idx, "word4 word1 word5", ranker).size());
-        assertEquals(2, QueryHandler.multiWordQuery(idx, "w1 w2 w3 w12", ranker).size());
-        assertEquals(2, QueryHandler.multiWordQuery(idx, "w12 w2 w3 w1", ranker).size());
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "w w0 w3", ranker).size());
-        assertEquals(7, QueryHandler.multiWordQuery(idx, "w6 w5 w5", ranker).size());
+        //Two words
+        assertEquals(1, multiWordQuery(index, "a b", ranker).size());
+        //Two words reversed order
+        assertEquals(1, multiWordQuery(index, "b a", ranker).size());
+        //More than one website match
+        assertEquals(2, multiWordQuery(index, "b c", ranker).size());
+        //No website has both
+        assertEquals(0, multiWordQuery(index, "a d", ranker).size());
+        //three word search
+        assertEquals(1, multiWordQuery(index, "b c d", ranker).size());
+        //Repeated word
+        assertEquals(2, multiWordQuery(index, "a a a", ranker).size());
     }
 
     @Test
-    void testORQueries() {
-        assertEquals(3, QueryHandler.multiWordQuery(idx, "word2 OR word3", ranker).size());
-        assertEquals(2, QueryHandler.multiWordQuery(idx, "word1 OR word4", ranker).size());
+    void testSingleORQueries() {
+        //Two sites have "a" and two sites have "c"
+        assertEquals(4, multiWordQuery(index, "a OR c", ranker).size());
+        //two sites have "a" and one site has "d"
+        assertEquals(3, multiWordQuery(index, "a OR d", ranker).size());
+        //Are sites counted twice? Two sites have "a", three have "b" where one has "a" and "b"
+        assertEquals(4, multiWordQuery(index, "a OR b", ranker).size());
         // Corner case: Does code remove duplicates?
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word1 OR word1", ranker).size());
+        assertEquals(2, multiWordQuery(index, "a OR a", ranker).size());
     }
 
     @Test
     void testMultipleORQueries() {
-        assertEquals(4, QueryHandler.multiWordQuery(idx, "word2 OR word3 OR word5 OR word6", ranker).size());
-        assertEquals(2, QueryHandler.multiWordQuery(idx, "word1 OR word4 OR ", ranker).size());
+        //One site has "d", one has "e" and one has "f"
+        assertEquals(3, multiWordQuery(index, "d OR e OR f", ranker).size());
+        //What if OR is followed by white space?
+        assertEquals(4, multiWordQuery(index, "a OR b OR ", ranker).size());
+        //What if OR is followed by a non-existing word?
+        assertEquals(4, multiWordQuery(index, "a OR b OR Tiger", ranker).size());
         // Corner case: Does code remove duplicates?
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word1 OR word1 OR OR word1", ranker).size());
-        assertEquals(7, QueryHandler.multiWordQuery(idx, "w1 w2 w3 w12 OR w3 w0 w OR w4 w5 w6", ranker).size());
-        assertEquals(3, QueryHandler.multiWordQuery(idx, "w1 w2 w3 w12 OR w3 w0 w", ranker).size());
-    }
-
-    // Test for problematic input
-    @Test
-    void testCornerCases() {
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "word1 OR ", ranker).size());
-        assertEquals(1, QueryHandler.multiWordQuery(idx, "Denmark OR germany", ranker).size());
+        assertEquals(2, multiWordQuery(index, "a OR a OR a", ranker).size());
     }
 
 
     /**
+     * <pre>
      * Test that multiWordLookup1 has the same results as multiWordLookup2
+     * </pre>
      */
+    // TODO: 18/12/17 Should this be included?
     @Test
     void testMultiWordLookupOneVsTwo() {
         String[] lookupQueries = new String[]{
@@ -137,49 +157,42 @@ class QueryHandlerTest {
                 "w6 w5 w5",
         };
         for (String lookupQuery : lookupQueries) {
-            List<Website> expected = QueryHandler.multiWordQuery(idx, lookupQuery, ranker);
-            List<Website> actual = QueryHandlerOld.multiWordQuery(idx, lookupQuery, ranker);
+            List<Website> expected = IndexMethods.multiWordQuery(index, lookupQuery, ranker);
+            List<Website> actual = IndexMethodsOld.multiWordQuery(index, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }
 
-
     @Test
     void testMultiWordQueryRankingOrderWithOR() {
         List<Website> expectedSites = new ArrayList<>();
-        //Expected sites based on the words "word1 OR word2" -> order of sites: one, two
+        //Expected sites with "a OR b" -> order of sites: one, two, three then four. (Due to document length difference)
         expectedSites.add(one);
         expectedSites.add(two);
-        assertEquals(expectedSites.toString(), QueryHandler.multiWordQuery(idx, "word1 OR word2", ranker).toString());
+        expectedSites.add(three);
+        expectedSites.add(four);
+        assertEquals(expectedSites.toString(), multiWordQuery(index, "a OR b", ranker).toString());
 
-        //Expected sites based on the words "word2 OR word3" -> order of sites: two, one, four
+        //Expected sites based on the words "b OR c" -> order of sites: three, four then two.
         expectedSites = new ArrayList<>();
+        expectedSites.add(three);
+        expectedSites.add(four);
         expectedSites.add(two);
-        expectedSites.add(one);
-        expectedSites.add(four);
-        assertEquals(expectedSites.toString(), QueryHandler.multiWordQuery(idx, "word2 OR word3", ranker).toString());
-
-        //Expected sites based on the words "word4 OR word7 --> order of site: four, five
-        expectedSites = new ArrayList<>();
-        expectedSites.add(four);
-        expectedSites.add(five);
-        assertEquals(expectedSites.toString(), QueryHandler.multiWordQuery(idx, "word4 OR word7", ranker).toString());
+        assertEquals(expectedSites.toString(), multiWordQuery(index, "b OR c", ranker).toString());
     }
 
     @Test
     void testMultiWordQueryRankingOrderWithAND() {
         List<Website> expectedSites = new ArrayList<>();
 
-        //Expected sites based on the words "word2 word3 --> order of site: two
+        //Expected sites based on the words "a b --> order of site: two
         expectedSites.add(two);
-        assertEquals(expectedSites.toString(), QueryHandler.multiWordQuery(idx, "word2 word3", ranker).toString());
+        assertEquals(expectedSites.toString(), multiWordQuery(index, "a b", ranker).toString());
 
-        //Expected sites based on the words "w2 w00 --> order of site: eight, elleven
+        //Expected sites based on the words "b c" --> order of site: three then four
         expectedSites = new ArrayList<>();
-        expectedSites.add(eight);
-        expectedSites.add(elleven);
-        assertEquals(expectedSites.toString(), QueryHandler.multiWordQuery(idx, "w2 w00", ranker).toString());
+        expectedSites.add(three);
+        expectedSites.add(four);
+        assertEquals(expectedSites.toString(), multiWordQuery(index, "b c", ranker).toString());
     }
-
-
 }
