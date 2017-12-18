@@ -19,7 +19,7 @@ public class Website implements Comparable<Website> {
 
     /**
      * <pre>
-     * Upon construction of a new Website element, the modifyWordList method of IndexMethods is called on the list
+     * Upon construction of a new Website element, the modifyWordList method of QueryHandler is called on the list
      * of keywords given to the constructor. This removes unnecessary punctuation and spaces, and converts the keywords
      * to lower case, to remove case sensitivity in searches.
      *
@@ -36,7 +36,7 @@ public class Website implements Comparable<Website> {
             throw new IllegalArgumentException();
         this.url = url;
         this.title = title;
-        this.words = IndexMethods.modifyWordList(words);
+        this.words = QueryHandler.modifyWordList(words);
         setOfWords = new HashSet<>(this.words);
     }
 

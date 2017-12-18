@@ -1,7 +1,8 @@
 package searchengine.CodeAnalysis;
 
+import searchengine.CodeAnalysis.BenchmarkingResources.BM25ScoreNotIndexed;
 import searchengine.FileHelper;
-import searchengine.IndexMethods;
+import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Ranking.*;
@@ -49,28 +50,33 @@ public class RankerBenchmarking implements Callable<Integer> {
         int iterations = 10000;
         int warmUpIterations = Math.max(1, iterations / 100);
 
-        queries = BenchmarkTimer.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
+        queries = Benchmark.generateQueryList(wordList, 1, (iterations + warmUpIterations + 1));
+
 
         Score[] rankerList = new Score[]{
-                new BM25Score(sites),
                 new SimpleScore(),
-//                new TFIDFScoreNotIndexed(sites),
-//                new BM25ScoreNotIndexed(sites),
-//                new TFIDFScore(sites),
                 new BM25Score(sites),
+                new BM25ScoreNotIndexed(sites),
+                // Warm ups
+
                 new SimpleScore(),
+                new SimpleScore(),
+                new BM25Score(sites),
+                new BM25Score(sites),
+                new BM25ScoreNotIndexed(sites),
+                new BM25ScoreNotIndexed(sites),
         };
 
-        for (Score ranker : rankerList) {
+        for (int i = 0; i < rankerList.length; i++) {
+            Score ranker = rankerList[i];
             Callable<Integer> callable = new RankerBenchmarking(ranker);
             String className = ranker.getClass().getSimpleName();
             try {
-                BenchmarkTimer benchmark = new BenchmarkTimer(callable, iterations, warmUpIterations);
+                Benchmark benchmark = new Benchmark(callable, iterations, warmUpIterations);
                 System.out.println(className + ":");
                 System.out.println(benchmark.toString());
-
             } catch (Exception e) {
-                System.out.println("Bencmarking failed for " + className);
+                System.out.println("Benchmarking failed for " + className);
                 e.printStackTrace();
             }
         }
@@ -80,7 +86,7 @@ public class RankerBenchmarking implements Callable<Integer> {
     public Integer call() throws Exception {
         String query = queries.get(currentQueryIndex);
         currentQueryIndex++;
-        IndexMethods.multiWordQuery(index, query, ranker);
+        QueryHandler.multiWordQuery(index, query, ranker);
         return 0;
     }
 }

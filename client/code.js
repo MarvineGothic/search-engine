@@ -10,7 +10,10 @@ $(document).ready(function() {
             data: {query: $('#searchbox').val()}
         }).success( function (data) { 
             console.log("Received response " + data);
-            $("#responsesize").html("<p>" + data.length + " websites retrieved</p>");
+            if (data.length === 0)
+                $("#responsesize").html("<p>No website contains the query word.</p>");
+            else
+                $("#responsesize").html("<p>" + data.length + " websites retrieved</p>");
             var buffer = "<ul>\n";
             $.each(data, function(index, value) { 
                 buffer += "<li><a href=\"" + value.url + "\">" + value.title + "</a></li>\n";

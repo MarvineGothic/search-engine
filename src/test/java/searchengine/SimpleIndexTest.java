@@ -1,4 +1,4 @@
-import searchengine.IndexMethods;
+import searchengine.QueryHandler;
 import searchengine.Indexes.*;
 import searchengine.Ranking.SimpleScore;
 import searchengine.Ranking.Score;
@@ -77,10 +77,10 @@ class SimpleIndexTest {
 	}
 
     private void lookupMin(Index index) {
-        assertEquals(1, IndexMethods.multiWordQuery(index,"word1", ranker).size(), "Case 1c failed");
-        assertEquals(1, IndexMethods.multiWordQuery(index,"word1 word2", ranker).size(), "Case 2c failed");
-        assertEquals(1, IndexMethods.multiWordQuery(index,"word1 OR word8", ranker).size(), "Case 3c failed");
-        assertEquals(0, IndexMethods.multiWordQuery(index,"wordX OR wordY", ranker).size(), "Case 4c failed");
+        assertEquals(1, QueryHandler.multiWordQuery(index,"word1", ranker).size(), "Case 1c failed");
+        assertEquals(1, QueryHandler.multiWordQuery(index,"word1 word2", ranker).size(), "Case 2c failed");
+        assertEquals(1, QueryHandler.multiWordQuery(index,"word1 OR word8", ranker).size(), "Case 3c failed");
+        assertEquals(0, QueryHandler.multiWordQuery(index,"wordX OR wordY", ranker).size(), "Case 4c failed");
     }
 
     private void lookupEmpty(Index index){
