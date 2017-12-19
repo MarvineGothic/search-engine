@@ -5,7 +5,8 @@ import searchengine.Website;
 
 /**
  * <pre>
- * This ranker gives all site the same score (Used when no ranking is desired)
+ * This ranker gives all sites the same score; 0.
+ * It is used when no ranking is desired
  * </pre>
  */
 public class SimpleScore implements Score {

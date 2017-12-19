@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * <pre>
- * Implements a the Score class using simple term frequency.
+ * Implements the Score interface and adds the method tf which calculates the term frequency of a given word.
+ * </pre>
  */
 public class TFScore implements Score {
 

@@ -10,7 +10,8 @@ import java.util.List;
 
 /**
  * <pre>
- * Implements a the Score class using the inverse document frequency algorithm to score the websites.
+ * Implements the Score class and adds the method idf
+ * which calculates the inverse document frequency algorithm to score the websites.
  *
  * Formulas and definitions used:
  * d: Database = The total number of websites in the database
@@ -25,7 +26,7 @@ public class IDFScore implements Score {
      * <pre>
      * Instantiates the current ranker
      * @param websiteList A list of all websites in the index used to perform the queries.
-     *                    </pre>
+     * </pre>
      */
     public IDFScore(List<Website> websiteList) {
         sites = websiteList;
@@ -42,7 +43,7 @@ public class IDFScore implements Score {
      * @param word    The query word
      * @param index   The index where the query is performed
      * @param website The website the query word is found on.
-     * @return The Inverse Document Frequency
+     * @return The Inverse Document Frequency: log2(d/n).
      * </pre>
      */
     public float idf(String word, Index index, Website website) {
