@@ -4,6 +4,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -37,12 +38,12 @@ public class WebCrawler {
     private FileWriter dataWriter;
     private String domain;
     private UrlValidator urlValidator;
-    private HashSet<String> exploredLinks;
-    private HashSet<String> unexploredLinks;
+    private Set<String> exploredLinks;
+    private Set<String> unexploredLinks;
     private HashMap<String, Integer> retryLinks; // Hashmap of failed links: Key: urls, Value: Number of failed attempts
     private boolean continueCrawling = true;
 
-    private WebCrawler(String startPage) {
+    private WebCrawler(String startPage) throws Exception {
         illgalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
         exploredLinks = new HashSet<>();
         unexploredLinks = new HashSet<>();
@@ -54,7 +55,18 @@ public class WebCrawler {
         }
         domain = startPage;
 
+
+        // Make sure the data folder exists
+        File file = new File(System.getProperty("user.dir") + File.separator + "data");
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                System.out.println("new directory " + dir + " was created");
+            } else {
+                throw new FileNotFoundException("Could not find folder: " + dir + "\n and failed to create it.");
+            }
+        }
+
         String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
         String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
 
@@ -63,11 +75,11 @@ public class WebCrawler {
         boolean fileExits2 = new File(fileNameVisited).isFile();
         if (fileExits1 || fileExits2) {
             if (!(fileExits1 && fileExits2))
-                throw new Error("Both " + fileName + " and " + " must exist");
+                throw new Exception("Both " + fileName + " and " + fileNameVisited + " must exist");
             // Load data
             boolean loaded = loadData();
             if (!loaded) {
-                throw new Error("Failed to load data. Abort");
+                throw new FileNotFoundException("Failed to load data. Abort");
             }
         }
 
@@ -94,8 +106,13 @@ public class WebCrawler {
             System.out.println("Missing starting page argument");
             return;
         }
-        WebCrawler webCrawler = new WebCrawler(args[0]);
-        webCrawler.crawl();
+        WebCrawler webCrawler;
+        try {
+            webCrawler = new WebCrawler(args[0]);
+            webCrawler.crawl();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -157,7 +174,7 @@ public class WebCrawler {
         exploredLinks.add(url);
 
         // Fetch the HTML code
-        Document document = null;
+        Document document;
         try {
             document = Jsoup.connect(url).get();
         } catch (IOException e) {
@@ -200,10 +217,14 @@ public class WebCrawler {
 
     /**
      * <pre>
-     * Author: Rasmus F
-     * strips a word to remove illegal characters (fx ,.'?!)
-     * It also removes foreign words such as é, à or á.
-     * Finally it removes some websites
+     * This methods does the following things:
+     * - Replaces words containing illegal characters with an empty string.
+     * - Replaces any valid url with an empty string
+     * - Replaces words ending with .com with an empty string
+     * - Replaces words longer than 25 characters with an empty string (this is normally script reference etc that was
+     *   missed or some other kind of code that has nothing to do with the text of the website)
+     * - Removes all characters not equal to a-z or A-Z.
+     *
      * @param word:  Word to be stripped
      * @return stripped word
      * </pre>
@@ -211,10 +232,12 @@ public class WebCrawler {
     private String wordStrip(String word) {
         if (word.contains(illgalCharacters))
             return "";
-        if (word.contains(domain))
+        if (urlValidator.isValid(word))
             return "";
         if (word.endsWith(".com"))
             return "";
+//        if (word.length() > 25)
+//            return "";
         return word.replaceAll("[^a-zA-Z]", "");
     }
 
@@ -260,16 +283,19 @@ public class WebCrawler {
         thread.start();
 
         System.out.println("Starting web crawling\n");
-        int loopcount = 0;
-        int interruptetSleepCount = -1;
-        while (unexploredLinks.size() > 0 && continueCrawling) {
-            loopcount += 1;
+        int loopCount = 0;
+        int interruptedSleepCount = -1;
+        while (unexploredLinks.size() > 0) {
+            loopCount += 1;
 
             // Sleep for 2 seconds to avoid overloading target server
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                interruptetSleepCount += 1;
+                interruptedSleepCount += 1;
+            }
+            if (!continueCrawling){
+                break;
             }
 
             String url = unexploredLinks.iterator().next();
@@ -279,13 +305,14 @@ public class WebCrawler {
             // Continuously updates file with unexplored links in case the program is terminated
             saveUnexploredLinks();
 
-
             // Stop if to many interruptions errors
-            if (interruptetSleepCount > loopcount / 5) {
+            if (interruptedSleepCount > loopCount / 5) {
                 System.out.println("Error: Stopped crawling. To many interruptions");
                 break;
             }
-            // TODO Retry some of the failed links again until they have been tried lets say 5 times.
+            /* TODO An additional improvement to this program would be to retry failed links once in a while out to
+            TODO a maximum of 5 retries. This will ensure that errors because of temporary loss of connection etc
+            TODO will not skip websites */
         }
 
         // Closes file
@@ -299,7 +326,7 @@ public class WebCrawler {
         if (continueCrawling)
             System.out.println("\nFinished crawling: " + domain);
         else
-            System.out.println("\nCrawling of " + domain + "stopped\nProgress has been saved for next session");
+            System.out.println("\nCrawling of " + domain + " stopped\nProgress has been saved for next session");
 
 
     }
@@ -318,15 +345,15 @@ public class WebCrawler {
 
         public void run() {
             Scanner sc = new Scanner(System.in);
-            List<String> abortConditions = new ArrayList<>();
-            abortConditions.add("q");
+            List<String> abortConditions = Collections.singletonList("q");
 
             System.out.println("type q (and enter) to quit");
             System.out.println("Your progress will be saved and you can continue later\n");
             while (sc.hasNext()) {
                 String line = sc.nextLine();
-                if (abortConditions.contains(line.toLowerCase())) {
+                if (abortConditions.contains(line.toLowerCase().replaceAll("\n",""))) {
                     crawler.continueCrawling = false;
+                    System.out.println("Exiting web crawling...");
                     break;
                 }
             }
