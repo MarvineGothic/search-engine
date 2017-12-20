@@ -29,7 +29,7 @@ public class RankerBenchmarking implements Callable<Integer> {
      * @param ranker Generates a new instance with the specified Score.
      * </pre>
      */
-    public RankerBenchmarking(Score ranker) {
+    private RankerBenchmarking(Score ranker) {
         this.ranker = ranker;
     }
 
@@ -67,8 +67,7 @@ public class RankerBenchmarking implements Callable<Integer> {
                 new BM25ScoreNotIndexed(sites),
         };
 
-        for (int i = 0; i < rankerList.length; i++) {
-            Score ranker = rankerList[i];
+        for (Score ranker : rankerList) {
             Callable<Integer> callable = new RankerBenchmarking(ranker);
             String className = ranker.getClass().getSimpleName();
             try {

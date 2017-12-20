@@ -31,7 +31,7 @@ public class TFScore implements Score {
     public static float tf(String word, Website website) {
         try {
             return ((IndexedWebsite) website).getWordFrequency();
-        } catch (ClassCastException e) {
+        } catch (ClassCastException | NullPointerException e ) {
             return Collections.frequency(website.getWords(), word);
         }
     }

@@ -30,7 +30,7 @@ public class RankingResultComparison {
      *             or-conditions
      * </pre>
      */
-    public RankingResultComparison(String filename, String[] queries) {
+    private RankingResultComparison(String filename, String[] queries) {
         List<Website> listOfWebsites = FileHelper.loadFile(filename);
         scoreList = new ArrayList<>();
         scoreList.add(new BM25Score(listOfWebsites));
@@ -70,7 +70,7 @@ public class RankingResultComparison {
 
     /**
      * <pre>
-     * This method shows the top 10 search results for different Score implemetation to easily compare the outputs.
+     * This method shows the top 10 search results for different Score implementation to easily compare the outputs.
      * @param query The given query. Can contain more than one word and you can use OR the create or-conditions
      * </pre>
      */

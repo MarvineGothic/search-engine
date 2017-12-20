@@ -18,7 +18,7 @@ public class IndexedWebsite extends Website {
     private final Website parent;
     private final String indexWord;
     private int wordFrequency;
-    private int websitesContainingWordCount;
+    private Integer websitesContainingWordCount = null;
 
     /**
      * <pre>
@@ -52,7 +52,7 @@ public class IndexedWebsite extends Website {
      * @return Get the total number of website in the Index that contains the indexWord.
      * </pre>
      */
-    public int getWebsitesContainingWordCount() {
+    public Integer getWebsitesContainingWordCount() {
         return websitesContainingWordCount;
     }
 
