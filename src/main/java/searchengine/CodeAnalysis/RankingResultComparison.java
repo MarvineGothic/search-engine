@@ -48,7 +48,7 @@ public class RankingResultComparison {
 
     /**
      * <pre>
-     * Prints out the top 10 search results for different implementation of the Score interface for a list of quries
+     * Prints out the top 10 search results for different implementation of the Score interface for a list of queries
      * to easily compare results
      * @param args A list of queries. Each query can contain more than one word and you can use OR the create
      *             or-conditions

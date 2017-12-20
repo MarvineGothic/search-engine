@@ -38,10 +38,6 @@ class QueryHandlerTest {
     private Website five = new Website("5.com", "example5", Collections.singletonList("e"));
     private Website six = new Website("6.com", "example6", Collections.singletonList("f"));
 
-    private Score ranker;
-    private Score simpleRanker;
-
-
     @BeforeEach
     void setUp() {
         List<Website> sites = new ArrayList<>();
@@ -52,13 +48,9 @@ class QueryHandlerTest {
         sites.add(five);
         sites.add(six);
 
-        simpleindex = new SimpleIndex();
-        simpleindex.build(sites);
-
         index = new InvertedHashMapIndex();
         index.build(sites);
 
-        simpleRanker = new SimpleScore();
         ranker = new BM25Score(sites);
     }
 
@@ -131,6 +123,7 @@ class QueryHandlerTest {
      * </pre>
      */
     // TODO: 18/12/17 Should this be included?
+    /*
     @Test
     void testMultiWordLookupOneVsTwo() {
         String[] lookupQueries = new String[]{
@@ -159,7 +152,7 @@ class QueryHandlerTest {
             List<Website> actual = QueryHandlerOld.multiWordQuery(index, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
-    }
+    }*/
 
     @Test
     void testMultiWordQueryRankingOrderWithOR() {
