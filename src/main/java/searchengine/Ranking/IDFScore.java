@@ -53,6 +53,7 @@ public class IDFScore implements Score {
         float n;
         try {
             n = ((IndexedWebsite) website).getWebsitesContainingWordCount();
+
         } catch (ClassCastException e) {
             n = index.lookup(word).size();
         }
