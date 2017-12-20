@@ -68,11 +68,10 @@ public class IndexTests {
      * while the two return 1
      */
     @Test
-    void lookupIndex() {
+    void lookupIndex(){
         lookupFull(Indexes);
     }
-
-    private void lookupFull(List<Index> indexList) {
+    public void lookupFull(List<Index> indexList) {
         for (Index index : indexList) {
             // Tests each Index type using 1 query word
             assertEquals(1, index.lookup("word1").size(), "Case 1b failed for " + index);
