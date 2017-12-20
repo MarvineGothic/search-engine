@@ -2,18 +2,23 @@ package searchengine;
 
 import searchengine.Indexes.Index;
 import searchengine.Ranking.Score;
-import searchengine.Stemming.Stemmer;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-/** <pre>
+/**
+ * <pre>
  * This class contains a methods that are useful for all indexes.
- </pre> */
+ * </pre>
+ */
 public class QueryHandler {
 
-    /** <pre>
+    /**
+     * <pre>
      * splitQuery method is processing the query line such that:
      * 1. if it contains punctuation it replaces them with a whitespace.
      * 2. if it's a single word - it stays as a query;
@@ -24,7 +29,8 @@ public class QueryHandler {
      *
      * So when we process the query, we iterate through OR, looking for ANY OF THEM on the site,
      * but inside each of OR-statement ALL words shall be presenting on the site.
-    </pre> */
+     * </pre>
+     */
     public static List<List<String>> splitQuery(@NotNull String query) {
         ArrayList<List<String>> result = new ArrayList<>();
         ArrayList<String> andWords;
@@ -48,7 +54,8 @@ public class QueryHandler {
         return result;
     }
 
-    /** <pre>
+    /**
+     * <pre>
      * modifyQuery modifies the query, to ease use of regular expressions, by passing the elements of the query through the modifyWordList method.
      * The modifyQuery method requires that queries have already been processed by the splitQuery method.
      *
@@ -57,7 +64,8 @@ public class QueryHandler {
      * and had punctuation and unnecessary spaces removed.
      *
      * When running this method we iterate through the Lists of strings in query, passing them to the modifyWordList method.
-     </pre> */
+     * </pre>
+     */
     public static List<List<String>> modifyQuery(@NotNull List<List<String>> query) {
         List<List<String>> tempQuery = new ArrayList<>();
         for (List<String> wordList : query) {
@@ -67,7 +75,8 @@ public class QueryHandler {
         return tempQuery;
     }
 
-    /** <pre>
+    /**
+     * <pre>
      * modifyWordList modifies a list of words, to ease use of regular expressions.
      * This is done by the following:
      * 1. converting query words to lower-case
@@ -79,21 +88,21 @@ public class QueryHandler {
      * @return a list of strings that have been converted to lower case and had punctuation and unnecessary spaces removed.
      *
      * When running this method, we iterate through the strings in lists of strings.
-     </pre> */
-    public static List<String> modifyWordList(@NotNull List<String> wordList){
+     * </pre>
+     */
+    public static List<String> modifyWordList(@NotNull List<String> wordList) {
         List<String> tempList = new ArrayList<>();
         for (String word : wordList) {
             String modifiedWord = word.toLowerCase()
                     .replaceAll("\\p{Punct}", " ")
-                    .replaceAll("\\s+", " ")
-                    .replaceAll("\\s+$|^\\s+", "");
-//            modifiedWord = Stemmer.StemWord(modifiedWord);
+                    .trim();
             if (!modifiedWord.isEmpty()) tempList.add(modifiedWord);    // no empty lines in word Lists
         }
         return tempList;
     }
 
-    /** <pre>
+    /**
+     * <pre>
      * This methods finds all the websites matching the AND/OR conditions of a multi-word query.
      * NOTE: This method also uses modifiesQuery on the given query
      * 28.11.17 added a check if sites contains all of AND-separated words. If not, it just jumps to next AND-separated line.
@@ -104,7 +113,8 @@ public class QueryHandler {
      *                       treated as an OR condition.
      * @param ranker         A ranker used to sort the found websites
      * @return A list of websites matching at least one of the OR conditions of the query.
-     </pre> */
+     * </pre>
+     */
     public static List<Website> multiWordQuery(@NotNull Index index, @NotNull String multiWordQuery, @NotNull Score ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
         Map<Website, Float> allRanks = new HashMap<>();
@@ -126,19 +136,21 @@ public class QueryHandler {
 
             updateAllRanks(currentRanks, allRanks);
         }
-        // The line below selects all the Websites to a List and sorts them according to the key (score).
+        // The line below selects all the Websites to a List and sorts them according to the value (rank).
         return allRanks.entrySet().stream().sorted((x, y) -> y.getValue().
                 compareTo(x.getValue())).map(Map.Entry::getKey).collect(
                 Collectors.toList());
     }
 
-    /** <pre>
-     * This method adds takes a map of websites and ranks and join it with another map of same type.
+    /**
+     * <pre>
+     * This method takes a map of websites and ranks and join it with another map of same type.
      * In case of a key existing in both maps the maximum rank will be used.
      * @param currentRanks The new values. This map will not be changed.
      * @param allRanks The original map. This map will be updated with entries from both maps.
-     </pre> */
-    protected static void updateAllRanks(@NotNull Map<Website, Float> currentRanks, @NotNull Map<Website, Float> allRanks){
+     * </pre>
+     */
+    protected static void updateAllRanks(@NotNull Map<Website, Float> currentRanks, @NotNull Map<Website, Float> allRanks) {
         for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
             Website site = mapEntry.getKey();
             Float currentRank = mapEntry.getValue();
