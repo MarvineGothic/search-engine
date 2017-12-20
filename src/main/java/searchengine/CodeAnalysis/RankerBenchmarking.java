@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 
 /**
  * <pre>
- * This class will run do a perform a different multi word query whenever it is called. This is used to benchmark the
+ * This class will perform a different multi-word query whenever it is called. This is used to benchmark the
  * performance of calls using different implementations of the Score class.
  * </pre>
  */

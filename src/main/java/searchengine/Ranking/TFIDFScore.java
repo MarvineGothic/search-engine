@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * <pre>
- * Implements a the Score class using the tf-idf algorithm to score the websites.
+ * Implements the Score class using the tf and idf algorithms to score the websites.
  * Read https://en.wikipedia.org/wiki/Tf-idf for more information.
  *
  * Formulas and definitions used:
