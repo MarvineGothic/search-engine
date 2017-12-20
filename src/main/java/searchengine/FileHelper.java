@@ -152,7 +152,7 @@ public class FileHelper {
         String[] schemes = {"http", "https", "ftp"};
         UrlValidator urlValidator = new UrlValidator(schemes);
         if (URL.replaceAll("\\s", "").length() != URL.length()) {
-            System.out.println("ERROR: parseFile with multiple words int the URL: *PAGE:" + URL);
+            System.out.println("ERROR: parseFile with multiple words in the URL: *PAGE:" + URL);
         }
         return urlValidator.isValid(URL) && !URL.contains(illegalCharacters) && !URL.isEmpty();
     }

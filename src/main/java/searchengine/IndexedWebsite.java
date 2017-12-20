@@ -87,7 +87,7 @@ public class IndexedWebsite extends Website {
      * <pre>
      * NOTE: This is the same as the hashcode of the parent website and DOES NOT the the index word into consideration.
      * So the equals method ignores the index word.
-     * The reason for this peculiar behavior is that it allows for an elegant sorting algorythm in the
+     * The reason for this peculiar behavior is that it allows for an elegant sorting algorithm in the
      * QueryHandler.MultiWordQuery method.
      * But it is important to keep in mind that this method works a little different than you might expect
      * @return Get the hashcode of the parent website.
@@ -104,7 +104,7 @@ public class IndexedWebsite extends Website {
      * - If other object is a normal website and that website equals the parent.
      * - If the other object is a indexed website and the two parent equals each other.
      * So the equals method ignores the index word.
-     * The reason for this peculiar behavior is that it allows for an elegant sorting algorythm in the
+     * The reason for this peculiar behavior is that it allows for an elegant sorting algorithm in the
      * QueryHandler.MultiWordQuery method.
      * But it is important to keep in mind that this method works a little different than you might expect
      *

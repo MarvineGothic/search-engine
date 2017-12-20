@@ -2,7 +2,7 @@ package searchengine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld;
+import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
 import searchengine.Indexes.SimpleIndex;
@@ -14,7 +14,7 @@ import searchengine.Ranking.SimpleScore;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static searchengine.IndexMethods.multiWordQuery;
+import static searchengine.QueryHandler.multiWordQuery;
 //import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;
 
 
@@ -27,11 +27,9 @@ import static searchengine.IndexMethods.multiWordQuery;
  * "import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;"
  * </pre>
  */
-
 class QueryHandlerTest {
     private Index index;
     private Index simpleindex;
-
 
     private Website one = new Website("1.com", "example1", Collections.singletonList("a"));
     private Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));
@@ -157,8 +155,8 @@ class QueryHandlerTest {
                 "w6 w5 w5",
         };
         for (String lookupQuery : lookupQueries) {
-            List<Website> expected = IndexMethods.multiWordQuery(index, lookupQuery, ranker);
-            List<Website> actual = IndexMethodsOld.multiWordQuery(index, lookupQuery, ranker);
+            List<Website> expected = QueryHandler.multiWordQuery(index, lookupQuery, ranker);
+            List<Website> actual = QueryHandlerOld.multiWordQuery(index, lookupQuery, ranker);
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }

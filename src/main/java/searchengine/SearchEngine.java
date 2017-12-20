@@ -28,7 +28,7 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Path("/")
-public class SearchEngine extends ResourceConfig {
+public class  SearchEngine extends ResourceConfig {
     private static Index currentIndex;
     private static Score currentRanker;
 

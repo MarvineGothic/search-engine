@@ -29,7 +29,7 @@ public class Benchmark {
      *                         function called when benchmarking.
      * @param iterations       The number of iterations the benchmark is based on.
      * @param warmUpIterations The number of warm up iterations used for the benchmark.
-     * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * @throws Exception If the Callable method throws an exception it needs to be caught.
      * </pre>
      */
     public Benchmark(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
