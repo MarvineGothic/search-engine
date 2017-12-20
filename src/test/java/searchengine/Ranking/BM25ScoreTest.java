@@ -53,7 +53,6 @@ class BM25ScoreTest {
                 float tf = TFScore.tf(word, site);
                 float idf = ranker.idf(word, index, site);
                 float DL = site.getWords().size();
-
                 expectedValue = idf * (tf * (1.75f + 1f) / (1.75f * (1f - 0.75f + 0.75f * DL / AVDLSites) + tf));
                 assertEquals(expectedValue, ranker.getScore(word, site, index), 1e-6, "getScoreValues failed for " + word + " and site " + site);
             }
