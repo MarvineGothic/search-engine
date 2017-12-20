@@ -50,6 +50,7 @@ public class FileHelper {
         catch (FileNotFoundException e){
             System.out.println("Couldn't load the given file");
             e.printStackTrace();
+            usedUrls.clear();
             return null;
         }
     }
