@@ -52,7 +52,7 @@ class InvertedIndexTest {
      *
      */
     @Test
-    void buildReverseIndex(){
+    void buildInvertedIndex(){
         buildHashMapIndex();
         buildTreeMapIndex();
     }
