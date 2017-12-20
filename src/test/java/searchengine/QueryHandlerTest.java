@@ -2,14 +2,10 @@ package searchengine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Indexes.SimpleIndex;
-
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
-import searchengine.Ranking.SimpleScore;
 
 import java.util.*;
 
@@ -154,7 +150,6 @@ class QueryHandlerTest {
             assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
         }
     }*/
-
     @Test
     void testMultiWordQueryRankingOrderWithOR() {
         List<Website> expectedSites = new ArrayList<>();

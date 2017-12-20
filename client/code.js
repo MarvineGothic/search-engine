@@ -1,9 +1,9 @@
 $(document).ready(function () {
     var baseUrl = "http://localhost:8080";
-    var availableTags = getCookie('_searches')/*.split('\\s+')*/;
+    var availableTags = getCookie('_searches');
 
     /**
-     * functions
+     * This function splits a string by whitespaces
      * @param val
      * @returns {*|Array}
      */
@@ -11,22 +11,45 @@ $(document).ready(function () {
         return val.split(/\s+/);
     }
 
+    /**
+     * This function splits a string by whitespaces
+     * and returns last string
+     * @param term
+     * @returns {*}
+     */
     function extractLast(term) {
         return split(term).pop();
     }
 
+    /**
+     * This function replaces all characters except letters, digits and whitespaces
+     * by a single whitespace
+     * @param term
+     * @returns {*|Array}
+     */
     function replace(term) {
         var str = term.replace(/[^\w\s]|_/g, " ")
             .replace(/\s+/g, " ");
         return split(str);
     }
 
+    /**
+     * Returns boolean value if array contains a specific word
+     * @param array
+     * @param word
+     * @returns {boolean}
+     */
     function contains(array, word) {
         return (array.indexOf(word.toLowerCase()) > -1);
     }
 
-    function getCookie(cname) {
-        var name = cname + "=";
+    /**
+     * Returns a string of words from a cookie file
+     * @param cName
+     * @returns {*|String}
+     */
+    function getCookie(cName) {
+        var name = cName + "=";
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
@@ -36,17 +59,23 @@ $(document).ready(function () {
         return "";
     }
 
+    /**
+     * This function updates a cookie file, based on a query search.
+     * It splits a multi word query in single words, sets them to lower case and
+     * adds only unique words in the cookie file.
+     * @param event
+     */
     function changeCookie(event) {
         var s = getCookie('_searches');
         var array = replace(event.target.value);
         var result = "";
         for (var i = 0; i < array.length; i++) {
-            var word = array[i].toLowerCase();
-            if (!contains(availableTags, word) && !contains(result.split(' '), word)) {
-                result = result.concat(' ' + word);
+            var word = array[i];
+            if (!contains(availableTags, word) && !contains(result.split(' '), word) && word !== "OR") {
+                result = result.concat(' ' + array[i]);
             }
         }
-        document.cookie = "_searches=" + s + result;
+        document.cookie = "_searches=" + s + result.toLowerCase();
     }
 
     /**
@@ -74,13 +103,15 @@ $(document).ready(function () {
     });
 
     $("#searchbox")
+    // it clicks a button by pressing "Enter" key
+    // and adds a query words to cookie file
         .keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#searchbutton').click();
                 changeCookie(event);
             }
-
         })
+
         // don't navigate away from the field on tab when selecting an item
         .on("keydown", function (event) {
             if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
@@ -88,19 +119,19 @@ $(document).ready(function () {
             }
         })
         .autocomplete({
-            minLength: 2,
+            minLength: 1,
             // update `cookie` with `value` of `#searchbox`, on `change` event
             change: function (event) {
                 var s = getCookie('_searches');
                 var array = replace(event.target.value);
                 var result = "";
                 for (var i = 0; i < array.length; i++) {
-                    var word = array[i].toLowerCase();
-                    if (!contains(availableTags, word) && !contains(result.split(' '), word)) {
-                        result = result.concat(' ' + word);
+                    var word = array[i];
+                    if (!contains(availableTags, word) && !contains(result.split(' '), word) && word !== "OR") {
+                        result = result.concat(' ' + array[i]);
                     }
                 }
-                document.cookie = "_searches=" + s + result;
+                document.cookie = "_searches=" + s + result.toLowerCase();
             },
             source: function (request, response) {
                 availableTags = getCookie('_searches').split(' ');
@@ -117,7 +148,7 @@ $(document).ready(function () {
                 terms.pop();
                 // add the selected item
                 terms.push(ui.item.value);
-                // add placeholder to get the comma-and-space at the end
+                // add placeholder
                 terms.push("");
                 this.value = terms.join(" ");
                 return false;
