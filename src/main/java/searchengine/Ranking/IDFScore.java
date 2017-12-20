@@ -46,7 +46,7 @@ public class IDFScore implements Score {
      * @return The Inverse Document Frequency: log2(d/n).
      * </pre>
      */
-    public float idf(String word, Index index, Website website) {
+    protected float idf(String word, Index index, Website website) {
         if (sites.size() == 0)
             return -1;
         float d = sites.size();

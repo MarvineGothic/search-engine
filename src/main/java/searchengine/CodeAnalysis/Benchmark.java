@@ -168,7 +168,7 @@ public class Benchmark {
         return String.format("Benchmark{" +
                 "meanRuntime=%s ms" +
                 ", 95%%confInterval=+/-%s ms" +
-                ", stdRuntime=%s ms" +
+                ", std=%s ms" +
                 ", totalRuntime=%s ms" +
                 '}', (float) meanRuntime / 1000000, (float) confInterval / 1000000, (float) stdRuntime / 1000000, (float) totalRuntime / 1000000);
     }

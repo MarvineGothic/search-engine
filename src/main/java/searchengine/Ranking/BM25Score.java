@@ -12,7 +12,7 @@ import java.util.List;
  *
  * Formulas and definitions used:
  * dL: words on website = The number of words an the website
- * avDl: Database = The total number of websites in the database
+ * avDl: Average website words = The average number of words over all websites in the database
  * b: constant parameter = standard value is 0.75
  * k: constant parameter = standard value is 1.75
  * </pre>
