@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,39 +33,51 @@ class FileHelperTest {
      */
     @Test
     void fileHelperFaultyDirectoryTest(){
-        FileHelper.parseFile("This is very much a faulty file directory!");
-        String expectedOutput = "Couldn't load the given file\r\n";
-        assertEquals(expectedOutput, outContent.toString());
+        String[] faultyDirectories = {"C:\\", "C:\\123", "C:\\abc", "C:\\890.txt", "C:\\zyx.txt", "æøå", "123", "test with spaces" +
+                ".,/()<"};
+        for (String faultyDirectory:faultyDirectories)
+        {
+            FileHelper.parseFile(faultyDirectory);
+            String expectedOutput = "Couldn't load the given file\r\n";
+            assertEquals(expectedOutput, outContent.toString(), "Assertion error for "+faultyDirectory);
+            outContent.reset();
+        }
     }
 
     /**
-     * Test if the FileHelper's parseFile method skips sites that does not contain a title or any words.
-     * Case 1a: Check if the method skips null value site lists
-     * Case 2a: Check if the method skips empty site lists
+     * Test if the FileHelper's parseFile method skips sites that does not contain a title or words.
      */
     @Test
     void fileHelperIncompleteSitesTest() {
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "incompleteSites.txt";
         List<Website> sites = FileHelper.parseFile(path);
-        assertEquals(true, sites != null, "Case 1a failed");
-        assertEquals(3, sites.size(), "Case 2a failed");
+        ArrayList<String> siteUrls = new ArrayList<>();
+        for (Website site:sites) {
+            siteUrls.add(site.getUrl());
+        }
+        assertEquals(siteUrls.toString(), "[https://site1.com/, https://site2.com/, https://site6.com/]");
     }
 
     /**
-     * Test if the FileHelper returns null when trying to load files with duplicate websites
+     * Test if the FileHelper throws an error message when trying to parse a duplicate website, and skips the duplicate
      */
     @Test
     void fileHelperDuplicateSitesTest() {
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "duplicateSites.txt";
-
-        FileHelper.parseFile(path);
+        List<Website> sites = FileHelper.parseFile(path);
         String expectedOutput = "ERROR: Duplicate site when parsing file: https://site1.com/\r\n";
         assertEquals(expectedOutput, outContent.toString());
+        ArrayList<String> siteUrls = new ArrayList<>();
+        for (Website site:sites) {
+            siteUrls.add(site.getUrl());
+        }
+        assertEquals(siteUrls.toString(), "[https://site1.com/, https://site2.com/, https://site3.com/]");
     }
 
 
     /**
-     * Test if the FileHelper returns null (error) if a website has more more words on a line
+     * Test if the FileHelper returns an error if a website has more than one words in an url or word line, but allows
+     * several words in the title line
      */
     @Test
     void fileHelperSingleWordsTest() {
@@ -79,7 +92,7 @@ class FileHelperTest {
         path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "multiWordLineSites.txt";
         FileHelper.parseFile(path);
 
-        String expectedOutput = "ERROR: parseFile with multiple words int the URL: *PAGE:https://site3.com/ Title\r\n";
+        String expectedOutput = "ERROR: parseFile with multiple words in the URL: *PAGE:https://site3.com/ Title\r\n";
         expectedOutput += "ERROR: parseFile with multiple words on the same line: word1 word2\r\n";
         assertEquals(expectedOutput, outContent.toString());
     }

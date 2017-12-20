@@ -71,7 +71,6 @@ public class IndexBenchmarking implements Callable<Integer> {
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override

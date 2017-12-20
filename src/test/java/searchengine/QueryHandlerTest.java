@@ -2,17 +2,20 @@ package searchengine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
+import searchengine.Indexes.SimpleIndex;
 
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
+import searchengine.Ranking.SimpleScore;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static searchengine.QueryHandler.multiWordQuery;
-//import static searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld.multiWordQuery;
+//import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;
 
 
 /**
@@ -24,10 +27,9 @@ import static searchengine.QueryHandler.multiWordQuery;
  * "import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;"
  * </pre>
  */
-
 class QueryHandlerTest {
     private Index index;
-    private Score ranker;
+    private Index simpleindex;
 
     private Website one = new Website("1.com", "example1", Collections.singletonList("a"));
     private Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));

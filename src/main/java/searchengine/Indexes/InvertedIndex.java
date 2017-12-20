@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * <pre>
  * Implements the Index interface using a reverse index method
@@ -35,12 +34,13 @@ abstract public class InvertedIndex implements Index {
                     if (value == null) {
                         value = new HashSet<>();
                     }
-                    value.add(new IndexedWebsite(currentSite, indexWord));
+                    IndexedWebsite site = new IndexedWebsite(currentSite, indexWord);
+                    value.add(site);
                     return value;
                 });
             }
         }
-        assignWebsitesContaningWordCount();
+        assignWebsitesContainingWordCount();
     }
 
     /**
@@ -48,7 +48,7 @@ abstract public class InvertedIndex implements Index {
      * For each word, this method assigns all the the number of websites containing that word to each IndexedWebsites
      * </pre>
      */
-    private void assignWebsitesContaningWordCount(){
+    private void assignWebsitesContainingWordCount(){
         for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()) {
             int count = entry.getValue().size();
             for (IndexedWebsite website : entry.getValue()) {
