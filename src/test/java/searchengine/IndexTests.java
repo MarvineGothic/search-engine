@@ -68,11 +68,10 @@ public class IndexTests {
      * while the two return 1
      */
     @Test
-    void lookupIndex() {
+    void lookupIndex(){
         lookupFull(Indexes);
     }
-
-    private void lookupFull(List<Index> indexList) {
+    public void lookupFull(List<Index> indexList) {
         for (Index index : indexList) {
             // Tests each Index type using 1 query word
             assertEquals(1, index.lookup("word1").size(), "Case 1b failed for " + index);
@@ -100,8 +99,6 @@ public class IndexTests {
             assertEquals(3, QueryHandler.multiWordQuery(index, "word1 word2 OR word3", ranker).size(),
                     "Case 12b failed " + index);
             assertEquals(1, QueryHandler.multiWordQuery(index, "word1 word7 OR wordX", ranker).size(),
-                    "Case 13b failed " + index);
-            assertEquals(2, QueryHandler.multiWordQuery(index, "word1 OR word8 OR wordX", ranker).size(),
                     "Case 13b failed " + index);
         }
     }
