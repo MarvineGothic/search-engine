@@ -11,7 +11,6 @@ class SplitQueryTest {
     @Test
     void testSingleWord() {
         assertEquals(1, splitQuery("word1").size());
-        assertEquals(1, splitQuery("word2").size());
         assertEquals(0, splitQuery("").size());
         assertEquals(0, splitQuery(" ").size());
         assertEquals(0, splitQuery("  ").size());
