@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
  * </pre>
  */
 class Benchmark {
-    private final Callable<Integer> callable;
+    private final Callable callable;
     private final int warmUpIterations;
     private final int iterations;
     private final List<Long> runTimes = new ArrayList<>();
@@ -32,7 +32,7 @@ class Benchmark {
      * @throws Exception If the Callable method throws an exception it needs to be caught.
      * </pre>
      */
-    public Benchmark(Callable<Integer> callable, int iterations, int warmUpIterations) throws Exception {
+    public Benchmark(Callable callable, int iterations, int warmUpIterations) throws Exception {
         this.callable = callable;
         this.warmUpIterations = warmUpIterations;
         this.iterations = iterations;
@@ -141,8 +141,8 @@ class Benchmark {
         for (float runTime : runTimes) {
             stdRuntime += (meanRuntime - runTime) * (meanRuntime - runTime);
         }
-
         stdRuntime = (long) Math.sqrt((double) (stdRuntime / (runTimes.size() - 1)));
+
         confInterval = (long) (stdRuntime / Math.sqrt(runTimes.size() - 1) * 1.96);
     }
 

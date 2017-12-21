@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * ReverseTreeMap, ReverseHashMap and Simple
  * </pre>
  */
-public class IndexBenchmarking implements Callable<Integer> {
+public class IndexBenchmarking implements Callable {
     private static List<String> listOfQueries;
     private final Index index;
     private int currentIndex = 0;
@@ -74,10 +74,10 @@ public class IndexBenchmarking implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Object call() throws Exception {
         String query = listOfQueries.get(currentIndex);
         index.lookup(query);
         currentIndex++;
-        return 0;
+        return null;
     }
 }

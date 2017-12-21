@@ -64,8 +64,8 @@ public class WebCrawler {
             }
         }
 
-        String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileName = dir + domain.replaceAll("[/:]+", "-") + ".txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         // Check if file exists
         boolean fileExits1 = new File(fileName).isFile();
@@ -87,8 +87,8 @@ public class WebCrawler {
             e.printStackTrace();
             return;
         }
-
-        unexploredLinks.add(startPage);
+        if (!exploredLinks.contains(startPage))
+            unexploredLinks.add(startPage);
     }
 
     /**
@@ -120,8 +120,8 @@ public class WebCrawler {
      */
     private boolean loadData() {
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
-        String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileName = dir + domain.replaceAll("[/:]+", "-") + ".txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         Scanner scanner;
         try {
@@ -136,6 +136,7 @@ public class WebCrawler {
             assert urlValidator.isValid(url);
             unexploredLinks.add(url);
         }
+
         try {
             scanner = new Scanner(new File(fileName), "UTF-8");
         } catch (FileNotFoundException e) {
@@ -186,7 +187,7 @@ public class WebCrawler {
             title = "Main-page";
         sb.append("\n").append(title);
 
-        for (String word : document.text().split(" ")) {
+        for (String word : document.text().split("\\s+")) {
             String strippedWord = wordStrip(word);
             if (!strippedWord.equals(""))
                 sb.append("\n").append(strippedWord);
@@ -232,8 +233,8 @@ public class WebCrawler {
             return "";
         if (word.endsWith(".com"))
             return "";
-//        if (word.length() > 25)
-//            return "";
+        if (word.length() > 25)
+            return "";
         return word.replaceAll("[^a-zA-Z]", "");
     }
 
@@ -245,7 +246,7 @@ public class WebCrawler {
     private void saveUnexploredLinks() {
 
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         // Tries 5 times if an error occurs.
         for (int j = 0; j < 5; j++) {
@@ -355,6 +356,5 @@ public class WebCrawler {
             }
         }
     }
-
 
 }

@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * performance of calls using different implementations of the Score class.
  * </pre>
  */
-public class RankerBenchmarking implements Callable<Integer> {
+public class RankerBenchmarking implements Callable {
     private static List<String> queries;
     private static Index index;
     private final Score ranker;
@@ -77,10 +77,10 @@ public class RankerBenchmarking implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public Object call() throws Exception {
         String query = queries.get(currentQueryIndex);
         currentQueryIndex++;
         QueryHandler.multiWordQuery(index, query, ranker);
-        return 0;
+        return null;
     }
 }

@@ -1,6 +1,5 @@
 package searchengine;
 
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class Website implements Comparable<Website> {
      * @param words is a list of the most commonly used keywords on a given website
      * </pre>
      */
-    public Website(@NotNull String url, @NotNull String title, @NotNull List<String> words) {
+    public Website(String url, String title, List<String> words) {
         if (url == null || title == null || words == null)
             throw new IllegalArgumentException();
         this.url = url;
@@ -120,9 +119,8 @@ public class Website implements Comparable<Website> {
         if (IndexedWebsite.class.equals(other.getClass())) {
             return equals(((IndexedWebsite) other).getParent());
         }
-        if (getClass() == other.getClass()) {
+        if (Website.class == other.getClass()) {
             Website website = (Website) other;
-
             return title.equals(website.title) && url.equals(website.url) && words.equals(website.words);
         }
         return false;

@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
  * This benchmarking class uses the package from this website: http://www.ellipticgroup.com/html/benchmarkingArticle.html
  * </pre>
  */
-public class QueryPerformanceBenchmarking implements Callable<Integer> {
+public class QueryPerformanceBenchmarking implements Callable {
     private final Index index;
     private final List<String> queryList;
     private final boolean methodType;
@@ -125,12 +125,12 @@ public class QueryPerformanceBenchmarking implements Callable<Integer> {
      */
     @SuppressWarnings("deprecation")
     @Override
-    public Integer call() throws Exception {
+    public Object call() throws Exception {
         if (methodType)
             QueryHandler.multiWordQuery(index, queryList.get(currentQueryIndex), ranker);
         else
             QueryHandlerOld.multiWordQuery(index, queryList.get(currentQueryIndex), ranker);
         currentQueryIndex++;
-        return 0;
+        return null;
     }
 }

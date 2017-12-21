@@ -11,7 +11,8 @@ import java.util.*;
  * creating a new object, site validity is checked.
  */
 public class FileHelper {
-    private static final String illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
+    private static final String illegalCharacters = "̨̨̈̈.,:;-" +
+        "";
     private static final Set<String> usedUrls = new HashSet<>();
     private static String url;
     private static String title;
@@ -157,7 +158,7 @@ public class FileHelper {
         if (URL.replaceAll("\\s", "").length() != URL.length()) {
             System.out.println("ERROR: parseFile with multiple words in the URL: *PAGE:" + URL);
         }
-        return urlValidator.isValid(URL) && !URL.contains(illegalCharacters) && !URL.isEmpty();
+        return urlValidator.isValid(URL) && !URL.isEmpty();
     }
 
     /**
