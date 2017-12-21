@@ -40,7 +40,7 @@ $(document).ready(function () {
      * @returns {boolean}
      */
     function contains(array, word) {
-        return (array.indexOf(word) > -1);
+        return (array.indexOf(word.toLowerCase()) > -1);
     }
 
     /**
@@ -75,7 +75,7 @@ $(document).ready(function () {
                 result = result.concat(' ' + array[i]);
             }
         }
-        document.cookie = "_searches=" + s + result;
+        document.cookie = "_searches=" + s + result.toLowerCase();
     }
 
     /**
@@ -131,7 +131,7 @@ $(document).ready(function () {
                         result = result.concat(' ' + array[i]);
                     }
                 }
-                document.cookie = "_searches=" + s + result;
+                document.cookie = "_searches=" + s + result.toLowerCase();
             },
             source: function (request, response) {
                 availableTags = getCookie('_searches').split(' ');
