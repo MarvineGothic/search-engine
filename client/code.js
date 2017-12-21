@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var baseUrl = "http://localhost:8080";
     var availableTags = getCookie('_searches');
+    var result = "";
 
     /**
      * This function splits a string by whitespaces
@@ -60,22 +61,19 @@ $(document).ready(function () {
     }
 
     /**
-     * This function updates a cookie file, based on a query search.
+     * This function prepares a result to update later a cookie file, based on a query search.
      * It splits a multi word query in single words, sets them to lower case and
-     * adds only unique words in the cookie file.
+     * adds only unique words in the result.
      * @param event
      */
     function changeCookie(event) {
-        var s = getCookie('_searches');
         var array = replace(event.target.value);
-        var result = "";
         for (var i = 0; i < array.length; i++) {
             var word = array[i];
             if (!contains(availableTags, word) && !contains(result.split(' '), word) && word !== "OR") {
                 result = result.concat(' ' + array[i]);
             }
         }
-        document.cookie = "_searches=" + s + result.toLowerCase();
     }
 
     /**
@@ -89,10 +87,16 @@ $(document).ready(function () {
             data: {query: $('#searchbox').val()}
         }).success(function (data) {
             console.log("Received response " + data);
-            if (data.length === 0)
+            if (data.length === 0) {
+                result = ""; // if no websites found we empty result
                 $("#responsesize").html("<p>No website contains the query word.</p>");
-            else
+            }
+            else {
                 $("#responsesize").html("<p>" + data.length + " websites retrieved</p>");
+                // only if we found some websites the cookie gets updated
+                var s = getCookie('_searches');
+                document.cookie = "_searches=" + s + result.toLowerCase();
+            }
             var buffer = "<ul>\n";
             $.each(data, function (index, value) {
                 buffer += "<li><a href=\"" + value.url + "\">" + value.title + "</a></li>\n";
@@ -122,16 +126,13 @@ $(document).ready(function () {
             minLength: 1,
             // update `cookie` with `value` of `#searchbox`, on `change` event
             change: function (event) {
-                var s = getCookie('_searches');
                 var array = replace(event.target.value);
-                var result = "";
                 for (var i = 0; i < array.length; i++) {
                     var word = array[i];
                     if (!contains(availableTags, word) && !contains(result.split(' '), word) && word !== "OR") {
                         result = result.concat(' ' + array[i]);
                     }
                 }
-                document.cookie = "_searches=" + s + result.toLowerCase();
             },
             source: function (request, response) {
                 availableTags = getCookie('_searches').split(' ');
