@@ -11,6 +11,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static searchengine.QueryHandler.multiWordQuery;
+import static searchengine.QueryHandler.splitQuery;
 //import static searchengine.CodeAnalysis.BenchmarkingResources.IndexMethodsOld.multiWordQuery;
 
 
@@ -93,8 +94,6 @@ class QueryHandlerTest {
     void testSingleORQueries() {
         //Two sites have "a" and two sites have "c"
         assertEquals(4, multiWordQuery(index, "a OR c", ranker).size());
-        //two sites have "a" and one site has "d"
-        assertEquals(3, multiWordQuery(index, "a OR d", ranker).size());
         //Are sites counted twice? Two sites have "a", three have "b" where one has "a" and "b"
         assertEquals(4, multiWordQuery(index, "a OR b", ranker).size());
         // Corner case: Does code remove duplicates?
@@ -113,43 +112,6 @@ class QueryHandlerTest {
         assertEquals(2, multiWordQuery(index, "a OR a OR a", ranker).size());
     }
 
-
-    /**
-     * <pre>
-     * Test that multiWordLookup1 has the same results as multiWordLookup2
-     * </pre>
-     */
-    // TODO: 18/12/17 Should this be included?
-    /*
-    @Test
-    void testMultiWordLookupOneVsTwo() {
-        String[] lookupQueries = new String[]{
-                "word1 OR word2 OR word word3",
-                "word2 OR word3",
-                "word1 OR word4",
-                "word1 OR word1",
-                "word2 OR word3 OR word5 OR word6",
-                "word1 OR word4 OR ",
-                "word1 OR word1 OR OR word1",
-                " word1,",
-                " ",
-                ". ",
-                "word1 OR ",
-                "Denmark OR Germany",
-                "word1 OR word8 OR wordX",
-                "w1 w2 w3 w12 OR w3 w0 w OR w4 w5 w6",
-                "w1 w2 w3 w12 OR w3 w0 w",
-                "w1 w2 w3 w12",
-                "w12 w2 w3 w1",
-                "w w0 w3",
-                "w6 w5 w5",
-        };
-        for (String lookupQuery : lookupQueries) {
-            List<Website> expected = QueryHandler.multiWordQuery(index, lookupQuery, ranker);
-            List<Website> actual = QueryHandlerOld.multiWordQuery(index, lookupQuery, ranker);
-            assertEquals(expected, actual, "Failed test for query: " + lookupQuery);
-        }
-    }*/
     @Test
     void testMultiWordQueryRankingOrderWithOR() {
         List<Website> expectedSites = new ArrayList<>();
@@ -171,15 +133,23 @@ class QueryHandlerTest {
     @Test
     void testMultiWordQueryRankingOrderWithAND() {
         List<Website> expectedSites = new ArrayList<>();
-
-        //Expected sites based on the words "a b --> order of site: two
-        expectedSites.add(two);
-        assertEquals(expectedSites.toString(), multiWordQuery(index, "a b", ranker).toString());
-
         //Expected sites based on the words "b c" --> order of site: three then four
-        expectedSites = new ArrayList<>();
         expectedSites.add(three);
         expectedSites.add(four);
         assertEquals(expectedSites.toString(), multiWordQuery(index, "b c", ranker).toString());
+    }
+
+    @Test
+    void testModifyQueryMethod(){
+        assertEquals("denmark", QueryHandler.modifyQuery(splitQuery("Denmark OR Germany")).get(0).get(0));
+        assertEquals("denmark", QueryHandler.modifyQuery(splitQuery("denmark OR Germany")).get(0).get(0));
+
+        // spaces and punctuation
+        assertEquals(1, QueryHandler.modifyQuery(splitQuery(" word1,")).size());
+        assertEquals("word1", QueryHandler.modifyQuery(splitQuery(" word1,")).get(0).get(0));
+        assertEquals(0, QueryHandler.modifyQuery(splitQuery(" ")).size());
+        assertEquals("[]", QueryHandler.modifyQuery(splitQuery(" ")).toString());
+        assertEquals("[]", QueryHandler.modifyQuery(splitQuery(". ")).toString());
+        assertEquals(0, QueryHandler.modifyQuery(splitQuery(". ")).size());
     }
 }
