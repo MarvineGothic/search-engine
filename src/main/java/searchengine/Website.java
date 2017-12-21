@@ -1,7 +1,6 @@
 package searchengine;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -12,9 +11,9 @@ import java.util.List;
  * </pre>
  */
 public class Website implements Comparable<Website> {
-    protected String title;
-    protected String url;
-    protected List<String> words;
+    private String title;
+    private String url;
+    private List<String> words;
     private HashSet<String> setOfWords;
 
     /**
@@ -45,7 +44,7 @@ public class Website implements Comparable<Website> {
      * This constructor is used for the IndexedWebsite subclass.
      * </pre>
      */
-    protected Website() {
+    Website() {
     }
 
     public List<String> getWords() {
@@ -124,9 +123,7 @@ public class Website implements Comparable<Website> {
         if (getClass() == other.getClass()) {
             Website website = (Website) other;
 
-            if (!title.equals(website.title)) return false;
-            if (!url.equals(website.url)) return false;
-            return words.equals(website.words);
+            return title.equals(website.title) && url.equals(website.url) && words.equals(website.words);
         }
         return false;
     }

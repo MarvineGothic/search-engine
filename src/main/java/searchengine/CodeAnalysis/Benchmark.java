@@ -11,11 +11,11 @@ import java.util.concurrent.Callable;
  * of all run times
  * </pre>
  */
-public class Benchmark {
-    private Callable<Integer> callable;
-    private int warmUpIterations;
-    private int iterations;
-    private List<Long> runTimes = new ArrayList<>();
+class Benchmark {
+    private final Callable<Integer> callable;
+    private final int warmUpIterations;
+    private final int iterations;
+    private final List<Long> runTimes = new ArrayList<>();
     private long meanRuntime;
     private long totalRuntime;
     private long stdRuntime;
@@ -45,23 +45,6 @@ public class Benchmark {
 
     /**
      * <pre>
-     * Create a benchmark of a method. The number of iterations is set to 100 with 1 warm up iterations as default.
-     *
-     * @param callable An implementation of the Callable interface. The Call() method is the function called
-     *                 when benchmarking.
-     * @throws Exception If the Callable method throws an exception it needs to be caught.
-     * </pre>
-     */
-    public Benchmark(Callable<Integer> callable) throws Exception {
-        this.callable = callable;
-        this.iterations = 100;
-        this.warmUpIterations = 1;
-        run();
-    }
-
-
-    /**
-     * <pre>
      * Generates a list of queries, each containing a specified number of words. Words are selected using seed(0) so
      * this method will generate the same list each time as long as the input arguments are the same.
      *
@@ -88,7 +71,7 @@ public class Benchmark {
 
     /**
      * <pre>
-     * @return The averate run time when Callable is called.
+     * @return The average run time when Callable is called.
      * </pre>
      */
     public long getMeanRuntime() {
@@ -97,7 +80,7 @@ public class Benchmark {
 
     /**
      * <pre>
-     * @return The toal runtime of all iterations
+     * @return The total runtime of all iterations
      * </pre>
      */
     public long getTotalRuntime() {
@@ -129,7 +112,7 @@ public class Benchmark {
      * This method runs the actual benchmark.
      * For the calculation of the 95% confidence interval see https://en.wikipedia.org/wiki/1.96
      *
-     * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * @throws Exception If the Callable method throws an exception it needs to be caught.
      * </pre>
      */
     private void run() throws Exception {

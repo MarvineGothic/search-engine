@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
  */
 public class IndexBenchmarking implements Callable<Integer> {
     private static List<String> listOfQueries;
-    private Index index;
+    private final Index index;
     private int currentIndex = 0;
 
     /**
@@ -46,7 +46,7 @@ public class IndexBenchmarking implements Callable<Integer> {
      */
     public static void main(String[] args) {
         int iterations = 5000;
-        int warmUpIterations = Math.max(1, iterations/100);
+        int warmUpIterations = Math.max(1, iterations / 100);
         String filename = "enwiki-medium.txt";
         if (args.length > 0) {
             filename = args[0];

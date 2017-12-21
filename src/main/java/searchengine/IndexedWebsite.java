@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class IndexedWebsite extends Website {
     private final Website parent;
-    private final String indexWord;
     private int wordFrequency;
     private Integer websitesContainingWordCount = null;
 
@@ -34,7 +33,6 @@ public class IndexedWebsite extends Website {
             throw new IllegalArgumentException("Parent website must contain index word");
         }
         this.parent = parent;
-        this.indexWord = indexWord;
         wordFrequency = Collections.frequency(parent.getWords(), indexWord);
     }
 
@@ -68,15 +66,6 @@ public class IndexedWebsite extends Website {
 
     public Website getParent() {
         return parent;
-    }
-
-    /**
-     * <pre>
-     * @return Get the index word supplied in the constructor.
-     * </pre>
-     */
-    public String getIndexWord() {
-        return indexWord;
     }
 
     @Override

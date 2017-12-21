@@ -5,7 +5,6 @@ import searchengine.Indexes.Index;
 import searchengine.Website;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  * </pre>
  */
 public class IDFScore implements Score {
-    protected List<Website> sites = new ArrayList<>();
+    List<Website> sites = new ArrayList<>();
 
     /**
      * <pre>
@@ -46,7 +45,7 @@ public class IDFScore implements Score {
      * @return The Inverse Document Frequency: log2(d/n).
      * </pre>
      */
-    protected float idf(String word, Index index, Website website) {
+    float idf(String word, Index index, Website website) {
         if (sites.size() == 0)
             return -1;
         float d = sites.size();

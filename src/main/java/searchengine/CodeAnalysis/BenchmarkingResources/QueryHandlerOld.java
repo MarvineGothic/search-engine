@@ -1,7 +1,7 @@
 package searchengine.CodeAnalysis.BenchmarkingResources;
 
-import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
+import searchengine.QueryHandler;
 import searchengine.Ranking.Score;
 import searchengine.Website;
 
@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * NOTE This class is identical to IndexMethod except for a single method and is only used for benchmarking
  * </pre>
  */
+@SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated
 public class QueryHandlerOld extends QueryHandler {
     /**
@@ -36,8 +37,7 @@ public class QueryHandlerOld extends QueryHandler {
         Map<Website, Float> allRanks = new HashMap<>();
 
         // We loop over each OR separated list of query words
-        for (int i = 0; i < splitQueries.size(); i++) {
-            List<String> andSeparatedSearchWords = splitQueries.get(i);
+        for (List<String> andSeparatedSearchWords : splitQueries) {
             Map<Website, Float> currentRanks = new HashMap<>(); // Ranks for the current list of AND separated words.
 
             String initialSearchWord = andSeparatedSearchWords.get(0);

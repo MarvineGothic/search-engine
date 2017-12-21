@@ -1,9 +1,9 @@
 package searchengine.CodeAnalysis;
 
 import searchengine.FileHelper;
-import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
+import searchengine.QueryHandler;
 import searchengine.Ranking.*;
 import searchengine.Website;
 
@@ -19,12 +19,12 @@ import java.util.Map;
  * </pre>
  */
 public class RankingResultComparison {
-    private List<Score> scoreList;
-    private Index index;
+    private final List<Score> scoreList;
+    private final Index index;
 
     /**
      * <pre>
-     * Prints out the top 10 search results for different implementation of the Score interface for a list of quries
+     * Prints out the top 10 search results for different implementation of the Score interface for a list of queries
      * to easily compare results
      * @param queries A list of queries. Each query can contain more than one word and you can use OR the create
      *             or-conditions
@@ -113,7 +113,7 @@ public class RankingResultComparison {
      * @param matrix A list of lists of strings, representing a "matrix".
      * </pre>
      */
-    public void printMatrix(List<List<String>> matrix) {
+    private void printMatrix(List<List<String>> matrix) {
         String separator = ";";
 
         Map<Integer, Integer> rowWidthMap = new HashMap<>();

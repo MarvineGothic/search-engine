@@ -1,7 +1,6 @@
 package searchengine.Ranking;
 
 import org.junit.jupiter.api.Test;
-import searchengine.Ranking.TFScore;
 import searchengine.Website;
 
 import java.util.Arrays;
@@ -16,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * S is the site containing w
  * and m is the frequency of the word on that site
  */
-public class TFScoreTest {
-    private Website site = new Website("www.example1.com", "example1", Arrays.asList("a", "b", "b", "c", "c", "c"));
+class TFScoreTest {
+    private final Website site = new Website("www.example1.com", "example1", Arrays.asList("a", "b", "b", "c", "c", "c"));
 
     @Test
     void testTFValues() {

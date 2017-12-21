@@ -4,9 +4,7 @@ import searchengine.IndexedWebsite;
 import searchengine.Indexes.Index;
 import searchengine.Website;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * <pre>
@@ -14,11 +12,6 @@ import java.util.List;
  * </pre>
  */
 public class TFScore implements Score {
-
-    @Override
-    public float getScore(String word, Website website, Index index) {
-        return tf(word, website);
-    }
 
     /**
      * <pre>
@@ -31,9 +24,14 @@ public class TFScore implements Score {
     public static float tf(String word, Website website) {
         try {
             return ((IndexedWebsite) website).getWordFrequency();
-        } catch (ClassCastException | NullPointerException e ) {
+        } catch (ClassCastException | NullPointerException e) {
             return Collections.frequency(website.getWords(), word);
         }
+    }
+
+    @Override
+    public float getScore(String word, Website website, Index index) {
+        return tf(word, website);
     }
 }
 

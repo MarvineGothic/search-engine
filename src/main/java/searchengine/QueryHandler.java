@@ -119,8 +119,7 @@ public class QueryHandler {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
         Map<Website, Float> allRanks = new HashMap<>();
         // We loop over each OR separated list of query words
-        for (int i = 0; i < splitQueries.size(); i++) {
-            List<String> andSeparatedSearchWords = splitQueries.get(i);
+        for (List<String> andSeparatedSearchWords : splitQueries) {
             Map<Website, Float> currentRanks = new HashMap<>();      // Ranks for the current list of AND separated words.
             String initialSearchWord = andSeparatedSearchWords.get(0);
             List<Website> lookUp = index.lookup(initialSearchWord);

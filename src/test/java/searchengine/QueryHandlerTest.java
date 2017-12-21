@@ -25,16 +25,14 @@ import static searchengine.QueryHandler.splitQuery;
  * </pre>
  */
 class QueryHandlerTest {
+    private final Website one = new Website("1.com", "example1", Collections.singletonList("a"));
+    private final Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));
+    private final Website three = new Website("3.com", "example3", Arrays.asList("b", "c"));
+    private final Website four = new Website("4.com", "example4", Arrays.asList("b", "c", "d"));
+    private final Website five = new Website("5.com", "example5", Collections.singletonList("e"));
+    private final Website six = new Website("6.com", "example6", Collections.singletonList("f"));
     private Index index;
-    private Index simpleindex;
     private Score ranker;
-
-    private Website one = new Website("1.com", "example1", Collections.singletonList("a"));
-    private Website two = new Website("2.com", "example2", Arrays.asList("a", "b"));
-    private Website three = new Website("3.com", "example3", Arrays.asList("b", "c"));
-    private Website four = new Website("4.com", "example4", Arrays.asList("b", "c", "d"));
-    private Website five = new Website("5.com", "example5", Collections.singletonList("e"));
-    private Website six = new Website("6.com", "example6", Collections.singletonList("f"));
 
     @BeforeEach
     void setUp() {
@@ -140,7 +138,7 @@ class QueryHandlerTest {
     }
 
     @Test
-    void testModifyQueryMethod(){
+    void testModifyQueryMethod() {
         assertEquals("denmark", QueryHandler.modifyQuery(splitQuery("Denmark OR Germany")).get(0).get(0));
         assertEquals("denmark", QueryHandler.modifyQuery(splitQuery("denmark OR Germany")).get(0).get(0));
 

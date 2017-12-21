@@ -2,10 +2,12 @@ package searchengine.CodeAnalysis;
 
 import searchengine.CodeAnalysis.BenchmarkingResources.BM25ScoreNotIndexed;
 import searchengine.FileHelper;
-import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Ranking.*;
+import searchengine.QueryHandler;
+import searchengine.Ranking.BM25Score;
+import searchengine.Ranking.Score;
+import searchengine.Ranking.SimpleScore;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.concurrent.Callable;
 public class RankerBenchmarking implements Callable<Integer> {
     private static List<String> queries;
     private static Index index;
-    private Score ranker;
+    private final Score ranker;
     private int currentQueryIndex = 0;
 
     /**
@@ -40,6 +42,7 @@ public class RankerBenchmarking implements Callable<Integer> {
      * @param args Is not used
      * </pre>
      */
+    @SuppressWarnings("deprecation")
     public static void main(String[] args) {
         String fileName = "enwiki-medium.txt";
         ArrayList<String> wordList = new ArrayList<>(FileHelper.loadWordsInFile(fileName));

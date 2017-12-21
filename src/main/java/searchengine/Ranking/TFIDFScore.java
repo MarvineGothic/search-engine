@@ -1,11 +1,8 @@
 package searchengine.Ranking;
 
-import searchengine.IndexedWebsite;
 import searchengine.Indexes.Index;
 import searchengine.Website;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

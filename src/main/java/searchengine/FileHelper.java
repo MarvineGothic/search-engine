@@ -11,8 +11,8 @@ import java.util.*;
  * creating a new object, site validity is checked.
  */
 public class FileHelper {
-    private static String illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
-    private static Set<String> usedUrls = new HashSet<>();
+    private static final String illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
+    private static final Set<String> usedUrls = new HashSet<>();
     private static String url;
     private static String title;
     private static List<String> listOfWords;
@@ -28,26 +28,25 @@ public class FileHelper {
     public static List<Website> parseFile(String fileDirectory) {
         List<Website> sites = new ArrayList<>();
         resetWebsite();
-        try (Scanner sc = new Scanner(new File(fileDirectory), "UTF-8")){
-        while (sc.hasNext()) {
-            String line = sc.nextLine();
-            if (line.startsWith("*PAGE:")) {
-                addSiteIfValid(url, title, listOfWords, sites);
-                resetWebsite();
-                url = line.substring(6);
-            } else if (title.equals("")) {
-                title = line;
-            } else {
-                String word = line.toLowerCase().trim();
-                listOfWords.add(word);
+        try (Scanner sc = new Scanner(new File(fileDirectory), "UTF-8")) {
+            while (sc.hasNext()) {
+                String line = sc.nextLine();
+                if (line.startsWith("*PAGE:")) {
+                    addSiteIfValid(url, title, listOfWords, sites);
+                    resetWebsite();
+                    url = line.substring(6);
+                } else if (title.equals("")) {
+                    title = line;
+                } else {
+                    String word = line.toLowerCase().trim();
+                    listOfWords.add(word);
+                }
             }
-        }
-        addSiteIfValid(url, title, listOfWords, sites);
-        usedUrls.clear();
-        sc.close();
-        return sites;
-        }
-        catch (FileNotFoundException e){
+            addSiteIfValid(url, title, listOfWords, sites);
+            usedUrls.clear();
+            sc.close();
+            return sites;
+        } catch (FileNotFoundException e) {
             System.out.println("Couldn't load the given file");
             e.printStackTrace();
             usedUrls.clear();
@@ -59,14 +58,16 @@ public class FileHelper {
      * This method takes four parameters - three of which are information about a given website, and the fourth is the
      * list of websites that have been parsed, to which we wish to add another website
      *
-     * @param url url of the site we wish to add to the list of sites
-     * @param title title of the site we wish to add to the list of sites
+     * @param url         url of the site we wish to add to the list of sites
+     * @param title       title of the site we wish to add to the list of sites
      * @param listOfWords keywords responding to the site we wish to add to the list of sites
-     * @param sites the list of sites
+     * @param sites       the list of sites
      */
     private static void addSiteIfValid(String url, String title, List<String> listOfWords, List<Website> sites) {
-        if (checkForDuplicates(usedUrls, url)) {System.out.println("ERROR: Duplicate site when parsing file: " + url);}
-        for (String word:listOfWords) {
+        if (checkForDuplicates(usedUrls, url)) {
+            System.out.println("ERROR: Duplicate site when parsing file: " + url);
+        }
+        for (String word : listOfWords) {
             if (word.replaceAll("\\s", "").length() != word.length()) {
                 System.out.println("ERROR: parseFile with multiple words on the same line: " + word);
             }
@@ -81,7 +82,7 @@ public class FileHelper {
      * The method resets variables used in parsing and creating new website objects, to enable parsing of a new object
      * after the current one is done being created
      */
-    private static void resetWebsite(){
+    private static void resetWebsite() {
         url = "";
         title = "";
         listOfWords = new ArrayList<>();
@@ -93,26 +94,27 @@ public class FileHelper {
      * @param filename The filename to load
      * @return A set of all words on all the pages of that file.
      */
-    public static HashSet<String> loadWordsInFile(String filename){
+    public static HashSet<String> loadWordsInFile(String filename) {
         HashSet<String> words = new HashSet<>();
-        try (Scanner scanner = new Scanner(new File(getDataPath() + filename))){
+        try (Scanner scanner = new Scanner(new File(getDataPath() + filename))) {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 if (wordIsValid(line)) words.add(line);
             }
-        }catch (FileNotFoundException e) {
-                System.out.println("Couldn't load the given file");
-                e.printStackTrace();
-                return null;
-            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't load the given file");
+            e.printStackTrace();
+            return null;
+        }
         return words;
     }
 
     /**
      * We check whether a given URL has already been added to a given database, by comparing it to a list of already
      * used URLS.
+     *
      * @param usedUrls a list of URLs that have been added to the database already
-     * @param url an URL which is to be checked
+     * @param url      an URL which is to be checked
      * @return returns true if the URL has been used before, and is in usedUrls, and false if the URL has not been
      * used before, and is not in usedUrls.
      */
