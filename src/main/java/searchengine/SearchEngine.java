@@ -28,7 +28,7 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Path("/")
-public class  SearchEngine extends ResourceConfig {
+public class SearchEngine extends ResourceConfig {
     private static Index currentIndex;
     private static Score currentRanker;
 
@@ -87,13 +87,13 @@ public class  SearchEngine extends ResourceConfig {
             return new ArrayList<>();
         }
 
-        System.out.println("Handling request for query word \""+query+"\"");
+        System.out.println("Handling request for query word \"" + query + "\"");
 
         List<Website> resultList = QueryHandler.multiWordQuery(currentIndex, query, currentRanker);
         long endTime = System.nanoTime();
         System.out.println("Found " + resultList.size() + " websites in " + (endTime - startTime) / 10e6 + " milliseconds.");
 
-        if (resultList.isEmpty())System.out.println("No website contains the query word.");
+        if (resultList.isEmpty()) System.out.println("No website contains the query word.");
 
         return resultList;
     }

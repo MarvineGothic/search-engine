@@ -1,7 +1,6 @@
 package searchengine.Indexes;
 
 import searchengine.IndexedWebsite;
-import searchengine.Ranking.Score;
 import searchengine.Website;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Map;
  * </pre>
  */
 abstract public class InvertedIndex implements Index {
-    protected Map<String, HashSet<IndexedWebsite>> wordMap;
+    Map<String, HashSet<IndexedWebsite>> wordMap;
 
     /**
      * <pre>
@@ -48,7 +47,7 @@ abstract public class InvertedIndex implements Index {
      * For each word, this method assigns all the the number of websites containing that word to each IndexedWebsites
      * </pre>
      */
-    private void assignWebsitesContainingWordCount(){
+    private void assignWebsitesContainingWordCount() {
         for (Map.Entry<String, HashSet<IndexedWebsite>> entry : wordMap.entrySet()) {
             int count = entry.getValue().size();
             for (IndexedWebsite website : entry.getValue()) {

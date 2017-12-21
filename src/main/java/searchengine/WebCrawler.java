@@ -4,7 +4,6 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Entities;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -34,20 +33,18 @@ import java.util.*;
  * </pre>
  */
 public class WebCrawler {
-    private String illgalCharacters;
+    private final String illegalCharacters;
+    private final UrlValidator urlValidator;
+    private final Set<String> exploredLinks;
+    private final Set<String> unexploredLinks;
     private FileWriter dataWriter;
     private String domain;
-    private UrlValidator urlValidator;
-    private Set<String> exploredLinks;
-    private Set<String> unexploredLinks;
-    private HashMap<String, Integer> retryLinks; // Hashmap of failed links: Key: urls, Value: Number of failed attempts
     private boolean continueCrawling = true;
 
     private WebCrawler(String startPage) throws Exception {
-        illgalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
+        illegalCharacters = "ÆÐƎƏƐƔĲŊŒẞÞǷȜæðǝəɛɣĳŋœĸſßþƿȝĄƁÇĐƊĘĦĮƘŁØƠŞȘŢȚŦŲƯY̨Ƴąɓçđɗęħįƙłøơşșţțŧųưy̨ƴÁÀÂÄǍĂĀÃÅǺĄÆǼǢƁĆĊĈČÇĎḌĐƊÐÉÈĖÊËĚĔĒĘẸƎƏƐĠĜǦĞĢƔáàâäǎăāãåǻąæǽǣɓćċĉčçďḍđɗðéèėêëěĕēęẹǝəɛġĝǧğģɣĤḤĦIÍÌİÎÏǏĬĪĨĮỊĲĴĶƘĹĻŁĽĿʼNŃN̈ŇÑŅŊÓÒÔÖǑŎŌÕŐỌØǾƠŒĥḥħıíìiîïǐĭīĩįịĳĵķƙĸĺļłľŀŉńn̈ňñņŋóòôöǒŏōõőọøǿơœŔŘŖŚŜŠŞȘṢẞŤŢṬŦÞÚÙÛÜǓŬŪŨŰŮŲỤƯẂẀŴẄǷÝỲŶŸȲỸƳŹŻŽẒŕřŗſśŝšşșṣßťţṭŧþúùûüǔŭūũűůųụưẃẁŵẅƿýỳŷÿȳỹƴźżžẓ";
         exploredLinks = new HashSet<>();
         unexploredLinks = new HashSet<>();
-        retryLinks = new HashMap<>();
         urlValidator = new UrlValidator(new String[]{"http", "https", "ftp"});
         if (!urlValidator.isValid(startPage)) {
             System.out.println("Invalid starting page: " + startPage);
@@ -67,8 +64,8 @@ public class WebCrawler {
             }
         }
 
-        String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileName = dir + domain.replaceAll("[/:]+", "-") + ".txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         // Check if file exists
         boolean fileExits1 = new File(fileName).isFile();
@@ -90,14 +87,14 @@ public class WebCrawler {
             e.printStackTrace();
             return;
         }
-
-        unexploredLinks.add(startPage);
+        if (!exploredLinks.contains(startPage))
+            unexploredLinks.add(startPage);
     }
 
     /**
      * <pre>
      * The main program will start to crawl the domain given until you ask it to quit or it cannot find any
-     * urls mathing the sub domain anymore.
+     * urls matching the sub domain anymore.
      * @param args First element of args is the website domain (fx http://gameofthrones.wikia.com/wiki/)
      * </pre>
      */
@@ -123,8 +120,8 @@ public class WebCrawler {
      */
     private boolean loadData() {
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
-        String fileName = dir + domain.replaceAll("[/:]", "_") + ".txt";
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileName = dir + domain.replaceAll("[/:]+", "-") + ".txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         Scanner scanner;
         try {
@@ -139,6 +136,7 @@ public class WebCrawler {
             assert urlValidator.isValid(url);
             unexploredLinks.add(url);
         }
+
         try {
             scanner = new Scanner(new File(fileName), "UTF-8");
         } catch (FileNotFoundException e) {
@@ -178,7 +176,6 @@ public class WebCrawler {
         try {
             document = Jsoup.connect(url).get();
         } catch (IOException e) {
-            retryLinks.merge(url, 1, (a, b) -> a + b); // increment failed attempt with 1.
             System.err.println("\nError: For '" + url + "': " + e.getMessage());
             return;
         }
@@ -187,10 +184,10 @@ public class WebCrawler {
         sb.append("*PAGE:").append(url);
         String title = url.substring(domain.length(), url.length());
         if (title.equals(""))
-            title = "Mainpage";
+            title = "Main-page";
         sb.append("\n").append(title);
 
-        for (String word : document.text().split(" ")) {
+        for (String word : document.text().split("\\s+")) {
             String strippedWord = wordStrip(word);
             if (!strippedWord.equals(""))
                 sb.append("\n").append(strippedWord);
@@ -230,14 +227,14 @@ public class WebCrawler {
      * </pre>
      */
     private String wordStrip(String word) {
-        if (word.contains(illgalCharacters))
+        if (word.contains(illegalCharacters))
             return "";
         if (urlValidator.isValid(word))
             return "";
         if (word.endsWith(".com"))
             return "";
-//        if (word.length() > 25)
-//            return "";
+        if (word.length() > 25)
+            return "";
         return word.replaceAll("[^a-zA-Z]", "");
     }
 
@@ -249,14 +246,14 @@ public class WebCrawler {
     private void saveUnexploredLinks() {
 
         String dir = System.getProperty("user.dir") + File.separator + "data" + File.separator;
-        String fileNameVisited = dir + domain.replaceAll("[/:]", "_") + "_Unexplored.txt";
+        String fileNameVisited = dir + domain.replaceAll("[/:]+", "-") + "unexplored.txt";
 
         // Tries 5 times if an error occurs.
         for (int j = 0; j < 5; j++) {
             try {
                 FileWriter unexploredWriter = new FileWriter(fileNameVisited, false);
                 for (String url : unexploredLinks) {
-                    unexploredWriter.append(url + "\n");
+                    unexploredWriter.append(url).append("\n");
                 }
                 unexploredWriter.close();
                 continue;
@@ -294,7 +291,7 @@ public class WebCrawler {
             } catch (InterruptedException ex) {
                 interruptedSleepCount += 1;
             }
-            if (!continueCrawling){
+            if (!continueCrawling) {
                 break;
             }
 
@@ -337,7 +334,7 @@ public class WebCrawler {
      * </pre>
      */
     private static class AbortScanner implements Runnable {
-        private WebCrawler crawler;
+        private final WebCrawler crawler;
 
         AbortScanner(WebCrawler crawler) {
             this.crawler = crawler;
@@ -351,7 +348,7 @@ public class WebCrawler {
             System.out.println("Your progress will be saved and you can continue later\n");
             while (sc.hasNext()) {
                 String line = sc.nextLine();
-                if (abortConditions.contains(line.toLowerCase().replaceAll("\n",""))) {
+                if (abortConditions.contains(line.toLowerCase().replaceAll("\n", ""))) {
                     crawler.continueCrawling = false;
                     System.out.println("Exiting web crawling...");
                     break;
@@ -359,6 +356,5 @@ public class WebCrawler {
             }
         }
     }
-
 
 }

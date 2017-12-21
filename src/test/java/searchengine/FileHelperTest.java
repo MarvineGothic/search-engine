@@ -17,13 +17,13 @@ class FileHelperTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         System.setOut(null);
         System.setErr(null);
     }
@@ -32,14 +32,13 @@ class FileHelperTest {
      * Test if parseFile throws an error message when given a faulty file directory
      */
     @Test
-    void fileHelperFaultyDirectoryTest(){
+    void fileHelperFaultyDirectoryTest() {
         String[] faultyDirectories = {"C:\\", "C:\\123", "C:\\abc", "C:\\890.txt", "C:\\zyx.txt", "æøå", "123", "test with spaces" +
                 ".,/()<"};
-        for (String faultyDirectory:faultyDirectories)
-        {
+        for (String faultyDirectory : faultyDirectories) {
             FileHelper.parseFile(faultyDirectory);
             String expectedOutput = "Couldn't load the given file\r\n";
-            assertEquals(expectedOutput, outContent.toString(), "Assertion error for "+faultyDirectory);
+            assertEquals(expectedOutput, outContent.toString(), "Assertion error for " + faultyDirectory);
             outContent.reset();
         }
     }
@@ -52,7 +51,7 @@ class FileHelperTest {
         String path = System.getProperty("user.dir") + File.separator + "TestData" + File.separator + "incompleteSites.txt";
         List<Website> sites = FileHelper.parseFile(path);
         ArrayList<String> siteUrls = new ArrayList<>();
-        for (Website site:sites) {
+        for (Website site : sites) {
             siteUrls.add(site.getUrl());
         }
         assertEquals(siteUrls.toString(), "[https://site1.com/, https://site2.com/, https://site6.com/]");
@@ -68,7 +67,7 @@ class FileHelperTest {
         String expectedOutput = "ERROR: Duplicate site when parsing file: https://site1.com/\r\n";
         assertEquals(expectedOutput, outContent.toString());
         ArrayList<String> siteUrls = new ArrayList<>();
-        for (Website site:sites) {
+        for (Website site : sites) {
             siteUrls.add(site.getUrl());
         }
         assertEquals(siteUrls.toString(), "[https://site1.com/, https://site2.com/, https://site3.com/]");

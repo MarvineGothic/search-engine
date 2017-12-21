@@ -1,6 +1,5 @@
 package searchengine;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class IndexedWebsite extends Website {
     private final Website parent;
-    private final String indexWord;
     private int wordFrequency;
     private Integer websitesContainingWordCount = null;
 
@@ -27,14 +25,13 @@ public class IndexedWebsite extends Website {
      * @param indexWord The index word. Must be contained by the parent
      * </pre>
      */
-    public IndexedWebsite(@NotNull Website parent, @NotNull String indexWord) {
+    public IndexedWebsite(Website parent, String indexWord) {
         if (indexWord == null || parent == null)
             throw new IllegalArgumentException();
         if (!parent.getSetOfWords().contains(indexWord)) {
             throw new IllegalArgumentException("Parent website must contain index word");
         }
         this.parent = parent;
-        this.indexWord = indexWord;
         wordFrequency = Collections.frequency(parent.getWords(), indexWord);
     }
 
@@ -66,17 +63,8 @@ public class IndexedWebsite extends Website {
         this.websitesContainingWordCount = websitesContainingWordCount;
     }
 
-    public Website getParent() {
+    Website getParent() {
         return parent;
-    }
-
-    /**
-     * <pre>
-     * @return Get the index word supplied in the constructor.
-     * </pre>
-     */
-    public String getIndexWord() {
-        return indexWord;
     }
 
     @Override

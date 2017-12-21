@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Deprecated
 public class TFIDFScoreNotIndexed implements Score {
-    protected List<Website> sites = new ArrayList<>();
+    List<Website> sites = new ArrayList<>();
 
     /**
      * <pre>
@@ -49,7 +49,7 @@ public class TFIDFScoreNotIndexed implements Score {
      * @return term frequency
      * </pre>
      */
-    public float tf(String word, Website website) {
+    float tf(String word, Website website) {
         return Collections.frequency(website.getWords(), word);
     }
 
@@ -61,7 +61,7 @@ public class TFIDFScoreNotIndexed implements Score {
      * @return The Inverse Document Frequency
      * </pre>
      */
-    public float idf(String word, Index index) {
+    float idf(String word, Index index) {
         if (sites.size() == 0)
             return -1;
         float d = sites.size();

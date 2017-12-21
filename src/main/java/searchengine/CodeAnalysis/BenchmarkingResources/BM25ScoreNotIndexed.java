@@ -19,11 +19,11 @@ import java.util.List;
  * k: constant parameter = standard value is 1.75
  * </pre>
  */
-@SuppressWarnings("Duplicates")
+@SuppressWarnings({"Duplicates", "DeprecatedIsStillUsed"})
 @Deprecated
 public class BM25ScoreNotIndexed extends TFIDFScoreNotIndexed {
+    private final float avdL;
     private float totalAmountOfWords;
-    private float avdL;
 
     /**
      * <pre>

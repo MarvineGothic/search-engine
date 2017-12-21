@@ -16,9 +16,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IndexTests {
+class IndexTests {
+    private final Score ranker = new SimpleScore();
     private List<Index> Indexes = null;
-    private Score ranker = new SimpleScore();
 
     @BeforeEach
     void setUp() {
@@ -68,10 +68,11 @@ public class IndexTests {
      * while the two return 1
      */
     @Test
-    void lookupIndex(){
+    void lookupIndex() {
         lookupFull(Indexes);
     }
-    public void lookupFull(List<Index> indexList) {
+
+    private void lookupFull(List<Index> indexList) {
         for (Index index : indexList) {
             // Tests each Index type using 1 query word
             assertEquals(1, index.lookup("word1").size(), "Case 1b failed for " + index);

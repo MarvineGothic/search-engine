@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.Ranking.IDFScore;
 import searchengine.Website;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * n is the number of sites containing w
  * D is the database containing the sites
  */
-public class IDFScoreTest {
+class IDFScoreTest {
+    private final Website emptySite = new Website("example0.com", "example0", new ArrayList<>());
+    private final Website site1 = new Website("example1.com", "example1", Collections.singletonList("a"));
+    private final Website site2 = new Website("example1.com", "example1", Arrays.asList("a", "b"));
+    private final Website site3 = new Website("example1.com", "example1", Arrays.asList("a", "b", "c"));
     private List<Website> sites;
     private IDFScore ranker;
-    private Website emptySite = new Website("example0.com", "example0", new ArrayList<>());
-    private Website site1 = new Website("example1.com", "example1", Arrays.asList("a"));
-    private Website site2 = new Website("example1.com", "example1", Arrays.asList("a", "b"));
-    private Website site3 = new Website("example1.com", "example1", Arrays.asList("a", "b", "c"));
 
     @BeforeEach
     void setUp() {

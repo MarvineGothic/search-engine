@@ -18,8 +18,8 @@ import java.util.List;
  * </pre>
  */
 public class BM25Score extends TFIDFScore {
+    private final float avdL;
     private float totalAmountOfWords;
-    private float avdL;
 
     /**
      * <pre>

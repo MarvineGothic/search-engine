@@ -3,7 +3,6 @@ package searchengine;
 import searchengine.Indexes.Index;
 import searchengine.Ranking.Score;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +30,9 @@ public class QueryHandler {
      * but inside each of OR-statement ALL words shall be presenting on the site.
      * </pre>
      */
-    public static List<List<String>> splitQuery(@NotNull String query) {
+    public static List<List<String>> splitQuery(String query) {
         ArrayList<List<String>> result = new ArrayList<>();
         ArrayList<String> andWords;
-        //String line = query.trim();
         String[] splitOR = new String[]{query};
         query = query.replaceAll("\\p{Punct}", " ");
 
@@ -44,7 +42,8 @@ public class QueryHandler {
         for (String andSentence : splitOR) {
             andWords = new ArrayList<>();
             String[] temp = new String[]{andSentence};
-            if (andSentence.contains(" ")) temp = andSentence.split(" ");
+            if (andSentence.contains(" "))
+                temp = andSentence.split("\\s+");
             for (String words : temp) {
                 String word;
                 if (!(word = words.trim()).isEmpty()) andWords.add(word);
@@ -66,7 +65,7 @@ public class QueryHandler {
      * When running this method we iterate through the Lists of strings in query, passing them to the modifyWordList method.
      * </pre>
      */
-    public static List<List<String>> modifyQuery(@NotNull List<List<String>> query) {
+    public static List<List<String>> modifyQuery(List<List<String>> query) {
         List<List<String>> tempQuery = new ArrayList<>();
         for (List<String> wordList : query) {
             List<String> tempWordList = modifyWordList(wordList);
@@ -90,7 +89,7 @@ public class QueryHandler {
      * When running this method, we iterate through the strings in lists of strings.
      * </pre>
      */
-    public static List<String> modifyWordList(@NotNull List<String> wordList) {
+    public static List<String> modifyWordList(List<String> wordList) {
         List<String> tempList = new ArrayList<>();
         for (String word : wordList) {
             String modifiedWord = word.toLowerCase()
@@ -115,18 +114,17 @@ public class QueryHandler {
      * @return A list of websites matching at least one of the OR conditions of the query.
      * </pre>
      */
-    public static List<Website> multiWordQuery(@NotNull Index index, @NotNull String multiWordQuery, @NotNull Score ranker) {
+    public static List<Website> multiWordQuery(Index index, String multiWordQuery, Score ranker) {
         List<List<String>> splitQueries = modifyQuery(splitQuery(multiWordQuery));
         Map<Website, Float> allRanks = new HashMap<>();
         // We loop over each OR separated list of query words
-        for (int i = 0; i < splitQueries.size(); i++) {
-            List<String> andSeparatedSearchWords = splitQueries.get(i);
+        for (List<String> andSeparatedSearchWords : splitQueries) {
             Map<Website, Float> currentRanks = new HashMap<>();      // Ranks for the current list of AND separated words.
             String initialSearchWord = andSeparatedSearchWords.get(0);
             List<Website> lookUp = index.lookup(initialSearchWord);
 
             for (Website site : lookUp) {
-                if (site.containsAllWords(andSeparatedSearchWords)) {                    // 28.11.17 checks all words
+                if (site.containsAllWords(andSeparatedSearchWords)) {         // checks all words
                     currentRanks.put(site, ranker.getScore(initialSearchWord, site, index));
                     for (int j = 1; j < andSeparatedSearchWords.size(); j++) {
                         currentRanks.merge(site, ranker.getScore(andSeparatedSearchWords.get(j), site, index), Float::sum);
@@ -150,7 +148,7 @@ public class QueryHandler {
      * @param allRanks The original map. This map will be updated with entries from both maps.
      * </pre>
      */
-    protected static void updateAllRanks(@NotNull Map<Website, Float> currentRanks, @NotNull Map<Website, Float> allRanks) {
+    protected static void updateAllRanks(Map<Website, Float> currentRanks, Map<Website, Float> allRanks) {
         for (Map.Entry<Website, Float> mapEntry : currentRanks.entrySet()) {
             Website site = mapEntry.getKey();
             Float currentRank = mapEntry.getValue();

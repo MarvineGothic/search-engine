@@ -1,10 +1,10 @@
 package searchengine.CodeAnalysis;
 
+import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
 import searchengine.FileHelper;
-import searchengine.QueryHandler;
 import searchengine.Indexes.Index;
 import searchengine.Indexes.InvertedHashMapIndex;
-import searchengine.CodeAnalysis.BenchmarkingResources.QueryHandlerOld;
+import searchengine.QueryHandler;
 import searchengine.Ranking.BM25Score;
 import searchengine.Ranking.Score;
 import searchengine.Website;
@@ -20,11 +20,11 @@ import java.util.concurrent.Callable;
  * This benchmarking class uses the package from this website: http://www.ellipticgroup.com/html/benchmarkingArticle.html
  * </pre>
  */
-public class QueryPerformanceBenchmarking implements Callable<Integer> {
-    private Index index;
-    private List<String> queryList;
-    private boolean methodType;
-    private Score ranker;
+public class QueryPerformanceBenchmarking implements Callable {
+    private final Index index;
+    private final List<String> queryList;
+    private final boolean methodType;
+    private final Score ranker;
     private int currentQueryIndex = 0;
 
     /**
@@ -38,7 +38,7 @@ public class QueryPerformanceBenchmarking implements Callable<Integer> {
      * @param ranker
      * </pre>
      */
-    public QueryPerformanceBenchmarking(Index index, List<String> queryList, boolean methodType, Score ranker) {
+    private QueryPerformanceBenchmarking(Index index, List<String> queryList, boolean methodType, Score ranker) {
         this.index = index;
         this.queryList = queryList;
         this.methodType = methodType;
@@ -103,7 +103,7 @@ public class QueryPerformanceBenchmarking implements Callable<Integer> {
             benchmark1 = new Benchmark(callable1, iterations, warmUpIterations);
             System.out.println(String.format("%-20s", "QueryHandler:") + benchmark1.toString());
             benchmark2 = new Benchmark(callable2, iterations, warmUpIterations);
-            System.out.println(String.format("%-20s", "QueryHandlerOld:")+ benchmark2.toString());
+            System.out.println(String.format("%-20s", "QueryHandlerOld:") + benchmark2.toString());
             System.out.println("---------------------------------------------------");
             if (benchmark1.getMeanRuntime() < benchmark2.getMeanRuntime())
                 return 1;
@@ -123,13 +123,14 @@ public class QueryPerformanceBenchmarking implements Callable<Integer> {
      * @throws Exception If something goes wrong it throws an exception.
      * </pre>
      */
+    @SuppressWarnings("deprecation")
     @Override
-    public Integer call() throws Exception {
+    public Object call() throws Exception {
         if (methodType)
             QueryHandler.multiWordQuery(index, queryList.get(currentQueryIndex), ranker);
         else
             QueryHandlerOld.multiWordQuery(index, queryList.get(currentQueryIndex), ranker);
         currentQueryIndex++;
-        return 0;
+        return null;
     }
 }
