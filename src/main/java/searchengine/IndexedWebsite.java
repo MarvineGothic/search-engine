@@ -154,10 +154,4 @@ public class IndexedWebsite extends Website {
     public String toString() {
         return parent.toString();
     }
-
-    @Override
-    public List<Integer> getWordPositions(String word) {
-        return parent.getWordPositions(word);
-    }
-
 }

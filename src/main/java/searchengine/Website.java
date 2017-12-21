@@ -113,25 +113,6 @@ public class Website implements Comparable<Website> {
         return output;
     }
 
-    /**
-     * <pre>
-     * Get a list of where the word occurs on the website. Can be used in advanced ranking algorithms in the future.
-     *
-     * @param word The word to check for.
-     * @return A list of positions, where the positions is defined as the number of other words that occurs on the
-     * website before the given word.
-     * </pre>
-     */
-    public List<Integer> getWordPositions(String word) {
-        List<Integer> wordPositions = new ArrayList<>();
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).equals(word)) {
-                wordPositions.add(i);
-            }
-        }
-        return wordPositions;
-    }
-
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
