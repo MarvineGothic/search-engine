@@ -57,14 +57,6 @@ public class RankerBenchmarking implements Callable<Integer> {
                 new SimpleScore(),
                 new BM25Score(sites),
                 new BM25ScoreNotIndexed(sites),
-                // Warm ups
-
-                new SimpleScore(),
-                new SimpleScore(),
-                new BM25Score(sites),
-                new BM25Score(sites),
-                new BM25ScoreNotIndexed(sites),
-                new BM25ScoreNotIndexed(sites),
         };
 
         for (Score ranker : rankerList) {

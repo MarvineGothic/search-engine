@@ -58,7 +58,7 @@ public class QueryPerformanceBenchmarking implements Callable<Integer> {
         int winsFor1 = 0;
         int winsFor2 = 0;
         for (int i = 2; i < 12; i++) {
-            int winner = comparePerformance("enwiki-small.txt", i, 10000);
+            int winner = comparePerformance("enwiki-medium.txt", i, 10000);
             if (winner == 1)
                 winsFor1++;
             else

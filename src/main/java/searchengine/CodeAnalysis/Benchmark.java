@@ -25,7 +25,7 @@ public class Benchmark {
      * <pre>
      * Create a benchmark of a method.
      *
-     * @param callable         An implementation of the Callable<Integer> interface. The Call() method is the
+     * @param callable         An implementation of the Callable interface. The Call() method is the
      *                         function called when benchmarking.
      * @param iterations       The number of iterations the benchmark is based on.
      * @param warmUpIterations The number of warm up iterations used for the benchmark.
@@ -47,9 +47,9 @@ public class Benchmark {
      * <pre>
      * Create a benchmark of a method. The number of iterations is set to 100 with 1 warm up iterations as default.
      *
-     * @param callable An implementation of the Callable<Integer> interface. The Call() method is the function called
+     * @param callable An implementation of the Callable interface. The Call() method is the function called
      *                 when benchmarking.
-     * @throws Exception If the Callable method throws an axception it needs to be caught.
+     * @throws Exception If the Callable method throws an exception it needs to be caught.
      * </pre>
      */
     public Benchmark(Callable<Integer> callable) throws Exception {
