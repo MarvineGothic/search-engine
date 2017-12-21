@@ -17,7 +17,6 @@ import java.util.List;
  * k: constant parameter = standard value is 1.75
  * </pre>
  */
-@SuppressWarnings("Duplicates")
 public class BM25Score extends TFIDFScore {
     private float totalAmountOfWords;
     private float avdL;

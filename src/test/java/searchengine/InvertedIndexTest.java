@@ -38,6 +38,7 @@ class InvertedIndexTest {
     }
 
     /**
+     * <pre>
      * Tests the build method of InvertedHashMapIndex.
      *
      * Case 1a-3a: Testing build method for InvertedHashMapIndex
@@ -49,7 +50,7 @@ class InvertedIndexTest {
      * Case 4a: Testing if build method crashes if it is called on an empty websiteList
      * Case 5a: Testing if build method works for websiteList containing 1 website
      * case 6a: Testing if build method works for websiteList containing 3 websites
-     *
+     * </pre>
      */
     @Test
     void buildInvertedIndex(){
