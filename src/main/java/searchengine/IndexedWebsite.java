@@ -59,6 +59,7 @@ public class IndexedWebsite extends Website {
     /**
      * <pre>
      * Set the total number of website in the Index that contains the indexWord.
+     * @param websitesContainingWordCount The new value
      * </pre>
      */
     public void setWebsitesContainingWordCount(int websitesContainingWordCount) {
