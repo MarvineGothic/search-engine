@@ -11,8 +11,7 @@ import java.util.*;
  * creating a new object, site validity is checked.
  */
 public class FileHelper {
-    private static final String illegalCharacters = "̨̨̈̈.,:;-" +
-        "";
+    private static final String illegalCharacters = "̨̨̈̈.,:;-";
     private static final Set<String> usedUrls = new HashSet<>();
     private static String url;
     private static String title;
