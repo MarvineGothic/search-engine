@@ -22,11 +22,13 @@ public class TFScore implements Score {
      * </pre>
      */
     public static float tf(String word, Website website) {
-        try {
+        /*try {
             return ((IndexedWebsite) website).getWordFrequency();
         } catch (ClassCastException | NullPointerException e) {
             return Collections.frequency(website.getWords(), word);
-        }
+        }*/
+        return website.getWordFrequency(word);
+
     }
 
     @Override

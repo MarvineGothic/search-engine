@@ -1,5 +1,6 @@
 package searchengine;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -134,8 +135,7 @@ public class IndexedWebsite extends Website {
         return parent.containsWord(word);
     }
 
-    @Override
-    public Boolean containsAllWords(List<String> words) {
+    public Boolean containsAllWords(Collection<?> words) {
         return parent.containsAllWords(words);
     }
 

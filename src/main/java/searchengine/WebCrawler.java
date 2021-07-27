@@ -10,12 +10,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * <pre>
  * This class will start with website domain (fx http://gameofthrones.wikia.com/wiki/), and continue to search all
- * websites linked in that website as ling as the links are under the same domain.
+ * websites linked in that website as long as the links are under the same domain.
  * For each website visited the website's url, title and html stripped text will be saved in format
  *      *PAGE:[url]
  *      [Title]
@@ -99,6 +101,8 @@ public class WebCrawler {
      * </pre>
      */
     public static void main(String[] args) {
+        args = new String[1];
+        args[0]="http://gameofthrones.wikia.com/wiki/";
         if (args.length == 0) {
             System.out.println("Missing starting page argument");
             return;

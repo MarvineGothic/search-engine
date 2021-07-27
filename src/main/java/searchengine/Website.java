@@ -1,5 +1,7 @@
 package searchengine;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -46,6 +48,15 @@ public class Website implements Comparable<Website> {
     Website() {
     }
 
+    /**
+     * <pre>
+     * @return Get the number of times the indexWord occurs on the website.
+     * </pre>
+     */
+    public int getWordFrequency(String word){
+        return Collections.frequency(this.getWords(), word);
+    }
+
     public List<String> getWords() {
         return words;
     }
@@ -84,7 +95,7 @@ public class Website implements Comparable<Website> {
      * if it doesn't
      * </pre>
      */
-    public Boolean containsAllWords(List<String> words) {
+    public Boolean containsAllWords(Collection<?> words) {
         return setOfWords.containsAll(words);
     }
 

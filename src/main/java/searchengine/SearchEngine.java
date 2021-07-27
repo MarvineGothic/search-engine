@@ -18,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <pre>
@@ -55,12 +56,16 @@ public class SearchEngine extends ResourceConfig {
 
         currentIndex = new InvertedHashMapIndex();
         long t1 = System.nanoTime();
+        long m1 = System.currentTimeMillis();
         List<Website> sites = FileHelper.loadFile(args[0]);
         currentIndex.build(sites);
         currentRanker = new BM25Score(sites);
         long t2 = System.nanoTime();
+        long m2 = System.currentTimeMillis();
         System.out.println("Processing the data set and building the currentIndex took " +
                 (t2 - t1) / 10e6 + " milliseconds.");
+        System.out.println("Processing the data set and building the currentIndex took " +
+                (m2 - m1) + " milliseconds.");
 
         SpringApplication.run(SearchEngine.class);
     }

@@ -33,7 +33,6 @@ public class BM25Score extends TFIDFScore {
             this.totalAmountOfWords += site.getWords().size();
         }
         avdL = totalAmountOfWords / (sites.size() > 0 ? sites.size() : 1);
-
     }
 
     @Override
@@ -51,10 +50,10 @@ public class BM25Score extends TFIDFScore {
      * </pre>
      */
     private float tfPlus(String word, Website website) {
-        float tf = TFScore.tf(word, website);
+        float tf = TFScore.tf(word, website);          // term frequency
         float b = 0.75f;
         float k = 1.75f;
         float dL = website.getWords().size();
-        return (tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf));
+        return tf * (k + 1) / (k * (1 - b + b * dL / avdL) + tf);
     }
 }

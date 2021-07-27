@@ -4,6 +4,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -44,7 +45,7 @@ public class FileHelper {
             }
             addSiteIfValid(url, title, listOfWords, sites);
             usedUrls.clear();
-            sc.close();
+            //sc.close();
             return sites;
         } catch (FileNotFoundException e) {
             System.out.println("Couldn't load the given file");
